@@ -1,14 +1,13 @@
-const CACHE_NAME = "mathaino-lexeis-v1";
+const CACHE_NAME = "mathaino-lexeis-v2";
 const ASSETS = [
   "./",
   "./index.html",
-  "./app.js",
+  "./app.compiled.js",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
   "https://unpkg.com/react@18/umd/react.production.min.js",
   "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js",
-  "https://unpkg.com/@babel/standalone/babel.min.js",
 ];
 
 self.addEventListener("install", (event) => {

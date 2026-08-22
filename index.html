@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <title>Μαθαίνω Λέξεις</title>
 
-    
     <!-- PWA -->
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#FFF9EF" />
@@ -64,7 +63,6 @@
     <!-- React (από CDN, αποθηκεύεται στη συσκευή μετά την πρώτη φόρτωση για λειτουργία χωρίς σύνδεση) -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <!-- Αποθήκευση: γεφύρωμα του window.storage σε localStorage του κινητού -->
     <script>
@@ -90,7 +88,7 @@
       };
     </script>
 
-    <script type="text/babel" data-presets="react" src="app.js"></script>
+    <script src="app.compiled.js"></script>
 
     <!-- Εγγραφή service worker για λειτουργία χωρίς σύνδεση -->
     <script>
