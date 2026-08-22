@@ -35,6 +35,31 @@
   <body>
     <div id="root"></div>
 
+    <!-- Αν κάτι πάει στραβά, δείξε το σφάλμα στην οθόνη αντί για κενή σελίδα -->
+    <script>
+      function showBootError(msg) {
+        var root = document.getElementById("root");
+        if (root && !root.hasChildNodes()) {
+          root.innerHTML =
+            '<div style="padding:20px;font-family:sans-serif;color:#a00;white-space:pre-wrap;font-size:13px;line-height:1.5;">' +
+            "⚠️ Σφάλμα φόρτωσης:\n\n" + msg + "\n\n(Κάνε screenshot αυτή τη σελίδα)" +
+            "</div>";
+        }
+      }
+      window.addEventListener("error", function (e) {
+        showBootError((e.message || "") + "\n" + (e.filename || "") + ":" + (e.lineno || ""));
+      });
+      window.addEventListener("unhandledrejection", function (e) {
+        showBootError("Promise error: " + (e.reason && e.reason.message ? e.reason.message : e.reason));
+      });
+      setTimeout(function () {
+        var root = document.getElementById("root");
+        if (root && !root.hasChildNodes()) {
+          showBootError("Η εφαρμογή δεν πρόλαβε να φορτώσει (timeout). Πιθανόν πρόβλημα σύνδεσης με το CDN.");
+        }
+      }, 8000);
+    </script>
+
     <!-- React (από CDN, αποθηκεύεται στη συσκευή μετά την πρώτη φόρτωση για λειτουργία χωρίς σύνδεση) -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
