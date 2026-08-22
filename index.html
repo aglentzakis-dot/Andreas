@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="el">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <title>Μαθαίνω Λέξεις</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#FFF9EF" />
+
+    <!-- Εγκατάσταση σε iPhone/iPad (Safari) -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Μαθαίνω Λέξεις" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
+    <link rel="icon" href="icon-192.png" />
+
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #FFF9EF;
+        overscroll-behavior: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      #root {
+        max-width: 480px;
+        margin: 0 auto;
+        min-height: 100vh;
+      }
+      * { -webkit-touch-callout: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- React (από CDN, αποθηκεύεται στη συσκευή μετά την πρώτη φόρτωση για λειτουργία χωρίς σύνδεση) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Αποθήκευση: γεφύρωμα του window.storage σε localStorage του κινητού -->
+    <script>
+      window.storage = {
+        get: async (key, shared) => {
+          const v = localStorage.getItem((shared ? "shared:" : "priv:") + key);
+          if (v === null) throw new Error("not found");
+          return { key, value: v, shared: !!shared };
+        },
+        set: async (key, value, shared) => {
+          localStorage.setItem((shared ? "shared:" : "priv:") + key, value);
+          return { key, value, shared: !!shared };
+        },
+        delete: async (key, shared) => {
+          localStorage.removeItem((shared ? "shared:" : "priv:") + key);
+          return { key, deleted: true, shared: !!shared };
+        },
+        list: async (prefix, shared) => {
+          const p = (shared ? "shared:" : "priv:") + (prefix || "");
+          const keys = Object.keys(localStorage).filter((k) => k.startsWith(p)).map((k) => k.slice((shared ? "shared:" : "priv:").length));
+          return { keys, prefix, shared: !!shared };
+        },
+      };
+    </script>
+
+    <script type="text/babel" data-presets="react" src="app.js"></script>
+
+    <!-- Εγγραφή service worker για λειτουργία χωρίς σύνδεση -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("sw.js").catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>
