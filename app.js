@@ -85,15 +85,26 @@ const CATEGORIES = [
     dark: "#6F3FB0",
     soft: "#F4EBFF",
     items: [
-      { id: "kokkino", emoji: "🔴", label: "Κόκκινο" },
-      { id: "ble", emoji: "🔵", label: "Μπλε" },
-      { id: "prasino", emoji: "🟢", label: "Πράσινο" },
-      { id: "kitrino", emoji: "🟡", label: "Κίτρινο" },
-      { id: "portokali_x", emoji: "🟠", label: "Πορτοκαλί" },
-      { id: "mov", emoji: "🟣", label: "Μωβ" },
-      { id: "kafe", emoji: "🟤", label: "Καφέ" },
-      { id: "mavro", emoji: "⚫", label: "Μαύρο" },
-      { id: "aspro", emoji: "⚪", label: "Άσπρο" },
+      { id: "kokkino", hex: "#E53935", emoji: "🔴", label: "Κόκκινο" },
+      { id: "ble", hex: "#1E88E5", emoji: "🔵", label: "Μπλε" },
+      { id: "prasino", hex: "#43A047", emoji: "🟢", label: "Πράσινο" },
+      { id: "kitrino", hex: "#FDD835", emoji: "🟡", label: "Κίτρινο" },
+      { id: "portokali_x", hex: "#FB8C00", emoji: "🟠", label: "Πορτοκαλί" },
+      { id: "mov", hex: "#8E24AA", emoji: "🟣", label: "Μωβ" },
+      { id: "roz", hex: "#EC407A", emoji: "💗", label: "Ροζ" },
+      { id: "kafe", hex: "#6D4C41", emoji: "🟤", label: "Καφέ" },
+      { id: "mavro", hex: "#212121", emoji: "⚫", label: "Μαύρο" },
+      { id: "aspro", hex: "#FFFFFF", emoji: "⚪", label: "Άσπρο" },
+      { id: "gkri", hex: "#9E9E9E", emoji: "⚪", label: "Γκρι" },
+      { id: "mpez", hex: "#D9BB94", emoji: "🟤", label: "Μπεζ" },
+      { id: "xryso", hex: "#D4AF37", emoji: "🟡", label: "Χρυσό" },
+      { id: "asimi", hex: "#BFC1C2", emoji: "⚪", label: "Ασημί" },
+      { id: "tourkouaz", hex: "#26C6DA", emoji: "🔵", label: "Τιρκουάζ" },
+      { id: "ladi", hex: "#808000", emoji: "🟢", label: "Λαδί" },
+      { id: "vyssini", hex: "#7B1F2B", emoji: "🔴", label: "Βυσσινί" },
+      { id: "galazio", hex: "#64B5F6", emoji: "🔵", label: "Γαλάζιο" },
+      { id: "levanta", hex: "#B497BD", emoji: "🟣", label: "Λεβάντα" },
+      { id: "xaki", hex: "#BDB76B", emoji: "🟢", label: "Χακί" },
     ],
   },
   {
@@ -410,6 +421,23 @@ const EMOJI_LIBRARY = [
   { e: "🚢", k: ["πλοίο"] },
 ];
 
+// Χρωματιστός κύκλος (για τα χρώματα, πιο ακριβές από emoji)
+function ColorSwatch({ hex, size }) {
+  const isWhite = hex.toLowerCase() === "#ffffff";
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        borderRadius: "50%",
+        background: hex,
+        border: isWhite ? "2px solid #ddd" : "2px solid rgba(0,0,0,0.08)",
+        boxShadow: "inset 0 -3px 6px rgba(0,0,0,0.12)",
+      }}
+    />
+  );
+}
+
 function normalizeGreek(str) {
   return (str || "")
     .toLowerCase()
@@ -513,6 +541,8 @@ function MathainoLexeis() {
   const [itemEmojiDraft, setItemEmojiDraft] = useState("");
   const [itemLabelDraft, setItemLabelDraft] = useState("");
   const [speakingId, setSpeakingId] = useState(null);
+  const [colorQuery, setColorQuery] = useState("");
+  const [lastSpokenColorId, setLastSpokenColorId] = useState(null);
   const [saveState, setSaveState] = useState("idle");
   const [holdProgress, setHoldProgress] = useState(0);
   const voicesRef = useRef([]);
@@ -720,6 +750,23 @@ function MathainoLexeis() {
     persistItems(next);
   }
 
+  const xromataCategory = CATEGORIES.find((c) => c.id === "xromata");
+  const normalizedColorQuery = normalizeGreek(colorQuery.trim());
+  const colorMatch = normalizedColorQuery
+    ? xromataCategory.items.find((c) => normalizeGreek(c.label) === normalizedColorQuery)
+    : null;
+  const colorSuggestions = normalizedColorQuery
+    ? xromataCategory.items.filter((c) => normalizeGreek(c.label).startsWith(normalizedColorQuery) && c !== colorMatch).slice(0, 5)
+    : [];
+
+  useEffect(() => {
+    if (colorMatch && colorMatch.id !== lastSpokenColorId) {
+      speak(colorMatch.label, `colorgame-${colorMatch.id}`);
+      setLastSpokenColorId(colorMatch.id);
+    }
+    if (!colorMatch) setLastSpokenColorId(null);
+  }, [colorMatch, lastSpokenColorId, speak]);
+
   const allCategories = [...CATEGORIES, ...customCategories];
   const activeCategory = allCategories.find((c) => c.id === screen.categoryId);
   const activeItems = activeCategory
@@ -777,9 +824,13 @@ function MathainoLexeis() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 40 }}>
-          {screen.view === "items" && (
+          {screen.view !== "home" && (
             <button
-              onClick={() => setScreen({ view: "home", categoryId: null })}
+              onClick={() =>
+                setScreen(
+                  screen.view === "colorgame" ? { view: "items", categoryId: "xromata" } : { view: "home", categoryId: null }
+                )
+              }
               style={{
                 border: "none",
                 background: "#ffffffcc",
@@ -809,7 +860,7 @@ function MathainoLexeis() {
             letterSpacing: 0.2,
           }}
         >
-          {screen.view === "home" ? "Μαθαίνω Λέξεις" : activeCategory?.name}
+          {screen.view === "home" ? "Μαθαίνω Λέξεις" : screen.view === "colorgame" ? "Γράψε ένα χρώμα" : activeCategory?.name}
         </h1>
 
         {/* Αόρατη ζώνη γονικού ελέγχου: κράτα πατημένο ~1.5" για είσοδο/έξοδο από επεξεργασία. */}
@@ -955,9 +1006,31 @@ function MathainoLexeis() {
 
         {screen.view === "items" && activeCategory && (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+            {activeCategory.id === "xromata" && !editMode && (
+              <button
+                onClick={() => setScreen({ view: "colorgame", categoryId: "xromata" })}
+                style={{
+                  gridColumn: "1 / -1",
+                  border: `2.5px dashed ${activeCategory.color}`,
+                  cursor: "pointer",
+                  background: "#fff",
+                  borderRadius: 18,
+                  padding: "14px 10px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 10,
+                }}
+              >
+                <span style={{ fontSize: 26 }}>✍️</span>
+                <span style={{ fontSize: 14.5, fontWeight: 800, color: activeCategory.dark }}>Γράψε ένα χρώμα</span>
+              </button>
+            )}
             {activeItems.map((item) => {
               const label = getLabel(activeCategory.id, item);
-              const emoji = getEmoji(activeCategory.id, item);
+              const overrideEmoji = customEmojis[`${activeCategory.id}:${item.id}`];
+              const emoji = overrideEmoji ?? item.emoji;
+              const showSwatch = !overrideEmoji && item.hex;
               const isSpeaking = speakingId === item.id;
               return (
                 <div key={item.id} style={{ position: "relative" }}>
@@ -979,7 +1052,7 @@ function MathainoLexeis() {
                       transition: "all 0.15s ease",
                     }}
                   >
-                    <span style={{ fontSize: 42 }}>{emoji}</span>
+                    {showSwatch ? <ColorSwatch hex={item.hex} size={42} /> : <span style={{ fontSize: 42 }}>{emoji}</span>}
                     <span
                       style={{
                         fontSize: 12.5,
@@ -1059,6 +1132,90 @@ function MathainoLexeis() {
               >
                 <Plus size={22} color="#888" />
                 <span style={{ fontSize: 11, fontWeight: 800, color: "#888" }}>Νέα εικόνα</span>
+              </button>
+            )}
+          </div>
+        )}
+
+        {screen.view === "colorgame" && (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, paddingTop: 6 }}>
+            <input
+              autoFocus
+              value={colorQuery}
+              onChange={(e) => setColorQuery(e.target.value)}
+              placeholder="Γράψε ένα χρώμα… π.χ. κόκκινο"
+              style={{
+                width: "100%",
+                boxSizing: "border-box",
+                fontSize: 18,
+                textAlign: "center",
+                padding: "14px 16px",
+                borderRadius: 16,
+                border: `2.5px solid ${colorMatch ? colorMatch.hex : "#ddd"}`,
+                fontFamily: "inherit",
+                fontWeight: 700,
+                color: "#444",
+              }}
+            />
+
+            {colorSuggestions.length > 0 && (
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
+                {colorSuggestions.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => setColorQuery(c.label)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      border: "2px solid #eee",
+                      background: "#fff",
+                      borderRadius: 999,
+                      padding: "5px 10px 5px 6px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <ColorSwatch hex={c.hex} size={16} />
+                    <span style={{ fontSize: 12.5, fontWeight: 700, color: "#555" }}>{c.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <button
+              onClick={() => colorMatch && speak(colorMatch.label, `colorgame-${colorMatch.id}`)}
+              disabled={!colorMatch}
+              style={{
+                width: "72%",
+                aspectRatio: "1 / 1",
+                maxWidth: 260,
+                borderRadius: 32,
+                background: colorMatch ? colorMatch.hex : "#f0f0f0",
+                border: colorMatch ? (colorMatch.hex.toLowerCase() === "#ffffff" ? "4px solid #ddd" : "4px solid rgba(0,0,0,0.08)") : "4px dashed #ddd",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: colorMatch ? "pointer" : "default",
+                boxShadow: colorMatch ? "0 10px 24px rgba(0,0,0,0.12)" : "none",
+                transition: "all 0.2s ease",
+              }}
+            >
+              {!colorMatch && <span style={{ fontSize: 44, opacity: 0.4 }}>🎨</span>}
+              {colorMatch && <Volume2 size={30} color={colorMatch.hex.toLowerCase() === "#ffffff" || colorMatch.hex.toLowerCase() === "#fdd835" ? "#00000055" : "#ffffffaa"} />}
+            </button>
+
+            <div style={{ minHeight: 34, display: "flex", alignItems: "center" }}>
+              {colorMatch && (
+                <span style={{ fontSize: 22, fontWeight: 800, color: activeCategory?.dark || "#333" }}>{colorMatch.label}</span>
+              )}
+            </div>
+
+            {colorQuery && (
+              <button
+                onClick={() => setColorQuery("")}
+                style={{ border: "none", background: "transparent", color: "#999", fontSize: 13, fontWeight: 700, cursor: "pointer", textDecoration: "underline" }}
+              >
+                Καθαρισμός
               </button>
             )}
           </div>
