@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Ημερολόγιο Ψαρέματος</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0B3B4C">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -187,8 +192,6 @@
       <label>Ώρα αποχώρησης</label>
       <input type="time" id="f-timeout">
 
-      <div class="moon-preview" id="moon-preview">🌑 <span id="moon-text">Επίλεξε ημερομηνία</span></div>
-
       <label>Τοποθεσία (όνομα)</label>
       <input type="text" id="f-locname" placeholder="Συμπληρώνεται αυτόματα από τις συντεταγμένες">
 
@@ -201,6 +204,8 @@
           <div>Άνεμος (μποφόρ)<span>—</span></div>
           <div>Κατεύθυνση ανέμου<span>—</span></div>
           <div>Κύμα<span>—</span></div>
+          <div>Σελήνη<span>—</span></div>
+          <div>Παλίρροια (εκτίμηση)<span>—</span></div>
         </div>
         <div class="weather-status" id="f-weather-status">Συμπλήρωσε ημερομηνία και συντεταγμένες, μετά πάτα λήψη.</div>
       </div>
@@ -295,8 +300,6 @@
     <label>Ώρα αποχώρησης</label>
     <input type="time" id="e-timeout">
 
-    <div class="moon-preview" id="e-moon-preview">🌑 <span id="e-moon-text"></span></div>
-
     <label>Τοποθεσία (όνομα)</label>
     <input type="text" id="e-locname">
 
@@ -309,6 +312,8 @@
         <div>Άνεμος (μποφόρ)<span>—</span></div>
         <div>Κατεύθυνση ανέμου<span>—</span></div>
         <div>Κύμα<span>—</span></div>
+        <div>Σελήνη<span>—</span></div>
+        <div>Παλίρροια (εκτίμηση)<span>—</span></div>
       </div>
       <div class="weather-status" id="e-weather-status"></div>
     </div>
@@ -685,18 +690,44 @@ function moonLabel(phase){
   if(phase < 0.78) return ['🌗','Τελευταίο Τέταρτο'];
   return ['🌘','Φθίνουσα Μηνίσκος'];
 }
-function updateMoonPreview(dateId, previewId, textId){
-  const val = document.getElementById(dateId).value;
-  const preview = document.getElementById(previewId);
-  const ph = moonPhase(val);
-  if(ph === null){ preview.innerHTML = `🌑 <span id="${textId}">Επίλεξε ημερομηνία</span>`; return; }
-  const [emoji, label] = moonLabel(ph);
-  preview.innerHTML = `<span class="moon-emoji">${emoji}</span> <span id="${textId}">${label}</span>`;
+function hoursToHHMM(h){
+  h = ((h % 24) + 24) % 24;
+  let hh = Math.floor(h);
+  let mm = Math.round((h - hh) * 60);
+  if(mm === 60){ mm = 0; hh = (hh + 1) % 24; }
+  return String(hh).padStart(2,'0') + ':' + String(mm).padStart(2,'0');
 }
-document.getElementById('f-date').addEventListener('change', ()=>updateMoonPreview('f-date','moon-preview','moon-text'));
-document.getElementById('e-date').addEventListener('change', ()=>updateMoonPreview('e-date','e-moon-preview','e-moon-text'));
+function computeMoonInfo(dateStr){
+  const ph = moonPhase(dateStr);
+  if(ph === null) return null;
+  const [emoji, label] = moonLabel(ph);
+  const ageDays = ph * 29.53058867;
+  const lunarDay = Math.max(1, Math.min(30, Math.round(ageDays) || 1));
+  const upperTransit = (12 + ageDays * 0.828) % 24;
+  const lowerTransit = (upperTransit + 12.42) % 24;
+  const low1 = (upperTransit + 6.21) % 24;
+  const low2 = (lowerTransit + 6.21) % 24;
+  const highs = [upperTransit, lowerTransit].sort((a,b)=>a-b);
+  const lows = [low1, low2].sort((a,b)=>a-b);
+  return { emoji, label, lunarDay, highs, lows };
+}
+function paintMoonCells(gridId, dateStr){
+  const grid = document.getElementById(gridId);
+  const cells = grid.children;
+  const moonCell = cells[5], tideCell = cells[6];
+  const info = computeMoonInfo(dateStr);
+  if(!info){
+    moonCell.querySelector('span').textContent = '—';
+    tideCell.querySelector('span').textContent = '—';
+    return;
+  }
+  moonCell.querySelector('span').textContent = `${info.emoji} ${info.label} (${info.lunarDay}η μέρα)`;
+  tideCell.querySelector('span').textContent = `Πλημ. ${hoursToHHMM(info.highs[0])} & ${hoursToHHMM(info.highs[1])} · Άμπ. ${hoursToHHMM(info.lows[0])} & ${hoursToHHMM(info.lows[1])}`;
+}
+document.getElementById('f-date').addEventListener('change', ()=>paintMoonCells('f-weather-grid', document.getElementById('f-date').value));
+document.getElementById('e-date').addEventListener('change', ()=>paintMoonCells('e-weather-grid', document.getElementById('e-date').value));
 document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
-updateMoonPreview('f-date','moon-preview','moon-text');
+paintMoonCells('f-weather-grid', document.getElementById('f-date').value);
 
 /* ---------- automatic weather / pressure / wind / wave fetch ---------- */
 const WEATHER_CODES = {
@@ -869,7 +900,7 @@ function resetForm(){
   refreshPickers(); renderFishQty();
   photoState['f-photo-grid'] = [];
   renderPhotoGrid('f-photo-grid');
-  updateMoonPreview('f-date','moon-preview','moon-text');
+  paintMoonCells('f-weather-grid', document.getElementById('f-date').value);
 }
 
 /* ---------- entries list, grouped by month ---------- */
@@ -950,7 +981,7 @@ async function openDetail(id){
   bindDeletable('e-equip-chip-list', equips, eSelEquip, 'e-equip-count-sum', null, 'psarema_equip');
   renderEditFishQty(e.fish);
 
-  updateMoonPreview('e-date','e-moon-preview','e-moon-text');
+  paintMoonCells('e-weather-grid', e.date);
   const parsed = parseCoords(e.coords);
   document.getElementById('e-coord-preview').innerHTML = parsed ? `<a href="https://www.google.com/maps?q=${parsed.lat},${parsed.lng}" target="_blank">📍 Άνοιγμα στο Google Maps (${parsed.lat}, ${parsed.lng})</a>` : '';
 
