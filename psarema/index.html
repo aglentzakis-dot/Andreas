@@ -158,7 +158,6 @@
         <div><label>Ημερομηνία</label><input type="date" id="f-date"></div>
         <div><label>Συντεταγμένες</label><input type="text" id="f-coords" placeholder="π.χ. 37,6623056, 24,0367908"></div>
       </div>
-      <div class="geo-row"><button type="button" id="btn-geo">📍 Τρέχουσα τοποθεσία</button></div>
       <div class="coord-preview" id="coord-preview"></div>
 
       <div class="row2">
@@ -259,7 +258,6 @@
       <div><label>Ημερομηνία</label><input type="date" id="e-date"></div>
       <div><label>Συντεταγμένες</label><input type="text" id="e-coords" placeholder="π.χ. 37,6623056, 24,0367908"></div>
     </div>
-    <div class="geo-row"><button type="button" id="e-btn-geo">📍 Τρέχουσα τοποθεσία</button></div>
     <div class="coord-preview" id="e-coord-preview"></div>
 
     <div class="row2">
@@ -582,18 +580,6 @@ document.getElementById('f-date').addEventListener('change', ()=>scheduleAutoWea
 document.getElementById('f-timein').addEventListener('change', ()=>scheduleAutoWeather('f'));
 document.getElementById('e-date').addEventListener('change', ()=>scheduleAutoWeather('e'));
 document.getElementById('e-timein').addEventListener('change', ()=>scheduleAutoWeather('e'));
-document.getElementById('btn-geo').addEventListener('click', ()=>useCurrentLocation('f-coords'));
-document.getElementById('e-btn-geo').addEventListener('click', ()=>useCurrentLocation('e-coords'));
-function useCurrentLocation(inputId){
-  if(!navigator.geolocation){ toast('Η συσκευή δεν υποστηρίζει τοποθεσία'); return; }
-  toast('Λήψη τοποθεσίας...');
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const input = document.getElementById(inputId);
-    input.value = pos.coords.latitude.toFixed(7) + ', ' + pos.coords.longitude.toFixed(7);
-    input.dispatchEvent(new Event('input'));
-    toast('Η τοποθεσία καταγράφηκε');
-  }, ()=>{ toast('Δεν ήταν δυνατή η λήψη τοποθεσίας'); }, {enableHighAccuracy:true, timeout:8000});
-}
 
 /* ---------- moon phase ---------- */
 function moonPhase(dateStr){
@@ -942,9 +928,10 @@ function renderStats(){
   const wrap = document.getElementById('stats-content');
   if(entries.length === 0){ wrap.innerHTML = '<div class="empty">Χρειάζονται καταχωρήσεις για στατιστικά</div>'; return; }
 
-  let totalFish = 0, pressureSum = 0, pressureCount = 0;
+  let totalFish = 0;
   const bySpecies = {}, byLocation = {}, byWeather = {}, byWindDir = {};
   const byMonth = new Array(12).fill(0);
+  const entryTotals = [];
 
   entries.forEach(e=>{
     const loc = e.locName || 'Άγνωστη τοποθεσία';
@@ -955,6 +942,7 @@ function renderStats(){
     Object.entries(e.fish||{}).forEach(([n,q])=>{ bySpecies[n] = (bySpecies[n]||0) + q; entryFish += q; });
     totalFish += entryFish;
     byLocation[loc].fish += entryFish;
+    entryTotals.push({ date: e.date, loc, fish: entryFish });
 
     if(e.timeIn && e.timeOut){
       const [h1,m1] = e.timeIn.split(':').map(Number);
@@ -969,17 +957,22 @@ function renderStats(){
     if(e.weather){
       byWeather[e.weather.weatherText] = (byWeather[e.weather.weatherText]||0) + 1;
       byWindDir[e.weather.windDirText] = (byWindDir[e.weather.windDirText]||0) + 1;
-      if(e.weather.pressure != null){ pressureSum += e.weather.pressure; pressureCount++; }
     }
   });
 
-  const avgPressure = pressureCount ? Math.round(pressureSum/pressureCount) : null;
   const kpi = `<div class="kpi-grid">
     <div class="kpi"><div class="num">${entries.length}</div><div class="lbl">Έξοδοι</div></div>
     <div class="kpi"><div class="num">${totalFish}</div><div class="lbl">Ψάρια συνολικά</div></div>
-    <div class="kpi"><div class="num">${avgPressure ? avgPressure+' hPa' : '—'}</div><div class="lbl">Μ.Ο. πίεση</div></div>
     <div class="kpi"><div class="num">${entries.length ? (totalFish/entries.length).toFixed(1) : 0}</div><div class="lbl">Μ.Ο. ψάρια/έξοδο</div></div>
   </div>`;
+
+  const topCatches = entryTotals.filter(x=>x.fish>0).sort((a,b)=>b.fish-a.fish).slice(0,3);
+  const topCatchesHtml = topCatches.length ? topCatches.map((t,i)=>`
+    <div class="bar-row" style="align-items:flex-start;">
+      <div class="bar-label" style="width:24px; font-weight:800; color:var(--coral);">#${i+1}</div>
+      <div class="bar-label" style="width:auto; flex:1;">${formatDate(t.date)}<br><span style="font-weight:400; color:#7c8f95; font-size:0.75rem;">${t.loc}</span></div>
+      <div class="bar-val" style="width:auto;">${t.fish} ψάρια</div>
+    </div>`).join('') : '<div class="hint">Δεν υπάρχουν ακόμα καταγεγραμμένα ψάρια</div>';
 
   function barBlock(title, obj, maxOverride){
     const max = maxOverride || Math.max(...Object.values(obj), 1);
@@ -1001,6 +994,7 @@ function renderStats(){
   }).join('');
 
   wrap.innerHTML = kpi +
+    `<div class="stat-block"><h3>Καλύτερες ψαριές</h3>${topCatchesHtml}</div>` +
     barBlock('Ψάρια ανά είδος', bySpecies) +
     `<div class="stat-block"><h3>Εποχικότητα (ψάρια ανά μήνα)</h3>${monthBars}</div>` +
     barBlock('Καιρικές συνθήκες κατά την ψαριά', byWeather) +
