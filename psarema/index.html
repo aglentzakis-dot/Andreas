@@ -23,6 +23,13 @@
   header h1{ font-size: 1.5rem; letter-spacing: 0.3px; }
   header h1 a.brand-link{ color: inherit; text-decoration: none; display:inline-flex; align-items:center; }
   header h1 a.brand-link:active{ opacity: 0.75; }
+  .equip-link{
+    position:absolute; top:18px; right:16px; z-index:2;
+    background: rgba(255,255,255,0.14); color:#fff; text-decoration:none;
+    font-size:0.75rem; font-weight:700; padding:7px 12px; border-radius:20px;
+    border:1px solid rgba(255,255,255,0.3); letter-spacing:0.2px;
+  }
+  .equip-link:active{ background: rgba(255,255,255,0.24); }
   header .sub{ font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
   nav.tabs{ display:flex; gap: 6px; padding: 10px 12px 0; background: var(--deep); overflow-x:auto; }
   nav.tabs button{
@@ -48,6 +55,10 @@
   details.picker summary::-webkit-details-marker{ display:none; }
   details.picker summary::after{ content: "▾"; color: var(--teal); }
   details.picker[open] summary::after{ content:"▴"; }
+  details.picker.angler-picker summary{ background: var(--foam); border-bottom: 1px solid var(--line); font-size:0.88rem; color:#4d6169; }
+  details.picker.angler-picker{ border-color: var(--line); background: var(--foam); }
+  details.picker.angler-picker .chip{ font-size:0.8rem; padding:5px 10px; }
+  details.picker.angler-picker .chip.sel{ background: #8a97a0; border-color: #8a97a0; color:#fff; }
   .picker-list{ padding: 6px 10px 10px; display:flex; flex-wrap:wrap; gap: 6px; border-top: 1px solid var(--line); }
   .chip{ padding: 7px 12px; border-radius: 20px; background: var(--white); border: 1.5px solid var(--line); font-size: 0.85rem; cursor:pointer; user-select:none; }
   .chip.sel{ background: var(--teal); border-color: var(--teal); color: var(--white); }
@@ -139,15 +150,8 @@
 <body>
 
 <header>
-  <h1><a href="https://miserlis-fishing.gr/" target="_blank" rel="noopener" class="brand-link" aria-label="Miserlis Fishing Store">
-    <svg viewBox="0 0 64 28" width="30" height="14" style="vertical-align:-3px; margin-right:6px;">
-      <g fill="#2E86D6">
-        <path d="M2 14 L20 14" stroke="#2E86D6" stroke-width="2.4" stroke-linecap="round"/>
-        <path d="M18 14 C24 6, 40 4, 50 6 C42 8, 34 11, 30 14 C34 17, 42 20, 50 22 C40 24, 24 22, 18 14 Z"/>
-        <path d="M6 14 L14 9 L14 19 Z"/>
-        <circle cx="24" cy="12" r="1.1" fill="var(--foam)"/>
-      </g>
-    </svg>Ημερολόγιο Ψαρέματος</a></h1>
+  <a href="https://miserlis-fishing.gr/" target="_blank" rel="noopener" class="equip-link" id="equip-link">Εξοπλισμός</a>
+  <h1>Ημερολόγιο Ψαρέματος</h1>
   <div class="sub">Προσωπική καταγραφή — αποθηκεύεται στη συσκευή σου</div>
 </header>
 
@@ -165,16 +169,25 @@
     <div class="card">
       <h2>Στοιχεία εξόδου</h2>
 
-      <div class="row2">
-        <div><label>Ημερομηνία</label><input type="date" id="f-date"></div>
-        <div><label>Συντεταγμένες</label><textarea id="f-coords" rows="2" placeholder="π.χ. 37,6623056, 24,0367908 ή link/κείμενο από Apple Maps"></textarea></div>
-      </div>
+      <label>Ψαράς</label>
+      <details class="picker angler-picker" id="angler-picker">
+        <summary>Επίλεξε ψαρά(-άδες) <span id="angler-count-sum"></span></summary>
+        <div class="picker-list" id="angler-chip-list"></div>
+        <div class="addrow"><input type="text" id="angler-new" placeholder="Προσθήκη ονόματος"><button type="button" id="angler-add">+</button></div>
+      </details>
+
+      <label>Συντεταγμένες</label>
+      <textarea id="f-coords" rows="2" placeholder="π.χ. 37,6623056, 24,0367908 ή link/κείμενο από Apple Maps"></textarea>
       <div class="geo-row"><button type="button" id="btn-geo">📍 Τρέχουσα τοποθεσία</button></div>
       <div class="coord-preview" id="coord-preview"></div>
 
       <div class="row2">
+        <div><label>Ημερομηνία</label><input type="date" id="f-date"></div>
         <div><label>Ώρα άφιξης</label><input type="time" id="f-timein"></div>
+      </div>
+      <div class="row2">
         <div><label>Ώρα αποχώρησης</label><input type="time" id="f-timeout"></div>
+        <div></div>
       </div>
 
       <div class="moon-preview" id="moon-preview">🌑 <span id="moon-text">Επίλεξε ημερομηνία</span></div>
@@ -243,9 +256,9 @@
   <div class="view" id="view-settings">
     <div class="card">
       <h2>Δεδομένα</h2>
-      <p class="hint">Τα δεδομένα σου αποθηκεύονται μόνο σε αυτή τη συσκευή/browser. Κάνε τακτικά εξαγωγή για αντίγραφο ασφαλείας — ιδανικά μετά από κάθε νέα ψαριά.</p>
-      <p class="hint">Μια αναβάθμιση της εφαρμογής (νέα έκδοση στο GitHub) <strong>δεν διαγράφει</strong> τις αποθηκευμένες καταχωρήσεις σου — παραμένουν στη συσκευή σου όπως ήταν. Παρ' όλα αυτά, κράτα τακτικό αντίγραφο ασφαλείας για κάθε ενδεχόμενο.</p>
-      <p class="hint" style="margin-top:2px;">Σημείωση: όταν ανεβαίνει νέα έκδοση της εφαρμογής, οι καταχωρήσεις σου <b>δεν</b> επηρεάζονται — μένουν ασφαλείς στη συσκευή σου.</p>
+      <p class="hint" style="background:#fdf1ec; border:1px solid #f0c8b4; border-radius:8px; padding:8px 10px;"><strong>Δοκιμαστική έκδοση (beta)</strong> — η εφαρμογή βρίσκεται σε δοκιμαστικό στάδιο και μπορεί να αλλάξει.</p>
+      <p class="hint">Τα αρχεία (χωρίς τις φωτογραφίες) φυλάσσονται για 3 μήνες μετά το backup, από τον προγραμματιστή της εφαρμογής.</p>
+      <p class="hint" style="margin-top:8px;">Η εφαρμογή παρέχεται όπως είναι (χωρίς εγγύηση), χωρίς καμία ευθύνη για τυχόν απώλεια δεδομένων, από οποιαδήποτε αιτία (διαγραφή browser, βλάβη συσκευής, τεχνικό πρόβλημα κ.ά.). Συνιστάται τακτική εξαγωγή/αποθήκευση από τον ίδιο τον χρήστη.</p>
       <div class="footer-tools">
         <button type="button" id="btn-export">⬇ Εξαγωγή JSON</button>
         <button type="button" id="btn-import">⬆ Εισαγωγή JSON</button>
@@ -267,6 +280,12 @@
       <h2>Λεπτομέρειες καταχώρησης</h2>
       <button type="button" class="modal-close" id="modal-close">✕</button>
     </div>
+
+    <label>Ψαράς</label>
+    <details class="picker angler-picker" id="e-angler-picker">
+      <summary>Επίλεξε ψαρά(-άδες) <span id="e-angler-count-sum"></span></summary>
+      <div class="picker-list" id="e-angler-chip-list"></div>
+    </details>
 
     <div class="row2">
       <div><label>Ημερομηνία</label><input type="date" id="e-date"></div>
@@ -347,6 +366,9 @@ let species = LS.get('psarema_species', DEFAULTS.species.slice());
 let baits = LS.get('psarema_bait', DEFAULTS.bait.slice());
 let equips = LS.get('psarema_equip', DEFAULTS.equip.slice());
 let entries = LS.get('psarema_entries', []);
+let anglers = LS.get('psarema_anglers', []);
+let selAngler = new Set();
+let eSelAngler = new Set();
 
 let selFish = new Set(), selBait = new Set(), selEquip = new Set();
 let eSelFish = new Set(), eSelBait = new Set(), eSelEquip = new Set();
@@ -553,6 +575,13 @@ function setupAdd(inputId, btnId, arr, storeKey, rerender){
 setupAdd('fish-new','fish-add', species, 'psarema_species', refreshPickers);
 setupAdd('bait-new','bait-add', baits, 'psarema_bait', refreshPickers);
 setupAdd('equip-new','equip-add', equips, 'psarema_equip', refreshPickers);
+
+/* ---------- angler (multi-select, same pattern as bait/equipment) ---------- */
+function refreshAnglerPicker(){
+  renderChipList('angler-chip-list', anglers, selAngler, 'angler-count-sum', null, {arr:anglers, storeKey:'psarema_anglers', rerender:refreshAnglerPicker});
+}
+setupAdd('angler-new','angler-add', anglers, 'psarema_anglers', refreshAnglerPicker);
+refreshAnglerPicker();
 
 /* ---------- coordinate parsing ---------- */
 function parseCoords(raw){
@@ -807,6 +836,7 @@ document.getElementById('btn-save').addEventListener('click', async ()=>{
   const entry = {
     id: entryId,
     date,
+    angler: [...selAngler],
     timeIn: document.getElementById('f-timein').value,
     timeOut: document.getElementById('f-timeout').value,
     locName: document.getElementById('f-locname').value.trim(),
@@ -824,6 +854,10 @@ document.getElementById('btn-save').addEventListener('click', async ()=>{
   resetForm();
 });
 function resetForm(){
+  ['angler-picker','fish-picker','bait-picker','equip-picker'].forEach(id=>{
+    const det = document.getElementById(id);
+    if(det) det.open = false;
+  });
   document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
   document.getElementById('f-timein').value = '';
   document.getElementById('f-timeout').value = '';
@@ -873,9 +907,11 @@ function entryCardHtml(e){
     wxTag = `<span class="tag wx">${w.weatherText} · ${Math.round(w.pressure)}hPa · ${w.beaufort}bf ${w.windDirText}</span>`;
   }
   const photoTag = (e.photos && e.photos.length) ? `<span class="tag">📷 ${e.photos.length}</span>` : '';
+  const anglerArr = Array.isArray(e.angler) ? e.angler : (e.angler ? [e.angler] : []);
+  const anglerLine = anglerArr.length ? `<div class="entry-loc">🎣 ${anglerArr.join(', ')}</div>` : '';
   return `<div class="entry" onclick="openDetail(${e.id})">
     <div class="entry-top">
-      <div><div class="entry-date">${formatDate(e.date)}</div><div class="entry-loc">${e.locName || '—'}</div></div>
+      <div><div class="entry-date">${formatDate(e.date)}</div><div class="entry-loc">${e.locName || '—'}</div>${anglerLine}</div>
     </div>
     <div class="entry-tags">${wxTag}${fishTags}${photoTag}${otherTags}</div>
   </div>`;
@@ -891,6 +927,8 @@ async function openDetail(id){
   document.getElementById('e-timein').value = e.timeIn || '';
   document.getElementById('e-timeout').value = e.timeOut || '';
   document.getElementById('e-coords').value = e.coords || '';
+  eSelAngler = new Set(Array.isArray(e.angler) ? e.angler : (e.angler ? [e.angler] : []));
+  bindDeletable('e-angler-chip-list', anglers, eSelAngler, 'e-angler-count-sum', null, 'psarema_anglers');
   document.getElementById('e-locname').value = e.locName || '';
   document.getElementById('e-notes').value = e.notes || '';
 
@@ -957,6 +995,7 @@ document.getElementById('e-btn-save').addEventListener('click', async ()=>{
   entries[idx] = {
     ...entries[idx],
     date: document.getElementById('e-date').value,
+    angler: [...eSelAngler],
     timeIn: document.getElementById('e-timein').value,
     timeOut: document.getElementById('e-timeout').value,
     coords: document.getElementById('e-coords').value.trim(),
