@@ -256,10 +256,10 @@
   const VOICE_KEY = "tts-voice-names";
   const LANG_KEY = "app-language";
   const LANG_META = {
-    el: { name: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC", ttsLang: "el-GR", prefix: "el", sample: "\u0393\u03B5\u03B9\u03B1 \u03C3\u03BF\u03C5, \u03B1\u03C5\u03C4\u03AE \u03B5\u03AF\u03BD\u03B1\u03B9 \u03B7 \u03C6\u03C9\u03BD\u03AE \u03BC\u03BF\u03C5." },
-    en: { name: "English", ttsLang: "en-US", prefix: "en", sample: "Hello, this is my voice." },
-    it: { name: "Italiano", ttsLang: "it-IT", prefix: "it", sample: "Ciao, questa \xE8 la mia voce." },
-    es: { name: "Espa\xF1ol", ttsLang: "es-ES", prefix: "es", sample: "Hola, esta es mi voz." }
+    el: { name: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC", ttsLang: "el-GR", prefix: "el", sample: "\u0393\u03B5\u03B9\u03B1 \u03C3\u03BF\u03C5, \u03B1\u03C5\u03C4\u03AE \u03B5\u03AF\u03BD\u03B1\u03B9 \u03B7 \u03C6\u03C9\u03BD\u03AE \u03BC\u03BF\u03C5.", preferred: ["el-gr"] },
+    en: { name: "English", ttsLang: "en-US", prefix: "en", sample: "Hello, this is my voice.", preferred: ["en-us", "en-gb"] },
+    it: { name: "Italiano", ttsLang: "it-IT", prefix: "it", sample: "Ciao, questa \xE8 la mia voce.", preferred: ["it-it"] },
+    es: { name: "Espa\xF1ol", ttsLang: "es-ES", prefix: "es", sample: "Hola, esta es mi voz.", preferred: ["es-es", "es-us"] }
   };
   const HOLD_MS = 1600;
   const EMOJI_LIBRARY = [
@@ -549,6 +549,12 @@
         }
       }
     );
+  }
+  function guessVoiceGender(voice) {
+    const n = (voice.name || "").toLowerCase();
+    if (/female|woman|γυναικ/.test(n)) return "\u{1F469}";
+    if (/\bmale\b|\bman\b|άνδρα|ανδρικ/.test(n)) return "\u{1F468}";
+    return "\u{1F5E3}\uFE0F";
   }
   function normalizeGreek(str) {
     return (str || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -1522,53 +1528,75 @@
           LANG_META[lang].name
         ))), (() => {
           const meta = LANG_META[appLanguage];
-          const langVoices = voicesList.filter((v) => v.lang && v.lang.toLowerCase().startsWith(meta.prefix));
-          const others = voicesList.filter((v) => !(v.lang && v.lang.toLowerCase().startsWith(meta.prefix)));
-          const ordered = [...langVoices, ...others];
-          return /* @__PURE__ */ React.createElement(React.Fragment, null, voicesList.length === 0 && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 13, color: "#888", lineHeight: 1.5 } }, "\u0394\u03B5\u03BD \u03B2\u03C1\u03AD\u03B8\u03B7\u03BA\u03B1\u03BD \u03B4\u03B9\u03B1\u03B8\u03AD\u03C3\u03B9\u03BC\u03B5\u03C2 \u03C6\u03C9\u03BD\u03AD\u03C2 \u03C3\u03B5 \u03B1\u03C5\u03C4\u03AE \u03C4\u03B7 \u03C3\u03C5\u03C3\u03BA\u03B5\u03C5\u03AE."), langVoices.length === 0 && voicesList.length > 0 && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "#a05a00", background: "#FFF3E0", padding: "8px 10px", borderRadius: 10, lineHeight: 1.5, marginBottom: 8 } }, "\u0394\u03B5\u03BD \u03B2\u03C1\u03AD\u03B8\u03B7\u03BA\u03B5 \u03C6\u03C9\u03BD\u03AE \u03C3\u03C4\u03B1 ", meta.name, " \u03C3\u03B5 \u03B1\u03C5\u03C4\u03CC \u03C4\u03BF \u03BA\u03B9\u03BD\u03B7\u03C4\u03CC. \u0395\u03B3\u03BA\u03B1\u03C4\u03AD\u03C3\u03C4\u03B7\u03C3\u03B5 \u03C4\u03B7\u03BD \u03B1\u03C0\u03CC \u03A1\u03C5\u03B8\u03BC\u03AF\u03C3\u03B5\u03B9\u03C2 \u2192 \u0393\u03BB\u03CE\u03C3\u03C3\u03B1 \u2192 Text-to-speech, \u03AE \u03B4\u03BF\u03BA\u03AF\u03BC\u03B1\u03C3\u03B5 \u03C0\u03C1\u03BF\u03C3\u03C9\u03C1\u03B9\u03BD\u03AC \u03BC\u03B9\u03B1 \u03B1\u03C0\u03CC \u03C4\u03B9\u03C2 \u03C0\u03B1\u03C1\u03B1\u03BA\u03AC\u03C4\u03C9."), /* @__PURE__ */ React.createElement("div", { style: { overflowY: "auto", display: "flex", flexDirection: "column", gap: 6 } }, ordered.map((v) => /* @__PURE__ */ React.createElement(
-            "div",
-            {
-              key: v.name + v.lang,
-              onClick: () => chooseVoice(appLanguage, v.name),
-              style: {
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 8,
-                padding: "10px 12px",
-                borderRadius: 12,
-                border: v.name === selectedVoiceNames[appLanguage] ? "2px solid #4F9DDE" : "2px solid #eee",
-                background: v.name === selectedVoiceNames[appLanguage] ? "#E8F4FC" : "#fafafa",
-                cursor: "pointer"
-              }
-            },
-            /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 13, fontWeight: 700, color: "#333", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" } }, v.name), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 11, color: "#999" } }, v.lang)),
-            v.name === selectedVoiceNames[appLanguage] && /* @__PURE__ */ React.createElement(Check, { size: 16, color: "#4F9DDE" }),
-            /* @__PURE__ */ React.createElement(
-              "button",
+          const allForLang = voicesList.filter((v) => v.lang && v.lang.toLowerCase().startsWith(meta.prefix));
+          const preferred = allForLang.filter((v) => meta.preferred.includes((v.lang || "").toLowerCase()));
+          const mainList = preferred.length > 0 ? preferred : allForLang;
+          const extraList = allForLang.filter((v) => !mainList.includes(v));
+          function VoiceCard(v) {
+            const isSel = v.name === selectedVoiceNames[appLanguage];
+            return /* @__PURE__ */ React.createElement(
+              "div",
               {
-                onClick: (e) => {
-                  e.stopPropagation();
-                  testVoice(appLanguage, v);
-                },
+                key: v.name + v.lang,
+                onClick: () => chooseVoice(appLanguage, v.name),
                 style: {
-                  border: "none",
-                  background: "#fff",
-                  borderRadius: 999,
-                  width: 30,
-                  height: 30,
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.12)",
-                  cursor: "pointer",
-                  flexShrink: 0
-                },
-                "aria-label": "\u0394\u03BF\u03BA\u03B9\u03BC\u03AE \u03C6\u03C9\u03BD\u03AE\u03C2"
+                  gap: 10,
+                  padding: "10px 12px",
+                  borderRadius: 14,
+                  border: isSel ? "2px solid #4F9DDE" : "2px solid #eee",
+                  background: isSel ? "#E8F4FC" : "#fafafa",
+                  cursor: "pointer"
+                }
               },
-              /* @__PURE__ */ React.createElement(Volume2, { size: 15, color: "#555" })
-            )
-          ))));
+              /* @__PURE__ */ React.createElement(
+                "div",
+                {
+                  style: {
+                    width: 36,
+                    height: 36,
+                    borderRadius: 999,
+                    background: isSel ? "#4F9DDE" : "#fff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 18,
+                    flexShrink: 0,
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
+                  }
+                },
+                guessVoiceGender(v)
+              ),
+              /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 13, fontWeight: 700, color: "#333", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" } }, v.name), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 11, color: "#999" } }, v.lang)),
+              isSel && /* @__PURE__ */ React.createElement(Check, { size: 16, color: "#4F9DDE" }),
+              /* @__PURE__ */ React.createElement(
+                "button",
+                {
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    testVoice(appLanguage, v);
+                  },
+                  style: {
+                    border: "none",
+                    background: "#fff",
+                    borderRadius: 999,
+                    width: 32,
+                    height: 32,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.12)",
+                    cursor: "pointer",
+                    flexShrink: 0
+                  },
+                  "aria-label": "\u0394\u03BF\u03BA\u03B9\u03BC\u03AE \u03C6\u03C9\u03BD\u03AE\u03C2"
+                },
+                /* @__PURE__ */ React.createElement(Volume2, { size: 15, color: "#555" })
+              )
+            );
+          }
+          return /* @__PURE__ */ React.createElement(React.Fragment, null, voicesList.length === 0 && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 13, color: "#888", lineHeight: 1.5 } }, "\u0394\u03B5\u03BD \u03B2\u03C1\u03AD\u03B8\u03B7\u03BA\u03B1\u03BD \u03B4\u03B9\u03B1\u03B8\u03AD\u03C3\u03B9\u03BC\u03B5\u03C2 \u03C6\u03C9\u03BD\u03AD\u03C2 \u03C3\u03B5 \u03B1\u03C5\u03C4\u03AE \u03C4\u03B7 \u03C3\u03C5\u03C3\u03BA\u03B5\u03C5\u03AE."), allForLang.length === 0 && voicesList.length > 0 && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "#a05a00", background: "#FFF3E0", padding: "8px 10px", borderRadius: 10, lineHeight: 1.5, marginBottom: 8 } }, "\u0394\u03B5\u03BD \u03B2\u03C1\u03AD\u03B8\u03B7\u03BA\u03B5 \u03C6\u03C9\u03BD\u03AE \u03C3\u03C4\u03B1 ", meta.name, " \u03C3\u03B5 \u03B1\u03C5\u03C4\u03CC \u03C4\u03BF \u03BA\u03B9\u03BD\u03B7\u03C4\u03CC. \u0395\u03B3\u03BA\u03B1\u03C4\u03AD\u03C3\u03C4\u03B7\u03C3\u03AD \u03C4\u03B7\u03BD \u03B1\u03C0\u03CC \u03A1\u03C5\u03B8\u03BC\u03AF\u03C3\u03B5\u03B9\u03C2 \u2192 \u0393\u03BB\u03CE\u03C3\u03C3\u03B1 \u2192 Text-to-speech."), /* @__PURE__ */ React.createElement("div", { style: { overflowY: "auto", display: "flex", flexDirection: "column", gap: 8 } }, mainList.map((v) => VoiceCard(v)), extraList.length > 0 && /* @__PURE__ */ React.createElement("details", null, /* @__PURE__ */ React.createElement("summary", { style: { fontSize: 12, color: "#999", fontWeight: 700, cursor: "pointer", padding: "4px 0" } }, "\u03A0\u03B5\u03C1\u03B9\u03C3\u03C3\u03CC\u03C4\u03B5\u03C1\u03B5\u03C2 \u03C6\u03C9\u03BD\u03AD\u03C2 (", extraList.length, ")"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 8, marginTop: 8 } }, extraList.map((v) => VoiceCard(v))))));
         })(), selectedVoiceNames[appLanguage] && /* @__PURE__ */ React.createElement(
           "button",
           {
