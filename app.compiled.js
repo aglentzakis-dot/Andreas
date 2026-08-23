@@ -30,18 +30,18 @@
       dark: "#C8412F",
       soft: "#FFEDE9",
       items: [
-        { id: "milo", emoji: "\u{1F34E}", label: "\u039C\u03AE\u03BB\u03BF" },
-        { id: "banana", emoji: "\u{1F34C}", label: "\u039C\u03C0\u03B1\u03BD\u03AC\u03BD\u03B1" },
-        { id: "portokali", emoji: "\u{1F34A}", label: "\u03A0\u03BF\u03C1\u03C4\u03BF\u03BA\u03AC\u03BB\u03B9" },
-        { id: "karpouzi", emoji: "\u{1F349}", label: "\u039A\u03B1\u03C1\u03C0\u03BF\u03CD\u03B6\u03B9" },
-        { id: "stafyli", emoji: "\u{1F347}", label: "\u03A3\u03C4\u03B1\u03C6\u03CD\u03BB\u03B9" },
-        { id: "fraoula", emoji: "\u{1F353}", label: "\u03A6\u03C1\u03AC\u03BF\u03C5\u03BB\u03B1" },
-        { id: "psomi", emoji: "\u{1F35E}", label: "\u03A8\u03C9\u03BC\u03AF" },
-        { id: "tyri", emoji: "\u{1F9C0}", label: "\u03A4\u03C5\u03C1\u03AF" },
-        { id: "pizza", emoji: "\u{1F355}", label: "\u03A0\u03AF\u03C4\u03C3\u03B1" },
-        { id: "pagoto", emoji: "\u{1F366}", label: "\u03A0\u03B1\u03B3\u03C9\u03C4\u03CC" },
-        { id: "keik", emoji: "\u{1F370}", label: "\u039A\u03AD\u03B9\u03BA" },
-        { id: "gala", emoji: "\u{1F95B}", label: "\u0393\u03AC\u03BB\u03B1" }
+        { id: "milo", emoji: "\u{1F34E}", label: "\u039C\u03AE\u03BB\u03BF", en: "Apple", it: "Mela", es: "Manzana" },
+        { id: "banana", emoji: "\u{1F34C}", label: "\u039C\u03C0\u03B1\u03BD\u03AC\u03BD\u03B1", en: "Banana", it: "Banana", es: "Pl\xE1tano" },
+        { id: "portokali", emoji: "\u{1F34A}", label: "\u03A0\u03BF\u03C1\u03C4\u03BF\u03BA\u03AC\u03BB\u03B9", en: "Orange", it: "Arancia", es: "Naranja" },
+        { id: "karpouzi", emoji: "\u{1F349}", label: "\u039A\u03B1\u03C1\u03C0\u03BF\u03CD\u03B6\u03B9", en: "Watermelon", it: "Anguria", es: "Sand\xEDa" },
+        { id: "stafyli", emoji: "\u{1F347}", label: "\u03A3\u03C4\u03B1\u03C6\u03CD\u03BB\u03B9", en: "Grapes", it: "Uva", es: "Uvas" },
+        { id: "fraoula", emoji: "\u{1F353}", label: "\u03A6\u03C1\u03AC\u03BF\u03C5\u03BB\u03B1", en: "Strawberry", it: "Fragola", es: "Fresa" },
+        { id: "psomi", emoji: "\u{1F35E}", label: "\u03A8\u03C9\u03BC\u03AF", en: "Bread", it: "Pane", es: "Pan" },
+        { id: "tyri", emoji: "\u{1F9C0}", label: "\u03A4\u03C5\u03C1\u03AF", en: "Cheese", it: "Formaggio", es: "Queso" },
+        { id: "pizza", emoji: "\u{1F355}", label: "\u03A0\u03AF\u03C4\u03C3\u03B1", en: "Pizza", it: "Pizza", es: "Pizza" },
+        { id: "pagoto", emoji: "\u{1F366}", label: "\u03A0\u03B1\u03B3\u03C9\u03C4\u03CC", en: "Ice cream", it: "Gelato", es: "Helado" },
+        { id: "keik", emoji: "\u{1F370}", label: "\u039A\u03AD\u03B9\u03BA", en: "Cake", it: "Torta", es: "Pastel" },
+        { id: "gala", emoji: "\u{1F95B}", label: "\u0393\u03AC\u03BB\u03B1", en: "Milk", it: "Latte", es: "Leche" }
       ]
     },
     {
@@ -52,18 +52,18 @@
       dark: "#1F7A6E",
       soft: "#E7FBF7",
       items: [
-        { id: "skylos", emoji: "\u{1F436}", label: "\u03A3\u03BA\u03CD\u03BB\u03BF\u03C2" },
-        { id: "gata", emoji: "\u{1F431}", label: "\u0393\u03AC\u03C4\u03B1" },
-        { id: "alogo", emoji: "\u{1F434}", label: "\u0386\u03BB\u03BF\u03B3\u03BF" },
-        { id: "ageladha", emoji: "\u{1F42E}", label: "\u0391\u03B3\u03B5\u03BB\u03AC\u03B4\u03B1" },
-        { id: "provato", emoji: "\u{1F411}", label: "\u03A0\u03C1\u03CC\u03B2\u03B1\u03C4\u03BF" },
-        { id: "liontari", emoji: "\u{1F981}", label: "\u039B\u03B9\u03BF\u03BD\u03C4\u03AC\u03C1\u03B9" },
-        { id: "elefantas", emoji: "\u{1F418}", label: "\u0395\u03BB\u03AD\u03C6\u03B1\u03BD\u03C4\u03B1\u03C2" },
-        { id: "pithikos", emoji: "\u{1F435}", label: "\u03A0\u03AF\u03B8\u03B7\u03BA\u03BF\u03C2" },
-        { id: "psari", emoji: "\u{1F41F}", label: "\u03A8\u03AC\u03C1\u03B9" },
-        { id: "pouli", emoji: "\u{1F426}", label: "\u03A0\u03BF\u03C5\u03BB\u03AF" },
-        { id: "kotopoulo", emoji: "\u{1F414}", label: "\u039A\u03CC\u03C4\u03B1" },
-        { id: "helona", emoji: "\u{1F422}", label: "\u03A7\u03B5\u03BB\u03CE\u03BD\u03B1" }
+        { id: "skylos", emoji: "\u{1F436}", label: "\u03A3\u03BA\u03CD\u03BB\u03BF\u03C2", en: "Dog", it: "Cane", es: "Perro" },
+        { id: "gata", emoji: "\u{1F431}", label: "\u0393\u03AC\u03C4\u03B1", en: "Cat", it: "Gatto", es: "Gato" },
+        { id: "alogo", emoji: "\u{1F434}", label: "\u0386\u03BB\u03BF\u03B3\u03BF", en: "Horse", it: "Cavallo", es: "Caballo" },
+        { id: "ageladha", emoji: "\u{1F42E}", label: "\u0391\u03B3\u03B5\u03BB\u03AC\u03B4\u03B1", en: "Cow", it: "Mucca", es: "Vaca" },
+        { id: "provato", emoji: "\u{1F411}", label: "\u03A0\u03C1\u03CC\u03B2\u03B1\u03C4\u03BF", en: "Sheep", it: "Pecora", es: "Oveja" },
+        { id: "liontari", emoji: "\u{1F981}", label: "\u039B\u03B9\u03BF\u03BD\u03C4\u03AC\u03C1\u03B9", en: "Lion", it: "Leone", es: "Le\xF3n" },
+        { id: "elefantas", emoji: "\u{1F418}", label: "\u0395\u03BB\u03AD\u03C6\u03B1\u03BD\u03C4\u03B1\u03C2", en: "Elephant", it: "Elefante", es: "Elefante" },
+        { id: "pithikos", emoji: "\u{1F435}", label: "\u03A0\u03AF\u03B8\u03B7\u03BA\u03BF\u03C2", en: "Monkey", it: "Scimmia", es: "Mono" },
+        { id: "psari", emoji: "\u{1F41F}", label: "\u03A8\u03AC\u03C1\u03B9", en: "Fish", it: "Pesce", es: "Pez" },
+        { id: "pouli", emoji: "\u{1F426}", label: "\u03A0\u03BF\u03C5\u03BB\u03AF", en: "Bird", it: "Uccello", es: "P\xE1jaro" },
+        { id: "kotopoulo", emoji: "\u{1F414}", label: "\u039A\u03CC\u03C4\u03B1", en: "Chicken", it: "Pollo", es: "Pollo" },
+        { id: "helona", emoji: "\u{1F422}", label: "\u03A7\u03B5\u03BB\u03CE\u03BD\u03B1", en: "Turtle", it: "Tartaruga", es: "Tortuga" }
       ]
     },
     {
@@ -74,16 +74,16 @@
       dark: "#B8860B",
       soft: "#FFF8E1",
       items: [
-        { id: "n1", emoji: "1\uFE0F\u20E3", label: "\u0388\u03BD\u03B1" },
-        { id: "n2", emoji: "2\uFE0F\u20E3", label: "\u0394\u03CD\u03BF" },
-        { id: "n3", emoji: "3\uFE0F\u20E3", label: "\u03A4\u03C1\u03AF\u03B1" },
-        { id: "n4", emoji: "4\uFE0F\u20E3", label: "\u03A4\u03AD\u03C3\u03C3\u03B5\u03C1\u03B1" },
-        { id: "n5", emoji: "5\uFE0F\u20E3", label: "\u03A0\u03AD\u03BD\u03C4\u03B5" },
-        { id: "n6", emoji: "6\uFE0F\u20E3", label: "\u0388\u03BE\u03B9" },
-        { id: "n7", emoji: "7\uFE0F\u20E3", label: "\u0395\u03C0\u03C4\u03AC" },
-        { id: "n8", emoji: "8\uFE0F\u20E3", label: "\u039F\u03BA\u03C4\u03CE" },
-        { id: "n9", emoji: "9\uFE0F\u20E3", label: "\u0395\u03BD\u03BD\u03AD\u03B1" },
-        { id: "n10", emoji: "\u{1F51F}", label: "\u0394\u03AD\u03BA\u03B1" }
+        { id: "n1", emoji: "1\uFE0F\u20E3", label: "\u0388\u03BD\u03B1", en: "One", it: "Uno", es: "Uno" },
+        { id: "n2", emoji: "2\uFE0F\u20E3", label: "\u0394\u03CD\u03BF", en: "Two", it: "Due", es: "Dos" },
+        { id: "n3", emoji: "3\uFE0F\u20E3", label: "\u03A4\u03C1\u03AF\u03B1", en: "Three", it: "Tre", es: "Tres" },
+        { id: "n4", emoji: "4\uFE0F\u20E3", label: "\u03A4\u03AD\u03C3\u03C3\u03B5\u03C1\u03B1", en: "Four", it: "Quattro", es: "Cuatro" },
+        { id: "n5", emoji: "5\uFE0F\u20E3", label: "\u03A0\u03AD\u03BD\u03C4\u03B5", en: "Five", it: "Cinque", es: "Cinco" },
+        { id: "n6", emoji: "6\uFE0F\u20E3", label: "\u0388\u03BE\u03B9", en: "Six", it: "Sei", es: "Seis" },
+        { id: "n7", emoji: "7\uFE0F\u20E3", label: "\u0395\u03C0\u03C4\u03AC", en: "Seven", it: "Sette", es: "Siete" },
+        { id: "n8", emoji: "8\uFE0F\u20E3", label: "\u039F\u03BA\u03C4\u03CE", en: "Eight", it: "Otto", es: "Ocho" },
+        { id: "n9", emoji: "9\uFE0F\u20E3", label: "\u0395\u03BD\u03BD\u03AD\u03B1", en: "Nine", it: "Nove", es: "Nueve" },
+        { id: "n10", emoji: "\u{1F51F}", label: "\u0394\u03AD\u03BA\u03B1", en: "Ten", it: "Dieci", es: "Diez" }
       ]
     },
     {
@@ -94,26 +94,26 @@
       dark: "#6F3FB0",
       soft: "#F4EBFF",
       items: [
-        { id: "kokkino", hex: "#E53935", emoji: "\u{1F534}", label: "\u039A\u03CC\u03BA\u03BA\u03B9\u03BD\u03BF" },
-        { id: "ble", hex: "#1E88E5", emoji: "\u{1F535}", label: "\u039C\u03C0\u03BB\u03B5" },
-        { id: "prasino", hex: "#43A047", emoji: "\u{1F7E2}", label: "\u03A0\u03C1\u03AC\u03C3\u03B9\u03BD\u03BF" },
-        { id: "kitrino", hex: "#FDD835", emoji: "\u{1F7E1}", label: "\u039A\u03AF\u03C4\u03C1\u03B9\u03BD\u03BF" },
-        { id: "portokali_x", hex: "#FB8C00", emoji: "\u{1F7E0}", label: "\u03A0\u03BF\u03C1\u03C4\u03BF\u03BA\u03B1\u03BB\u03AF" },
-        { id: "mov", hex: "#8E24AA", emoji: "\u{1F7E3}", label: "\u039C\u03C9\u03B2" },
-        { id: "roz", hex: "#EC407A", emoji: "\u{1F497}", label: "\u03A1\u03BF\u03B6" },
-        { id: "kafe", hex: "#6D4C41", emoji: "\u{1F7E4}", label: "\u039A\u03B1\u03C6\u03AD" },
-        { id: "mavro", hex: "#212121", emoji: "\u26AB", label: "\u039C\u03B1\u03CD\u03C1\u03BF" },
-        { id: "aspro", hex: "#FFFFFF", emoji: "\u26AA", label: "\u0386\u03C3\u03C0\u03C1\u03BF" },
-        { id: "gkri", hex: "#9E9E9E", emoji: "\u26AA", label: "\u0393\u03BA\u03C1\u03B9" },
-        { id: "mpez", hex: "#D9BB94", emoji: "\u{1F7E4}", label: "\u039C\u03C0\u03B5\u03B6" },
-        { id: "xryso", hex: "#D4AF37", emoji: "\u{1F7E1}", label: "\u03A7\u03C1\u03C5\u03C3\u03CC" },
-        { id: "asimi", hex: "#BFC1C2", emoji: "\u26AA", label: "\u0391\u03C3\u03B7\u03BC\u03AF" },
-        { id: "tourkouaz", hex: "#26C6DA", emoji: "\u{1F535}", label: "\u03A4\u03B9\u03C1\u03BA\u03BF\u03C5\u03AC\u03B6" },
-        { id: "ladi", hex: "#808000", emoji: "\u{1F7E2}", label: "\u039B\u03B1\u03B4\u03AF" },
-        { id: "vyssini", hex: "#7B1F2B", emoji: "\u{1F534}", label: "\u0392\u03C5\u03C3\u03C3\u03B9\u03BD\u03AF" },
-        { id: "galazio", hex: "#64B5F6", emoji: "\u{1F535}", label: "\u0393\u03B1\u03BB\u03AC\u03B6\u03B9\u03BF" },
-        { id: "levanta", hex: "#B497BD", emoji: "\u{1F7E3}", label: "\u039B\u03B5\u03B2\u03AC\u03BD\u03C4\u03B1" },
-        { id: "xaki", hex: "#BDB76B", emoji: "\u{1F7E2}", label: "\u03A7\u03B1\u03BA\u03AF" }
+        { id: "kokkino", hex: "#E53935", emoji: "\u{1F534}", label: "\u039A\u03CC\u03BA\u03BA\u03B9\u03BD\u03BF", en: "Red", it: "Rosso", es: "Rojo" },
+        { id: "ble", hex: "#1E88E5", emoji: "\u{1F535}", label: "\u039C\u03C0\u03BB\u03B5", en: "Blue", it: "Blu", es: "Azul" },
+        { id: "prasino", hex: "#43A047", emoji: "\u{1F7E2}", label: "\u03A0\u03C1\u03AC\u03C3\u03B9\u03BD\u03BF", en: "Green", it: "Verde", es: "Verde" },
+        { id: "kitrino", hex: "#FDD835", emoji: "\u{1F7E1}", label: "\u039A\u03AF\u03C4\u03C1\u03B9\u03BD\u03BF", en: "Yellow", it: "Giallo", es: "Amarillo" },
+        { id: "portokali_x", hex: "#FB8C00", emoji: "\u{1F7E0}", label: "\u03A0\u03BF\u03C1\u03C4\u03BF\u03BA\u03B1\u03BB\u03AF", en: "Orange", it: "Arancione", es: "Naranja" },
+        { id: "mov", hex: "#8E24AA", emoji: "\u{1F7E3}", label: "\u039C\u03C9\u03B2", en: "Purple", it: "Viola", es: "Morado" },
+        { id: "roz", hex: "#EC407A", emoji: "\u{1F497}", label: "\u03A1\u03BF\u03B6", en: "Pink", it: "Rosa", es: "Rosa" },
+        { id: "kafe", hex: "#6D4C41", emoji: "\u{1F7E4}", label: "\u039A\u03B1\u03C6\u03AD", en: "Brown", it: "Marrone", es: "Marr\xF3n" },
+        { id: "mavro", hex: "#212121", emoji: "\u26AB", label: "\u039C\u03B1\u03CD\u03C1\u03BF", en: "Black", it: "Nero", es: "Negro" },
+        { id: "aspro", hex: "#FFFFFF", emoji: "\u26AA", label: "\u0386\u03C3\u03C0\u03C1\u03BF", en: "White", it: "Bianco", es: "Blanco" },
+        { id: "gkri", hex: "#9E9E9E", emoji: "\u26AA", label: "\u0393\u03BA\u03C1\u03B9", en: "Gray", it: "Grigio", es: "Gris" },
+        { id: "mpez", hex: "#D9BB94", emoji: "\u{1F7E4}", label: "\u039C\u03C0\u03B5\u03B6", en: "Beige", it: "Beige", es: "Beige" },
+        { id: "xryso", hex: "#D4AF37", emoji: "\u{1F7E1}", label: "\u03A7\u03C1\u03C5\u03C3\u03CC", en: "Gold", it: "Oro", es: "Dorado" },
+        { id: "asimi", hex: "#BFC1C2", emoji: "\u26AA", label: "\u0391\u03C3\u03B7\u03BC\u03AF", en: "Silver", it: "Argento", es: "Plateado" },
+        { id: "tourkouaz", hex: "#26C6DA", emoji: "\u{1F535}", label: "\u03A4\u03B9\u03C1\u03BA\u03BF\u03C5\u03AC\u03B6", en: "Turquoise", it: "Turchese", es: "Turquesa" },
+        { id: "ladi", hex: "#808000", emoji: "\u{1F7E2}", label: "\u039B\u03B1\u03B4\u03AF", en: "Olive", it: "Verde oliva", es: "Verde oliva" },
+        { id: "vyssini", hex: "#7B1F2B", emoji: "\u{1F534}", label: "\u0392\u03C5\u03C3\u03C3\u03B9\u03BD\u03AF", en: "Maroon", it: "Bordeaux", es: "Granate" },
+        { id: "galazio", hex: "#64B5F6", emoji: "\u{1F535}", label: "\u0393\u03B1\u03BB\u03AC\u03B6\u03B9\u03BF", en: "Sky blue", it: "Azzurro", es: "Celeste" },
+        { id: "levanta", hex: "#B497BD", emoji: "\u{1F7E3}", label: "\u039B\u03B5\u03B2\u03AC\u03BD\u03C4\u03B1", en: "Lavender", it: "Lavanda", es: "Lavanda" },
+        { id: "xaki", hex: "#BDB76B", emoji: "\u{1F7E2}", label: "\u03A7\u03B1\u03BA\u03AF", en: "Khaki", it: "Cachi", es: "Caqui" }
       ]
     },
     {
@@ -124,16 +124,16 @@
       dark: "#2F7A38",
       soft: "#EEFBEF",
       items: [
-        { id: "mpala", emoji: "\u26BD", label: "\u039C\u03C0\u03AC\u03BB\u03B1" },
-        { id: "autokinito", emoji: "\u{1F697}", label: "\u0391\u03C5\u03C4\u03BF\u03BA\u03AF\u03BD\u03B7\u03C4\u03BF" },
-        { id: "vivlio", emoji: "\u{1F4DA}", label: "\u0392\u03B9\u03B2\u03BB\u03AF\u03BF" },
-        { id: "karekla", emoji: "\u{1FA91}", label: "\u039A\u03B1\u03C1\u03AD\u03BA\u03BB\u03B1" },
-        { id: "roloi", emoji: "\u23F0", label: "\u03A1\u03BF\u03BB\u03CC\u03B9" },
-        { id: "kleidi", emoji: "\u{1F511}", label: "\u039A\u03BB\u03B5\u03B9\u03B4\u03AF" },
-        { id: "psalidi", emoji: "\u2702\uFE0F", label: "\u03A8\u03B1\u03BB\u03AF\u03B4\u03B9" },
-        { id: "tilefono", emoji: "\u{1F4F1}", label: "\u03A4\u03B7\u03BB\u03AD\u03C6\u03C9\u03BD\u03BF" },
-        { id: "podilato", emoji: "\u{1F6B2}", label: "\u03A0\u03BF\u03B4\u03AE\u03BB\u03B1\u03C4\u03BF" },
-        { id: "ompela", emoji: "\u2602\uFE0F", label: "\u039F\u03BC\u03C0\u03C1\u03AD\u03BB\u03B1" }
+        { id: "mpala", emoji: "\u26BD", label: "\u039C\u03C0\u03AC\u03BB\u03B1", en: "Ball", it: "Palla", es: "Pelota" },
+        { id: "autokinito", emoji: "\u{1F697}", label: "\u0391\u03C5\u03C4\u03BF\u03BA\u03AF\u03BD\u03B7\u03C4\u03BF", en: "Car", it: "Macchina", es: "Coche" },
+        { id: "vivlio", emoji: "\u{1F4DA}", label: "\u0392\u03B9\u03B2\u03BB\u03AF\u03BF", en: "Book", it: "Libro", es: "Libro" },
+        { id: "karekla", emoji: "\u{1FA91}", label: "\u039A\u03B1\u03C1\u03AD\u03BA\u03BB\u03B1", en: "Chair", it: "Sedia", es: "Silla" },
+        { id: "roloi", emoji: "\u23F0", label: "\u03A1\u03BF\u03BB\u03CC\u03B9", en: "Clock", it: "Orologio", es: "Reloj" },
+        { id: "kleidi", emoji: "\u{1F511}", label: "\u039A\u03BB\u03B5\u03B9\u03B4\u03AF", en: "Key", it: "Chiave", es: "Llave" },
+        { id: "psalidi", emoji: "\u2702\uFE0F", label: "\u03A8\u03B1\u03BB\u03AF\u03B4\u03B9", en: "Scissors", it: "Forbici", es: "Tijeras" },
+        { id: "tilefono", emoji: "\u{1F4F1}", label: "\u03A4\u03B7\u03BB\u03AD\u03C6\u03C9\u03BD\u03BF", en: "Phone", it: "Telefono", es: "Tel\xE9fono" },
+        { id: "podilato", emoji: "\u{1F6B2}", label: "\u03A0\u03BF\u03B4\u03AE\u03BB\u03B1\u03C4\u03BF", en: "Bicycle", it: "Bicicletta", es: "Bicicleta" },
+        { id: "ompela", emoji: "\u2602\uFE0F", label: "\u039F\u03BC\u03C0\u03C1\u03AD\u03BB\u03B1", en: "Umbrella", it: "Ombrello", es: "Paraguas" }
       ]
     },
     {
@@ -144,18 +144,18 @@
       dark: "#256B9E",
       soft: "#E8F4FC",
       items: [
-        { id: "paixnidi", emoji: "\u{1F9F8}", label: "\u03A0\u03B1\u03AF\u03B6\u03C9" },
-        { id: "zografiki", emoji: "\u{1F3A8}", label: "\u0396\u03C9\u03B3\u03C1\u03B1\u03C6\u03AF\u03B6\u03C9" },
-        { id: "ypnos", emoji: "\u{1F634}", label: "\u039A\u03BF\u03B9\u03BC\u03AC\u03BC\u03B1\u03B9" },
-        { id: "mpanio", emoji: "\u{1F6C1}", label: "\u039A\u03AC\u03BD\u03C9 \u03BC\u03C0\u03AC\u03BD\u03B9\u03BF" },
-        { id: "trogo", emoji: "\u{1F37D}\uFE0F", label: "\u03A4\u03C1\u03CE\u03C9" },
-        { id: "volta", emoji: "\u{1F6B6}", label: "\u03A0\u03AC\u03C9 \u03B2\u03CC\u03BB\u03C4\u03B1" },
-        { id: "tragoudi", emoji: "\u{1F3B5}", label: "\u03A4\u03C1\u03B1\u03B3\u03BF\u03C5\u03B4\u03AC\u03C9" },
-        { id: "diavazo", emoji: "\u{1F4D6}", label: "\u0394\u03B9\u03B1\u03B2\u03AC\u03B6\u03C9" },
-        { id: "xorevo", emoji: "\u{1F483}", label: "\u03A7\u03BF\u03C1\u03B5\u03CD\u03C9" },
-        { id: "pazl", emoji: "\u{1F9E9}", label: "\u039A\u03AC\u03BD\u03C9 \u03C0\u03B1\u03B6\u03BB" },
-        { id: "plenoxeria", emoji: "\u{1F9FC}", label: "\u03A0\u03BB\u03AD\u03BD\u03C9 \u03C4\u03B1 \u03C7\u03AD\u03C1\u03B9\u03B1 \u03BC\u03BF\u03C5" },
-        { id: "vourtsizo", emoji: "\u{1FAA5}", label: "\u0392\u03BF\u03C5\u03C1\u03C4\u03C3\u03AF\u03B6\u03C9 \u03C4\u03B1 \u03B4\u03CC\u03BD\u03C4\u03B9\u03B1 \u03BC\u03BF\u03C5" }
+        { id: "paixnidi", emoji: "\u{1F9F8}", label: "\u03A0\u03B1\u03AF\u03B6\u03C9", en: "Play", it: "Gioco", es: "Jugar" },
+        { id: "zografiki", emoji: "\u{1F3A8}", label: "\u0396\u03C9\u03B3\u03C1\u03B1\u03C6\u03AF\u03B6\u03C9", en: "Draw", it: "Disegno", es: "Dibujar" },
+        { id: "ypnos", emoji: "\u{1F634}", label: "\u039A\u03BF\u03B9\u03BC\u03AC\u03BC\u03B1\u03B9", en: "Sleep", it: "Dormire", es: "Dormir" },
+        { id: "mpanio", emoji: "\u{1F6C1}", label: "\u039A\u03AC\u03BD\u03C9 \u03BC\u03C0\u03AC\u03BD\u03B9\u03BF", en: "Bath", it: "Bagno", es: "Ba\xF1o" },
+        { id: "trogo", emoji: "\u{1F37D}\uFE0F", label: "\u03A4\u03C1\u03CE\u03C9", en: "Eat", it: "Mangiare", es: "Comer" },
+        { id: "volta", emoji: "\u{1F6B6}", label: "\u03A0\u03AC\u03C9 \u03B2\u03CC\u03BB\u03C4\u03B1", en: "Walk", it: "Camminare", es: "Caminar" },
+        { id: "tragoudi", emoji: "\u{1F3B5}", label: "\u03A4\u03C1\u03B1\u03B3\u03BF\u03C5\u03B4\u03AC\u03C9", en: "Sing", it: "Cantare", es: "Cantar" },
+        { id: "diavazo", emoji: "\u{1F4D6}", label: "\u0394\u03B9\u03B1\u03B2\u03AC\u03B6\u03C9", en: "Read", it: "Leggere", es: "Leer" },
+        { id: "xorevo", emoji: "\u{1F483}", label: "\u03A7\u03BF\u03C1\u03B5\u03CD\u03C9", en: "Dance", it: "Ballare", es: "Bailar" },
+        { id: "pazl", emoji: "\u{1F9E9}", label: "\u039A\u03AC\u03BD\u03C9 \u03C0\u03B1\u03B6\u03BB", en: "Puzzle", it: "Puzzle", es: "Rompecabezas" },
+        { id: "plenoxeria", emoji: "\u{1F9FC}", label: "\u03A0\u03BB\u03AD\u03BD\u03C9 \u03C4\u03B1 \u03C7\u03AD\u03C1\u03B9\u03B1 \u03BC\u03BF\u03C5", en: "Wash hands", it: "Lavare le mani", es: "Lavar manos" },
+        { id: "vourtsizo", emoji: "\u{1FAA5}", label: "\u0392\u03BF\u03C5\u03C1\u03C4\u03C3\u03AF\u03B6\u03C9 \u03C4\u03B1 \u03B4\u03CC\u03BD\u03C4\u03B9\u03B1 \u03BC\u03BF\u03C5", en: "Brush teeth", it: "Lavare i denti", es: "Cepillar dientes" }
       ]
     },
     {
@@ -166,14 +166,14 @@
       dark: "#C24A75",
       soft: "#FFEFF4",
       items: [
-        { id: "xaroumenos", emoji: "\u{1F60A}", label: "\u03A7\u03B1\u03C1\u03BF\u03CD\u03BC\u03B5\u03BD\u03BF\u03C2" },
-        { id: "lypimenos", emoji: "\u{1F622}", label: "\u039B\u03C5\u03C0\u03B7\u03BC\u03AD\u03BD\u03BF\u03C2" },
-        { id: "thymomenos", emoji: "\u{1F620}", label: "\u0398\u03C5\u03BC\u03C9\u03BC\u03AD\u03BD\u03BF\u03C2" },
-        { id: "fovismenos", emoji: "\u{1F628}", label: "\u03A6\u03BF\u03B2\u03B9\u03C3\u03BC\u03AD\u03BD\u03BF\u03C2" },
-        { id: "kourasmenos", emoji: "\u{1F634}", label: "\u039A\u03BF\u03C5\u03C1\u03B1\u03C3\u03BC\u03AD\u03BD\u03BF\u03C2" },
-        { id: "ekpliktos", emoji: "\u{1F632}", label: "\u0388\u03BA\u03C0\u03BB\u03B7\u03BA\u03C4\u03BF\u03C2" },
-        { id: "iremos", emoji: "\u{1F60C}", label: "\u0389\u03C1\u03B5\u03BC\u03BF\u03C2" },
-        { id: "mperdemenos", emoji: "\u{1F615}", label: "\u039C\u03C0\u03B5\u03C1\u03B4\u03B5\u03BC\u03AD\u03BD\u03BF\u03C2" }
+        { id: "xaroumenos", emoji: "\u{1F60A}", label: "\u03A7\u03B1\u03C1\u03BF\u03CD\u03BC\u03B5\u03BD\u03BF\u03C2", en: "Happy", it: "Felice", es: "Feliz" },
+        { id: "lypimenos", emoji: "\u{1F622}", label: "\u039B\u03C5\u03C0\u03B7\u03BC\u03AD\u03BD\u03BF\u03C2", en: "Sad", it: "Triste", es: "Triste" },
+        { id: "thymomenos", emoji: "\u{1F620}", label: "\u0398\u03C5\u03BC\u03C9\u03BC\u03AD\u03BD\u03BF\u03C2", en: "Angry", it: "Arrabbiato", es: "Enojado" },
+        { id: "fovismenos", emoji: "\u{1F628}", label: "\u03A6\u03BF\u03B2\u03B9\u03C3\u03BC\u03AD\u03BD\u03BF\u03C2", en: "Scared", it: "Spaventato", es: "Asustado" },
+        { id: "kourasmenos", emoji: "\u{1F634}", label: "\u039A\u03BF\u03C5\u03C1\u03B1\u03C3\u03BC\u03AD\u03BD\u03BF\u03C2", en: "Tired", it: "Stanco", es: "Cansado" },
+        { id: "ekpliktos", emoji: "\u{1F632}", label: "\u0388\u03BA\u03C0\u03BB\u03B7\u03BA\u03C4\u03BF\u03C2", en: "Surprised", it: "Sorpreso", es: "Sorprendido" },
+        { id: "iremos", emoji: "\u{1F60C}", label: "\u0389\u03C1\u03B5\u03BC\u03BF\u03C2", en: "Calm", it: "Calmo", es: "Tranquilo" },
+        { id: "mperdemenos", emoji: "\u{1F615}", label: "\u039C\u03C0\u03B5\u03C1\u03B4\u03B5\u03BC\u03AD\u03BD\u03BF\u03C2", en: "Confused", it: "Confuso", es: "Confundido" }
       ]
     },
     {
@@ -184,16 +184,16 @@
       dark: "#5C4B2E",
       soft: "#F5F0E6",
       items: [
-        { id: "ksypnao", emoji: "\u23F0", label: "\u039E\u03C5\u03C0\u03BD\u03AC\u03C9" },
-        { id: "proino", emoji: "\u{1F963}", label: "\u03A4\u03C1\u03CE\u03C9 \u03C0\u03C1\u03C9\u03B9\u03BD\u03CC" },
-        { id: "plenodontia", emoji: "\u{1FAA5}", label: "\u03A0\u03BB\u03AD\u03BD\u03C9 \u03C4\u03B1 \u03B4\u03CC\u03BD\u03C4\u03B9\u03B1 \u03BC\u03BF\u03C5" },
-        { id: "ntynomai", emoji: "\u{1F455}", label: "\u039D\u03C4\u03CD\u03BD\u03BF\u03BC\u03B1\u03B9" },
-        { id: "sxoleio", emoji: "\u{1F392}", label: "\u03A0\u03AC\u03C9 \u03C3\u03C7\u03BF\u03BB\u03B5\u03AF\u03BF" },
-        { id: "mesimeriano", emoji: "\u{1F37D}\uFE0F", label: "\u03A4\u03C1\u03CE\u03C9 \u03BC\u03B5\u03C3\u03B7\u03BC\u03B5\u03C1\u03B9\u03B1\u03BD\u03CC" },
-        { id: "paixnidi_r", emoji: "\u{1F9F8}", label: "\u03A0\u03B1\u03AF\u03B6\u03C9" },
-        { id: "mpanio_r", emoji: "\u{1F6C1}", label: "\u039A\u03AC\u03BD\u03C9 \u03BC\u03C0\u03AC\u03BD\u03B9\u03BF" },
-        { id: "pitzames", emoji: "\u{1F319}", label: "\u03A6\u03BF\u03C1\u03AC\u03C9 \u03C0\u03B9\u03C4\u03B6\u03AC\u03BC\u03B5\u03C2" },
-        { id: "ypnos_r", emoji: "\u{1F31B}", label: "\u03A0\u03AC\u03C9 \u03B3\u03B9\u03B1 \u03CD\u03C0\u03BD\u03BF" }
+        { id: "ksypnao", emoji: "\u23F0", label: "\u039E\u03C5\u03C0\u03BD\u03AC\u03C9", en: "Wake up", it: "Svegliarsi", es: "Despertar" },
+        { id: "proino", emoji: "\u{1F963}", label: "\u03A4\u03C1\u03CE\u03C9 \u03C0\u03C1\u03C9\u03B9\u03BD\u03CC", en: "Breakfast", it: "Colazione", es: "Desayuno" },
+        { id: "plenodontia", emoji: "\u{1FAA5}", label: "\u03A0\u03BB\u03AD\u03BD\u03C9 \u03C4\u03B1 \u03B4\u03CC\u03BD\u03C4\u03B9\u03B1 \u03BC\u03BF\u03C5", en: "Brush teeth", it: "Lavare i denti", es: "Cepillar dientes" },
+        { id: "ntynomai", emoji: "\u{1F455}", label: "\u039D\u03C4\u03CD\u03BD\u03BF\u03BC\u03B1\u03B9", en: "Get dressed", it: "Vestirsi", es: "Vestirse" },
+        { id: "sxoleio", emoji: "\u{1F392}", label: "\u03A0\u03AC\u03C9 \u03C3\u03C7\u03BF\u03BB\u03B5\u03AF\u03BF", en: "School", it: "Scuola", es: "Escuela" },
+        { id: "mesimeriano", emoji: "\u{1F37D}\uFE0F", label: "\u03A4\u03C1\u03CE\u03C9 \u03BC\u03B5\u03C3\u03B7\u03BC\u03B5\u03C1\u03B9\u03B1\u03BD\u03CC", en: "Lunch", it: "Pranzo", es: "Almuerzo" },
+        { id: "paixnidi_r", emoji: "\u{1F9F8}", label: "\u03A0\u03B1\u03AF\u03B6\u03C9", en: "Play", it: "Gioco", es: "Jugar" },
+        { id: "mpanio_r", emoji: "\u{1F6C1}", label: "\u039A\u03AC\u03BD\u03C9 \u03BC\u03C0\u03AC\u03BD\u03B9\u03BF", en: "Bath", it: "Bagno", es: "Ba\xF1o" },
+        { id: "pitzames", emoji: "\u{1F319}", label: "\u03A6\u03BF\u03C1\u03AC\u03C9 \u03C0\u03B9\u03C4\u03B6\u03AC\u03BC\u03B5\u03C2", en: "Pajamas", it: "Pigiama", es: "Pijama" },
+        { id: "ypnos_r", emoji: "\u{1F31B}", label: "\u03A0\u03AC\u03C9 \u03B3\u03B9\u03B1 \u03CD\u03C0\u03BD\u03BF", en: "Sleep", it: "Dormire", es: "Dormir" }
       ]
     },
     {
@@ -204,16 +204,16 @@
       dark: "#4A50B0",
       soft: "#EEF0FF",
       items: [
-        { id: "treho", emoji: "\u{1F3C3}", label: "\u03A4\u03C1\u03AD\u03C7\u03C9" },
-        { id: "pidao", emoji: "\u{1F938}", label: "\u03A0\u03B7\u03B4\u03AC\u03C9" },
-        { id: "anoigo", emoji: "\u{1F513}", label: "\u0391\u03BD\u03BF\u03AF\u03B3\u03C9" },
-        { id: "kleino", emoji: "\u{1F512}", label: "\u039A\u03BB\u03B5\u03AF\u03BD\u03C9" },
-        { id: "dino", emoji: "\u{1F932}", label: "\u0394\u03AF\u03BD\u03C9" },
-        { id: "perno", emoji: "\u{1F90F}", label: "\u03A0\u03B1\u03AF\u03C1\u03BD\u03C9" },
-        { id: "kathomai", emoji: "\u{1FA91}", label: "\u039A\u03AC\u03B8\u03BF\u03BC\u03B1\u03B9" },
-        { id: "sikonomai", emoji: "\u{1F9CD}", label: "\u03A3\u03B7\u03BA\u03CE\u03BD\u03BF\u03BC\u03B1\u03B9" },
-        { id: "koitazo", emoji: "\u{1F440}", label: "\u039A\u03BF\u03B9\u03C4\u03AC\u03B6\u03C9" },
-        { id: "akouo", emoji: "\u{1F442}", label: "\u0391\u03BA\u03BF\u03CD\u03C9" }
+        { id: "treho", emoji: "\u{1F3C3}", label: "\u03A4\u03C1\u03AD\u03C7\u03C9", en: "Run", it: "Correre", es: "Correr" },
+        { id: "pidao", emoji: "\u{1F938}", label: "\u03A0\u03B7\u03B4\u03AC\u03C9", en: "Jump", it: "Saltare", es: "Saltar" },
+        { id: "anoigo", emoji: "\u{1F513}", label: "\u0391\u03BD\u03BF\u03AF\u03B3\u03C9", en: "Open", it: "Aprire", es: "Abrir" },
+        { id: "kleino", emoji: "\u{1F512}", label: "\u039A\u03BB\u03B5\u03AF\u03BD\u03C9", en: "Close", it: "Chiudere", es: "Cerrar" },
+        { id: "dino", emoji: "\u{1F932}", label: "\u0394\u03AF\u03BD\u03C9", en: "Give", it: "Dare", es: "Dar" },
+        { id: "perno", emoji: "\u{1F90F}", label: "\u03A0\u03B1\u03AF\u03C1\u03BD\u03C9", en: "Take", it: "Prendere", es: "Tomar" },
+        { id: "kathomai", emoji: "\u{1FA91}", label: "\u039A\u03AC\u03B8\u03BF\u03BC\u03B1\u03B9", en: "Sit", it: "Sedersi", es: "Sentarse" },
+        { id: "sikonomai", emoji: "\u{1F9CD}", label: "\u03A3\u03B7\u03BA\u03CE\u03BD\u03BF\u03BC\u03B1\u03B9", en: "Stand up", it: "Alzarsi", es: "Levantarse" },
+        { id: "koitazo", emoji: "\u{1F440}", label: "\u039A\u03BF\u03B9\u03C4\u03AC\u03B6\u03C9", en: "Look", it: "Guardare", es: "Mirar" },
+        { id: "akouo", emoji: "\u{1F442}", label: "\u0391\u03BA\u03BF\u03CD\u03C9", en: "Listen", it: "Ascoltare", es: "Escuchar" }
       ]
     },
     {
@@ -224,16 +224,16 @@
       dark: "#A86B1E",
       soft: "#FFF3E0",
       items: [
-        { id: "kefali", emoji: "\u{1F642}", label: "\u039A\u03B5\u03C6\u03AC\u03BB\u03B9" },
-        { id: "mati", emoji: "\u{1F441}\uFE0F", label: "\u039C\u03AC\u03C4\u03B9" },
-        { id: "afti", emoji: "\u{1F442}", label: "\u0391\u03C5\u03C4\u03AF" },
-        { id: "myti", emoji: "\u{1F443}", label: "\u039C\u03CD\u03C4\u03B7" },
-        { id: "stoma", emoji: "\u{1F444}", label: "\u03A3\u03C4\u03CC\u03BC\u03B1" },
-        { id: "dontia", emoji: "\u{1F9B7}", label: "\u0394\u03CC\u03BD\u03C4\u03B9\u03B1" },
-        { id: "xeri", emoji: "\u270B", label: "\u03A7\u03AD\u03C1\u03B9" },
-        { id: "dahtyla", emoji: "\u{1F446}", label: "\u0394\u03AC\u03C7\u03C4\u03C5\u03BB\u03B1" },
-        { id: "podi", emoji: "\u{1F9B6}", label: "\u03A0\u03CC\u03B4\u03B9" },
-        { id: "mallia", emoji: "\u{1F487}", label: "\u039C\u03B1\u03BB\u03BB\u03B9\u03AC" }
+        { id: "kefali", emoji: "\u{1F642}", label: "\u039A\u03B5\u03C6\u03AC\u03BB\u03B9", en: "Head", it: "Testa", es: "Cabeza" },
+        { id: "mati", emoji: "\u{1F441}\uFE0F", label: "\u039C\u03AC\u03C4\u03B9", en: "Eye", it: "Occhio", es: "Ojo" },
+        { id: "afti", emoji: "\u{1F442}", label: "\u0391\u03C5\u03C4\u03AF", en: "Ear", it: "Orecchio", es: "Oreja" },
+        { id: "myti", emoji: "\u{1F443}", label: "\u039C\u03CD\u03C4\u03B7", en: "Nose", it: "Naso", es: "Nariz" },
+        { id: "stoma", emoji: "\u{1F444}", label: "\u03A3\u03C4\u03CC\u03BC\u03B1", en: "Mouth", it: "Bocca", es: "Boca" },
+        { id: "dontia", emoji: "\u{1F9B7}", label: "\u0394\u03CC\u03BD\u03C4\u03B9\u03B1", en: "Teeth", it: "Denti", es: "Dientes" },
+        { id: "xeri", emoji: "\u270B", label: "\u03A7\u03AD\u03C1\u03B9", en: "Hand", it: "Mano", es: "Mano" },
+        { id: "dahtyla", emoji: "\u{1F446}", label: "\u0394\u03AC\u03C7\u03C4\u03C5\u03BB\u03B1", en: "Fingers", it: "Dita", es: "Dedos" },
+        { id: "podi", emoji: "\u{1F9B6}", label: "\u03A0\u03CC\u03B4\u03B9", en: "Foot", it: "Piede", es: "Pie" },
+        { id: "mallia", emoji: "\u{1F487}", label: "\u039C\u03B1\u03BB\u03BB\u03B9\u03AC", en: "Hair", it: "Capelli", es: "Cabello" }
       ]
     }
   ];
@@ -253,7 +253,14 @@
   const CATS_KEY = "custom-categories";
   const ITEMS_KEY = "custom-items-by-cat";
   const EMOJIS_KEY = "custom-emojis";
-  const VOICE_KEY = "tts-voice-name";
+  const VOICE_KEY = "tts-voice-names";
+  const LANG_KEY = "app-language";
+  const LANG_META = {
+    el: { name: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC", ttsLang: "el-GR", prefix: "el", sample: "\u0393\u03B5\u03B9\u03B1 \u03C3\u03BF\u03C5, \u03B1\u03C5\u03C4\u03AE \u03B5\u03AF\u03BD\u03B1\u03B9 \u03B7 \u03C6\u03C9\u03BD\u03AE \u03BC\u03BF\u03C5." },
+    en: { name: "English", ttsLang: "en-US", prefix: "en", sample: "Hello, this is my voice." },
+    it: { name: "Italiano", ttsLang: "it-IT", prefix: "it", sample: "Ciao, questa \xE8 la mia voce." },
+    es: { name: "Espa\xF1ol", ttsLang: "es-ES", prefix: "es", sample: "Hola, esta es mi voz." }
+  };
   const HOLD_MS = 1600;
   const EMOJI_LIBRARY = [
     { e: "\u{1F34E}", k: ["\u03BC\u03AE\u03BB\u03BF", "\u03C6\u03C1\u03BF\u03CD\u03C4\u03BF"] },
@@ -636,7 +643,8 @@
     const [colorQuery, setColorQuery] = useState("");
     const [lastSpokenColorId, setLastSpokenColorId] = useState(null);
     const [voicesList, setVoicesList] = useState([]);
-    const [selectedVoiceName, setSelectedVoiceName] = useState("");
+    const [selectedVoiceNames, setSelectedVoiceNames] = useState({ el: "", en: "", it: "", es: "" });
+    const [appLanguage, setAppLanguage] = useState("el");
     const [voiceSettingsOpen, setVoiceSettingsOpen] = useState(false);
     const [listening, setListening] = useState(false);
     const [colorTextMode, setColorTextMode] = useState(false);
@@ -693,7 +701,12 @@
         }
         try {
           const res = await window.storage.get(VOICE_KEY, false);
-          if (res && res.value) setSelectedVoiceName(res.value);
+          if (res && res.value) setSelectedVoiceNames((prev) => ({ ...prev, ...JSON.parse(res.value) }));
+        } catch (e) {
+        }
+        try {
+          const res = await window.storage.get(LANG_KEY, false);
+          if (res && res.value) setAppLanguage(res.value);
         } catch (e) {
         }
       })();
@@ -707,23 +720,33 @@
       loadVoices();
       if (window.speechSynthesis) window.speechSynthesis.onvoiceschanged = loadVoices;
     }, []);
-    async function chooseVoice(name) {
-      setSelectedVoiceName(name);
+    async function chooseVoice(lang, name) {
+      setSelectedVoiceNames((prev) => {
+        const next = { ...prev, [lang]: name };
+        window.storage.set(VOICE_KEY, JSON.stringify(next), false).catch(() => {
+        });
+        return next;
+      });
+    }
+    async function chooseLanguage(lang) {
+      setAppLanguage(lang);
       try {
-        await window.storage.set(VOICE_KEY, name, false);
+        await window.storage.set(LANG_KEY, lang, false);
       } catch (e) {
       }
     }
     const speak = useCallback(
-      (text, itemId) => {
+      (text, itemId, langOverride) => {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
+        const lang = langOverride || appLanguage;
+        const meta = LANG_META[lang] || LANG_META.el;
         const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = "el-GR";
-        const chosen = voicesRef.current.find((v) => v.name === selectedVoiceName);
-        const greekVoice = voicesRef.current.find((v) => v.lang && v.lang.toLowerCase().startsWith("el"));
+        utter.lang = meta.ttsLang;
+        const chosen = voicesRef.current.find((v) => v.name === selectedVoiceNames[lang]);
+        const langVoice = voicesRef.current.find((v) => v.lang && v.lang.toLowerCase().startsWith(meta.prefix));
         if (chosen) utter.voice = chosen;
-        else if (greekVoice) utter.voice = greekVoice;
+        else if (langVoice) utter.voice = langVoice;
         utter.rate = 0.9;
         utter.pitch = 1.05;
         setSpeakingId(itemId);
@@ -731,14 +754,15 @@
         utter.onerror = () => setSpeakingId(null);
         window.speechSynthesis.speak(utter);
       },
-      [selectedVoiceName]
+      [selectedVoiceNames, appLanguage]
     );
-    function testVoice(voice) {
+    function testVoice(lang, voice) {
       if (!window.speechSynthesis) return;
       window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance("\u0393\u03B5\u03B9\u03B1 \u03C3\u03BF\u03C5, \u03B1\u03C5\u03C4\u03AE \u03B5\u03AF\u03BD\u03B1\u03B9 \u03B7 \u03C6\u03C9\u03BD\u03AE \u03BC\u03BF\u03C5.");
+      const meta = LANG_META[lang] || LANG_META.el;
+      const utter = new SpeechSynthesisUtterance(meta.sample);
       utter.voice = voice;
-      utter.lang = voice.lang || "el-GR";
+      utter.lang = voice.lang || meta.ttsLang;
       utter.rate = 0.9;
       window.speechSynthesis.speak(utter);
     }
@@ -771,6 +795,7 @@
     }
     const getLabel = (catId, item) => {
       var _a;
+      if (appLanguage !== "el" && item[appLanguage]) return item[appLanguage];
       return (_a = customLabels[`${catId}:${item.id}`]) != null ? _a : item.label;
     };
     const getEmoji = (catId, item) => {
@@ -899,7 +924,7 @@
     const colorSuggestions = normalizedColorQuery ? xromataCategory.items.filter((c) => normalizeGreek(c.label).startsWith(normalizedColorQuery) && c !== colorMatch).slice(0, 5) : [];
     useEffect(() => {
       if (colorMatch && colorMatch.id !== lastSpokenColorId) {
-        speak(colorMatch.label, `colorgame-${colorMatch.id}`);
+        speak(colorMatch.label, `colorgame-${colorMatch.id}`, "el");
         setLastSpokenColorId(colorMatch.id);
       }
       if (!colorMatch) setLastSpokenColorId(null);
@@ -1338,7 +1363,7 @@
       ))), /* @__PURE__ */ React.createElement(
         "button",
         {
-          onClick: () => colorMatch && speak(colorMatch.label, `colorgame-${colorMatch.id}`),
+          onClick: () => colorMatch && speak(colorMatch.label, `colorgame-${colorMatch.id}`, "el"),
           disabled: !colorMatch,
           style: {
             width: "72%",
@@ -1471,69 +1496,87 @@
             borderRadius: 20
           }
         },
-        /* @__PURE__ */ React.createElement("div", { style: { background: "#fff", borderRadius: 20, padding: 20, width: "100%", maxWidth: 340, maxHeight: "80%", display: "flex", flexDirection: "column", boxShadow: "0 12px 30px rgba(0,0,0,0.3)" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 } }, /* @__PURE__ */ React.createElement("span", { style: { fontWeight: 800, fontSize: 15, color: "#333" } }, "\u{1F5E3}\uFE0F \u03A6\u03C9\u03BD\u03AE \u03B5\u03BA\u03C6\u03CE\u03BD\u03B7\u03C3\u03B7\u03C2"), /* @__PURE__ */ React.createElement(
+        /* @__PURE__ */ React.createElement("div", { style: { background: "#fff", borderRadius: 20, padding: 20, width: "100%", maxWidth: 340, maxHeight: "80%", display: "flex", flexDirection: "column", boxShadow: "0 12px 30px rgba(0,0,0,0.3)" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 } }, /* @__PURE__ */ React.createElement("span", { style: { fontWeight: 800, fontSize: 15, color: "#333" } }, "\u{1F5E3}\uFE0F \u0393\u03BB\u03CE\u03C3\u03C3\u03B1 & \u03C6\u03C9\u03BD\u03AE"), /* @__PURE__ */ React.createElement(
           "button",
           {
             onClick: () => setVoiceSettingsOpen(false),
             style: { border: "none", background: "#f1f1f1", borderRadius: 999, width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }
           },
           /* @__PURE__ */ React.createElement(XIcon, { size: 16 })
-        )), voicesList.length === 0 && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 13, color: "#888", lineHeight: 1.5 } }, "\u0394\u03B5\u03BD \u03B2\u03C1\u03AD\u03B8\u03B7\u03BA\u03B1\u03BD \u03B4\u03B9\u03B1\u03B8\u03AD\u03C3\u03B9\u03BC\u03B5\u03C2 \u03C6\u03C9\u03BD\u03AD\u03C2 \u03C3\u03B5 \u03B1\u03C5\u03C4\u03AE \u03C4\u03B7 \u03C3\u03C5\u03C3\u03BA\u03B5\u03C5\u03AE."), !voicesList.some((v) => v.lang && v.lang.toLowerCase().startsWith("el")) && voicesList.length > 0 && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "#a05a00", background: "#FFF3E0", padding: "8px 10px", borderRadius: 10, lineHeight: 1.5, marginBottom: 8 } }, "\u0394\u03B5\u03BD \u03B2\u03C1\u03AD\u03B8\u03B7\u03BA\u03B5 \u03B5\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AE \u03C6\u03C9\u03BD\u03AE \u03C3\u03C4\u03BF \u03BA\u03B9\u03BD\u03B7\u03C4\u03CC. \u0393\u03B9\u03B1 \u03C3\u03C9\u03C3\u03C4\u03AE \u03C0\u03C1\u03BF\u03C6\u03BF\u03C1\u03AC, \u03B5\u03B3\u03BA\u03B1\u03C4\u03AD\u03C3\u03C4\u03B7\u03C3\u03B5 \u03B5\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AE \u03C6\u03C9\u03BD\u03AE \u03B1\u03C0\u03CC \u03C4\u03B9\u03C2 \u03A1\u03C5\u03B8\u03BC\u03AF\u03C3\u03B5\u03B9\u03C2 \u2192 \u0393\u03BB\u03CE\u03C3\u03C3\u03B1 \u2192 Text-to-speech. \u039C\u03AD\u03C7\u03C1\u03B9 \u03C4\u03CC\u03C4\u03B5, \u03B4\u03B9\u03AC\u03BB\u03B5\u03BE\u03B5 \u03CC\u03C0\u03BF\u03B9\u03B1 \u03C6\u03C9\u03BD\u03AE \u03B1\u03BA\u03BF\u03CD\u03B3\u03B5\u03C4\u03B1\u03B9 \u03BA\u03B1\u03BB\u03CD\u03C4\u03B5\u03C1\u03B1."), /* @__PURE__ */ React.createElement("div", { style: { overflowY: "auto", display: "flex", flexDirection: "column", gap: 6 } }, [...voicesList].sort((a, b) => {
-          const aEl = a.lang && a.lang.toLowerCase().startsWith("el") ? 0 : 1;
-          const bEl = b.lang && b.lang.toLowerCase().startsWith("el") ? 0 : 1;
-          if (aEl !== bEl) return aEl - bEl;
-          return a.name.localeCompare(b.name);
-        }).map((v) => /* @__PURE__ */ React.createElement(
-          "div",
+        )), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 } }, Object.keys(LANG_META).map((lang) => /* @__PURE__ */ React.createElement(
+          "button",
           {
-            key: v.name + v.lang,
-            onClick: () => chooseVoice(v.name),
+            key: lang,
+            onClick: () => chooseLanguage(lang),
             style: {
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 8,
-              padding: "10px 12px",
-              borderRadius: 12,
-              border: v.name === selectedVoiceName ? "2px solid #4F9DDE" : "2px solid #eee",
-              background: v.name === selectedVoiceName ? "#E8F4FC" : "#fafafa",
+              border: appLanguage === lang ? "2px solid #4F9DDE" : "2px solid #eee",
+              background: appLanguage === lang ? "#E8F4FC" : "#fafafa",
+              color: "#333",
+              fontWeight: 700,
+              fontSize: 12.5,
+              padding: "7px 12px",
+              borderRadius: 999,
               cursor: "pointer"
             }
           },
-          /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 13, fontWeight: 700, color: "#333", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" } }, v.name), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 11, color: "#999" } }, v.lang)),
-          v.name === selectedVoiceName && /* @__PURE__ */ React.createElement(Check, { size: 16, color: "#4F9DDE" }),
-          /* @__PURE__ */ React.createElement(
-            "button",
+          LANG_META[lang].name
+        ))), (() => {
+          const meta = LANG_META[appLanguage];
+          const langVoices = voicesList.filter((v) => v.lang && v.lang.toLowerCase().startsWith(meta.prefix));
+          const others = voicesList.filter((v) => !(v.lang && v.lang.toLowerCase().startsWith(meta.prefix)));
+          const ordered = [...langVoices, ...others];
+          return /* @__PURE__ */ React.createElement(React.Fragment, null, voicesList.length === 0 && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 13, color: "#888", lineHeight: 1.5 } }, "\u0394\u03B5\u03BD \u03B2\u03C1\u03AD\u03B8\u03B7\u03BA\u03B1\u03BD \u03B4\u03B9\u03B1\u03B8\u03AD\u03C3\u03B9\u03BC\u03B5\u03C2 \u03C6\u03C9\u03BD\u03AD\u03C2 \u03C3\u03B5 \u03B1\u03C5\u03C4\u03AE \u03C4\u03B7 \u03C3\u03C5\u03C3\u03BA\u03B5\u03C5\u03AE."), langVoices.length === 0 && voicesList.length > 0 && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "#a05a00", background: "#FFF3E0", padding: "8px 10px", borderRadius: 10, lineHeight: 1.5, marginBottom: 8 } }, "\u0394\u03B5\u03BD \u03B2\u03C1\u03AD\u03B8\u03B7\u03BA\u03B5 \u03C6\u03C9\u03BD\u03AE \u03C3\u03C4\u03B1 ", meta.name, " \u03C3\u03B5 \u03B1\u03C5\u03C4\u03CC \u03C4\u03BF \u03BA\u03B9\u03BD\u03B7\u03C4\u03CC. \u0395\u03B3\u03BA\u03B1\u03C4\u03AD\u03C3\u03C4\u03B7\u03C3\u03B5 \u03C4\u03B7\u03BD \u03B1\u03C0\u03CC \u03A1\u03C5\u03B8\u03BC\u03AF\u03C3\u03B5\u03B9\u03C2 \u2192 \u0393\u03BB\u03CE\u03C3\u03C3\u03B1 \u2192 Text-to-speech, \u03AE \u03B4\u03BF\u03BA\u03AF\u03BC\u03B1\u03C3\u03B5 \u03C0\u03C1\u03BF\u03C3\u03C9\u03C1\u03B9\u03BD\u03AC \u03BC\u03B9\u03B1 \u03B1\u03C0\u03CC \u03C4\u03B9\u03C2 \u03C0\u03B1\u03C1\u03B1\u03BA\u03AC\u03C4\u03C9."), /* @__PURE__ */ React.createElement("div", { style: { overflowY: "auto", display: "flex", flexDirection: "column", gap: 6 } }, ordered.map((v) => /* @__PURE__ */ React.createElement(
+            "div",
             {
-              onClick: (e) => {
-                e.stopPropagation();
-                testVoice(v);
-              },
+              key: v.name + v.lang,
+              onClick: () => chooseVoice(appLanguage, v.name),
               style: {
-                border: "none",
-                background: "#fff",
-                borderRadius: 999,
-                width: 30,
-                height: 30,
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 2px 4px rgba(0,0,0,0.12)",
-                cursor: "pointer",
-                flexShrink: 0
-              },
-              "aria-label": "\u0394\u03BF\u03BA\u03B9\u03BC\u03AE \u03C6\u03C9\u03BD\u03AE\u03C2"
+                justifyContent: "space-between",
+                gap: 8,
+                padding: "10px 12px",
+                borderRadius: 12,
+                border: v.name === selectedVoiceNames[appLanguage] ? "2px solid #4F9DDE" : "2px solid #eee",
+                background: v.name === selectedVoiceNames[appLanguage] ? "#E8F4FC" : "#fafafa",
+                cursor: "pointer"
+              }
             },
-            /* @__PURE__ */ React.createElement(Volume2, { size: 15, color: "#555" })
-          )
-        ))), selectedVoiceName && /* @__PURE__ */ React.createElement(
+            /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 13, fontWeight: 700, color: "#333", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" } }, v.name), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 11, color: "#999" } }, v.lang)),
+            v.name === selectedVoiceNames[appLanguage] && /* @__PURE__ */ React.createElement(Check, { size: 16, color: "#4F9DDE" }),
+            /* @__PURE__ */ React.createElement(
+              "button",
+              {
+                onClick: (e) => {
+                  e.stopPropagation();
+                  testVoice(appLanguage, v);
+                },
+                style: {
+                  border: "none",
+                  background: "#fff",
+                  borderRadius: 999,
+                  width: 30,
+                  height: 30,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.12)",
+                  cursor: "pointer",
+                  flexShrink: 0
+                },
+                "aria-label": "\u0394\u03BF\u03BA\u03B9\u03BC\u03AE \u03C6\u03C9\u03BD\u03AE\u03C2"
+              },
+              /* @__PURE__ */ React.createElement(Volume2, { size: 15, color: "#555" })
+            )
+          ))));
+        })(), selectedVoiceNames[appLanguage] && /* @__PURE__ */ React.createElement(
           "button",
           {
-            onClick: () => chooseVoice(""),
+            onClick: () => chooseVoice(appLanguage, ""),
             style: { marginTop: 10, border: "none", background: "transparent", color: "#999", fontSize: 12.5, fontWeight: 700, cursor: "pointer", textDecoration: "underline" }
           },
           "\u0395\u03C0\u03B1\u03BD\u03B1\u03C6\u03BF\u03C1\u03AC \u03C3\u03B5 \u03B1\u03C5\u03C4\u03CC\u03BC\u03B1\u03C4\u03B7 \u03B5\u03C0\u03B9\u03BB\u03BF\u03B3\u03AE"
-        ))
+        ), appLanguage !== "el" && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 11, color: "#999", marginTop: 10, lineHeight: 1.4 } }, "\u03A3\u03B7\u03BC\u03B5\u03AF\u03C9\u03C3\u03B7: \u03C4\u03BF \xAB\u0393\u03C1\u03AC\u03C8\u03B5 \u03AD\u03BD\u03B1 \u03C7\u03C1\u03CE\u03BC\u03B1\xBB \u03C0\u03B1\u03C1\u03B1\u03BC\u03AD\u03BD\u03B5\u03B9 \u03C0\u03AC\u03BD\u03C4\u03B1 \u03C3\u03C4\u03B1 \u03B5\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC."))
       )
     );
   }
