@@ -1,4 +1,4 @@
-const CACHE_NAME = "mathaino-lexeis-v2";
+const CACHE_NAME = "mathaino-lexeis-v3";
 const ASSETS = [
   "./",
   "./index.html",

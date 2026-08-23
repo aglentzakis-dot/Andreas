@@ -253,6 +253,7 @@
   const CATS_KEY = "custom-categories";
   const ITEMS_KEY = "custom-items-by-cat";
   const EMOJIS_KEY = "custom-emojis";
+  const VOICE_KEY = "tts-voice-name";
   const HOLD_MS = 1600;
   const EMOJI_LIBRARY = [
     { e: "\u{1F34E}", k: ["\u03BC\u03AE\u03BB\u03BF", "\u03C6\u03C1\u03BF\u03CD\u03C4\u03BF"] },
@@ -532,6 +533,13 @@
     const [speakingId, setSpeakingId] = useState(null);
     const [colorQuery, setColorQuery] = useState("");
     const [lastSpokenColorId, setLastSpokenColorId] = useState(null);
+    const [voicesList, setVoicesList] = useState([]);
+    const [selectedVoiceName, setSelectedVoiceName] = useState("");
+    const [voiceSettingsOpen, setVoiceSettingsOpen] = useState(false);
+    const [listening, setListening] = useState(false);
+    const [colorTextMode, setColorTextMode] = useState(false);
+    const recognitionRef = useRef(null);
+    const speechRecognitionSupported = typeof window !== "undefined" && !!(window.SpeechRecognition || window.webkitSpeechRecognition);
     const [saveState, setSaveState] = useState("idle");
     const [holdProgress, setHoldProgress] = useState(0);
     const voicesRef = useRef([]);
@@ -581,29 +589,84 @@
           if (res && res.value) setCustomEmojis(JSON.parse(res.value));
         } catch (e) {
         }
+        try {
+          const res = await window.storage.get(VOICE_KEY, false);
+          if (res && res.value) setSelectedVoiceName(res.value);
+        } catch (e) {
+        }
       })();
     }, []);
     useEffect(() => {
       function loadVoices() {
-        voicesRef.current = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+        const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+        voicesRef.current = voices;
+        setVoicesList(voices);
       }
       loadVoices();
       if (window.speechSynthesis) window.speechSynthesis.onvoiceschanged = loadVoices;
     }, []);
-    const speak = useCallback((text, itemId) => {
+    async function chooseVoice(name) {
+      setSelectedVoiceName(name);
+      try {
+        await window.storage.set(VOICE_KEY, name, false);
+      } catch (e) {
+      }
+    }
+    const speak = useCallback(
+      (text, itemId) => {
+        if (!window.speechSynthesis) return;
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = "el-GR";
+        const chosen = voicesRef.current.find((v) => v.name === selectedVoiceName);
+        const greekVoice = voicesRef.current.find((v) => v.lang && v.lang.toLowerCase().startsWith("el"));
+        if (chosen) utter.voice = chosen;
+        else if (greekVoice) utter.voice = greekVoice;
+        utter.rate = 0.9;
+        utter.pitch = 1.05;
+        setSpeakingId(itemId);
+        utter.onend = () => setSpeakingId(null);
+        utter.onerror = () => setSpeakingId(null);
+        window.speechSynthesis.speak(utter);
+      },
+      [selectedVoiceName]
+    );
+    function testVoice(voice) {
       if (!window.speechSynthesis) return;
       window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = "el-GR";
-      const greekVoice = voicesRef.current.find((v) => v.lang && v.lang.toLowerCase().startsWith("el"));
-      if (greekVoice) utter.voice = greekVoice;
+      const utter = new SpeechSynthesisUtterance("\u0393\u03B5\u03B9\u03B1 \u03C3\u03BF\u03C5, \u03B1\u03C5\u03C4\u03AE \u03B5\u03AF\u03BD\u03B1\u03B9 \u03B7 \u03C6\u03C9\u03BD\u03AE \u03BC\u03BF\u03C5.");
+      utter.voice = voice;
+      utter.lang = voice.lang || "el-GR";
       utter.rate = 0.9;
-      utter.pitch = 1.05;
-      setSpeakingId(itemId);
-      utter.onend = () => setSpeakingId(null);
-      utter.onerror = () => setSpeakingId(null);
       window.speechSynthesis.speak(utter);
-    }, []);
+    }
+    function startListening() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) return;
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch (e) {
+        }
+      }
+      const rec = new SR();
+      rec.lang = "el-GR";
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+      rec.onresult = (e) => {
+        const text = e.results[0][0].transcript;
+        setColorQuery(text);
+      };
+      rec.onend = () => setListening(false);
+      rec.onerror = () => setListening(false);
+      recognitionRef.current = rec;
+      setListening(true);
+      try {
+        rec.start();
+      } catch (e) {
+        setListening(false);
+      }
+    }
     const getLabel = (catId, item) => {
       var _a;
       return (_a = customLabels[`${catId}:${item.id}`]) != null ? _a : item.label;
@@ -835,7 +898,27 @@
           },
           screen.view === "home" ? "\u039C\u03B1\u03B8\u03B1\u03AF\u03BD\u03C9 \u039B\u03AD\u03BE\u03B5\u03B9\u03C2" : screen.view === "colorgame" ? "\u0393\u03C1\u03AC\u03C8\u03B5 \u03AD\u03BD\u03B1 \u03C7\u03C1\u03CE\u03BC\u03B1" : activeCategory == null ? void 0 : activeCategory.name
         ),
-        /* @__PURE__ */ React.createElement(
+        /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 4 } }, /* @__PURE__ */ React.createElement(
+          "button",
+          {
+            onClick: () => setVoiceSettingsOpen(true),
+            "aria-label": "\u03A1\u03C5\u03B8\u03BC\u03AF\u03C3\u03B5\u03B9\u03C2 \u03C6\u03C9\u03BD\u03AE\u03C2",
+            style: {
+              border: "none",
+              background: "#ffffffcc",
+              borderRadius: 999,
+              width: 38,
+              height: 38,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 3px 0 rgba(0,0,0,0.08)",
+              cursor: "pointer",
+              fontSize: 17
+            }
+          },
+          "\u{1F5E3}\uFE0F"
+        ), /* @__PURE__ */ React.createElement(
           "div",
           {
             onPointerDown: startHold,
@@ -881,7 +964,7 @@
               }
             )
           )
-        )
+        ))
       ),
       editMode && /* @__PURE__ */ React.createElement(
         "div",
@@ -1085,27 +1168,54 @@
         },
         /* @__PURE__ */ React.createElement(Plus, { size: 22, color: "#888" }),
         /* @__PURE__ */ React.createElement("span", { style: { fontSize: 11, fontWeight: 800, color: "#888" } }, "\u039D\u03AD\u03B1 \u03B5\u03B9\u03BA\u03CC\u03BD\u03B1")
-      )), screen.view === "colorgame" && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 16, paddingTop: 6 } }, /* @__PURE__ */ React.createElement(
+      )), screen.view === "colorgame" && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 10, paddingTop: 6 } }, /* @__PURE__ */ React.createElement("div", { style: { position: "relative", width: "100%" } }, /* @__PURE__ */ React.createElement(
         "input",
         {
-          autoFocus: true,
+          autoFocus: !speechRecognitionSupported,
+          readOnly: speechRecognitionSupported && !colorTextMode,
           value: colorQuery,
           onChange: (e) => setColorQuery(e.target.value),
-          placeholder: "\u0393\u03C1\u03AC\u03C8\u03B5 \u03AD\u03BD\u03B1 \u03C7\u03C1\u03CE\u03BC\u03B1\u2026 \u03C0.\u03C7. \u03BA\u03CC\u03BA\u03BA\u03B9\u03BD\u03BF",
+          onClick: () => {
+            if (speechRecognitionSupported && !colorTextMode) startListening();
+          },
+          placeholder: speechRecognitionSupported && !colorTextMode ? listening ? "\u03A3\u03B5 \u03B1\u03BA\u03BF\u03CD\u03C9\u2026 \u03C0\u03B5\u03C2 \u03AD\u03BD\u03B1 \u03C7\u03C1\u03CE\u03BC\u03B1" : "\u03A0\u03AC\u03C4\u03B7\u03C3\u03B5 \u03B5\u03B4\u03CE \u03BA\u03B1\u03B9 \u03C0\u03B5\u03C2 \u03AD\u03BD\u03B1 \u03C7\u03C1\u03CE\u03BC\u03B1" : "\u0393\u03C1\u03AC\u03C8\u03B5 \u03AD\u03BD\u03B1 \u03C7\u03C1\u03CE\u03BC\u03B1\u2026 \u03C0.\u03C7. \u03BA\u03CC\u03BA\u03BA\u03B9\u03BD\u03BF",
           style: {
             width: "100%",
             boxSizing: "border-box",
             fontSize: 18,
             textAlign: "center",
-            padding: "14px 16px",
+            padding: speechRecognitionSupported && !colorTextMode ? "14px 46px" : "14px 16px",
             borderRadius: 16,
-            border: `2.5px solid ${colorMatch ? colorMatch.hex : "#ddd"}`,
+            border: `2.5px solid ${listening ? "#4F9DDE" : colorMatch ? colorMatch.hex : "#ddd"}`,
             fontFamily: "inherit",
             fontWeight: 700,
-            color: "#444"
+            color: "#444",
+            cursor: speechRecognitionSupported && !colorTextMode ? "pointer" : "text",
+            boxShadow: listening ? "0 0 0 5px #4F9DDE33" : "none",
+            transition: "box-shadow 0.2s ease, border 0.2s ease"
           }
         }
-      ), colorSuggestions.length > 0 && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" } }, colorSuggestions.map((c) => /* @__PURE__ */ React.createElement(
+      ), speechRecognitionSupported && !colorTextMode && /* @__PURE__ */ React.createElement(
+        "span",
+        {
+          style: {
+            position: "absolute",
+            right: 14,
+            top: "50%",
+            transform: "translateY(-50%)",
+            fontSize: 22,
+            animation: listening ? "pulseMic 1s infinite" : "none"
+          }
+        },
+        listening ? "\u{1F534}" : "\u{1F3A4}"
+      )), speechRecognitionSupported && /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: () => setColorTextMode((v) => !v),
+          style: { border: "none", background: "transparent", color: "#999", fontSize: 12.5, fontWeight: 700, cursor: "pointer", textDecoration: "underline" }
+        },
+        colorTextMode ? "\u{1F3A4} \u03A0\u03B5\u03C2 \u03C4\u03BF \u03B1\u03BD\u03C4' \u03B1\u03C5\u03C4\u03BF\u03CD" : "\u2328\uFE0F \u03A0\u03BB\u03B7\u03BA\u03C4\u03C1\u03BF\u03BB\u03CC\u03B3\u03B7\u03C3\u03B5 \u03B1\u03BD\u03C4' \u03B1\u03C5\u03C4\u03BF\u03CD"
+      ), /* @__PURE__ */ React.createElement("style", null, `@keyframes pulseMic { 0%,100% { opacity:1; transform: translateY(-50%) scale(1); } 50% { opacity:0.5; transform: translateY(-50%) scale(1.15); } }`), colorSuggestions.length > 0 && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" } }, colorSuggestions.map((c) => /* @__PURE__ */ React.createElement(
         "button",
         {
           key: c.id,
@@ -1243,7 +1353,86 @@
         /* @__PURE__ */ React.createElement(Check, { size: 18 }),
         " \u03A0\u03C1\u03BF\u03C3\u03B8\u03AE\u03BA\u03B7"
       ))),
-      saveState !== "idle" && /* @__PURE__ */ React.createElement("div", { style: { position: "absolute", bottom: 10, left: "50%", transform: "translateX(-50%)", background: "#333", color: "#fff", fontSize: 12, fontWeight: 600, padding: "6px 14px", borderRadius: 999 } }, saveState === "saving" ? "\u0391\u03C0\u03BF\u03B8\u03AE\u03BA\u03B5\u03C5\u03C3\u03B7..." : "\u0391\u03C0\u03BF\u03B8\u03B7\u03BA\u03B5\u03CD\u03C4\u03B7\u03BA\u03B5 \u2713")
+      saveState !== "idle" && /* @__PURE__ */ React.createElement("div", { style: { position: "absolute", bottom: 10, left: "50%", transform: "translateX(-50%)", background: "#333", color: "#fff", fontSize: 12, fontWeight: 600, padding: "6px 14px", borderRadius: 999 } }, saveState === "saving" ? "\u0391\u03C0\u03BF\u03B8\u03AE\u03BA\u03B5\u03C5\u03C3\u03B7..." : "\u0391\u03C0\u03BF\u03B8\u03B7\u03BA\u03B5\u03CD\u03C4\u03B7\u03BA\u03B5 \u2713"),
+      voiceSettingsOpen && /* @__PURE__ */ React.createElement(
+        "div",
+        {
+          style: {
+            position: "absolute",
+            inset: 0,
+            background: "rgba(0,0,0,0.45)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 24,
+            zIndex: 10,
+            borderRadius: 20
+          }
+        },
+        /* @__PURE__ */ React.createElement("div", { style: { background: "#fff", borderRadius: 20, padding: 20, width: "100%", maxWidth: 340, maxHeight: "80%", display: "flex", flexDirection: "column", boxShadow: "0 12px 30px rgba(0,0,0,0.3)" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 } }, /* @__PURE__ */ React.createElement("span", { style: { fontWeight: 800, fontSize: 15, color: "#333" } }, "\u{1F5E3}\uFE0F \u03A6\u03C9\u03BD\u03AE \u03B5\u03BA\u03C6\u03CE\u03BD\u03B7\u03C3\u03B7\u03C2"), /* @__PURE__ */ React.createElement(
+          "button",
+          {
+            onClick: () => setVoiceSettingsOpen(false),
+            style: { border: "none", background: "#f1f1f1", borderRadius: 999, width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }
+          },
+          /* @__PURE__ */ React.createElement(XIcon, { size: 16 })
+        )), voicesList.length === 0 && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 13, color: "#888", lineHeight: 1.5 } }, "\u0394\u03B5\u03BD \u03B2\u03C1\u03AD\u03B8\u03B7\u03BA\u03B1\u03BD \u03B4\u03B9\u03B1\u03B8\u03AD\u03C3\u03B9\u03BC\u03B5\u03C2 \u03C6\u03C9\u03BD\u03AD\u03C2 \u03C3\u03B5 \u03B1\u03C5\u03C4\u03AE \u03C4\u03B7 \u03C3\u03C5\u03C3\u03BA\u03B5\u03C5\u03AE."), !voicesList.some((v) => v.lang && v.lang.toLowerCase().startsWith("el")) && voicesList.length > 0 && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "#a05a00", background: "#FFF3E0", padding: "8px 10px", borderRadius: 10, lineHeight: 1.5, marginBottom: 8 } }, "\u0394\u03B5\u03BD \u03B2\u03C1\u03AD\u03B8\u03B7\u03BA\u03B5 \u03B5\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AE \u03C6\u03C9\u03BD\u03AE \u03C3\u03C4\u03BF \u03BA\u03B9\u03BD\u03B7\u03C4\u03CC. \u0393\u03B9\u03B1 \u03C3\u03C9\u03C3\u03C4\u03AE \u03C0\u03C1\u03BF\u03C6\u03BF\u03C1\u03AC, \u03B5\u03B3\u03BA\u03B1\u03C4\u03AD\u03C3\u03C4\u03B7\u03C3\u03B5 \u03B5\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AE \u03C6\u03C9\u03BD\u03AE \u03B1\u03C0\u03CC \u03C4\u03B9\u03C2 \u03A1\u03C5\u03B8\u03BC\u03AF\u03C3\u03B5\u03B9\u03C2 \u2192 \u0393\u03BB\u03CE\u03C3\u03C3\u03B1 \u2192 Text-to-speech. \u039C\u03AD\u03C7\u03C1\u03B9 \u03C4\u03CC\u03C4\u03B5, \u03B4\u03B9\u03AC\u03BB\u03B5\u03BE\u03B5 \u03CC\u03C0\u03BF\u03B9\u03B1 \u03C6\u03C9\u03BD\u03AE \u03B1\u03BA\u03BF\u03CD\u03B3\u03B5\u03C4\u03B1\u03B9 \u03BA\u03B1\u03BB\u03CD\u03C4\u03B5\u03C1\u03B1."), /* @__PURE__ */ React.createElement("div", { style: { overflowY: "auto", display: "flex", flexDirection: "column", gap: 6 } }, [...voicesList].sort((a, b) => {
+          const aEl = a.lang && a.lang.toLowerCase().startsWith("el") ? 0 : 1;
+          const bEl = b.lang && b.lang.toLowerCase().startsWith("el") ? 0 : 1;
+          if (aEl !== bEl) return aEl - bEl;
+          return a.name.localeCompare(b.name);
+        }).map((v) => /* @__PURE__ */ React.createElement(
+          "div",
+          {
+            key: v.name + v.lang,
+            onClick: () => chooseVoice(v.name),
+            style: {
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 8,
+              padding: "10px 12px",
+              borderRadius: 12,
+              border: v.name === selectedVoiceName ? "2px solid #4F9DDE" : "2px solid #eee",
+              background: v.name === selectedVoiceName ? "#E8F4FC" : "#fafafa",
+              cursor: "pointer"
+            }
+          },
+          /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", flex: 1, minWidth: 0 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 13, fontWeight: 700, color: "#333", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" } }, v.name), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 11, color: "#999" } }, v.lang)),
+          v.name === selectedVoiceName && /* @__PURE__ */ React.createElement(Check, { size: 16, color: "#4F9DDE" }),
+          /* @__PURE__ */ React.createElement(
+            "button",
+            {
+              onClick: (e) => {
+                e.stopPropagation();
+                testVoice(v);
+              },
+              style: {
+                border: "none",
+                background: "#fff",
+                borderRadius: 999,
+                width: 30,
+                height: 30,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.12)",
+                cursor: "pointer",
+                flexShrink: 0
+              },
+              "aria-label": "\u0394\u03BF\u03BA\u03B9\u03BC\u03AE \u03C6\u03C9\u03BD\u03AE\u03C2"
+            },
+            /* @__PURE__ */ React.createElement(Volume2, { size: 15, color: "#555" })
+          )
+        ))), selectedVoiceName && /* @__PURE__ */ React.createElement(
+          "button",
+          {
+            onClick: () => chooseVoice(""),
+            style: { marginTop: 10, border: "none", background: "transparent", color: "#999", fontSize: 12.5, fontWeight: 700, cursor: "pointer", textDecoration: "underline" }
+          },
+          "\u0395\u03C0\u03B1\u03BD\u03B1\u03C6\u03BF\u03C1\u03AC \u03C3\u03B5 \u03B1\u03C5\u03C4\u03CC\u03BC\u03B1\u03C4\u03B7 \u03B5\u03C0\u03B9\u03BB\u03BF\u03B3\u03AE"
+        ))
+      )
     );
   }
   const rootEl = document.getElementById("root");
