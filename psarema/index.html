@@ -21,6 +21,8 @@
   }
   header::after{ content:""; position:absolute; right:-30px; bottom:-40px; width:160px; height:160px; border-radius:50%; background: rgba(255,255,255,0.06); }
   header h1{ font-size: 1.5rem; letter-spacing: 0.3px; }
+  header h1 a.brand-link{ color: inherit; text-decoration: none; display:inline-flex; align-items:center; }
+  header h1 a.brand-link:active{ opacity: 0.75; }
   header .sub{ font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
   nav.tabs{ display:flex; gap: 6px; padding: 10px 12px 0; background: var(--deep); overflow-x:auto; }
   nav.tabs button{
@@ -36,8 +38,9 @@
   label:first-of-type{ margin-top:0; }
   input[type=text], input[type=date], input[type=time], input[type=number], select, textarea{
     width: 100%; padding: 11px 12px; border: 1.5px solid var(--line); border-radius: 9px;
-    font-size: 0.95rem; font-family:'Inter',sans-serif; background: var(--foam); color: var(--ink);
+    font-size: 0.95rem; font-family:'Inter',sans-serif; background: var(--foam); color: var(--ink); resize: vertical;
   }
+  textarea#f-coords, textarea#e-coords{ min-height: 64px; line-height: 1.35; }
   input:focus, select:focus, textarea:focus{ outline: none; border-color: var(--teal); }
   .row2{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   details.picker{ border: 1.5px solid var(--line); border-radius: 9px; background: var(--foam); overflow:hidden; }
@@ -136,7 +139,15 @@
 <body>
 
 <header>
-  <h1>🎣 Ημερολόγιο Ψαρέματος</h1>
+  <h1><a href="https://miserlis-fishing.gr/" target="_blank" rel="noopener" class="brand-link" aria-label="Miserlis Fishing Store">
+    <svg viewBox="0 0 64 28" width="30" height="14" style="vertical-align:-3px; margin-right:6px;">
+      <g fill="#2E86D6">
+        <path d="M2 14 L20 14" stroke="#2E86D6" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M18 14 C24 6, 40 4, 50 6 C42 8, 34 11, 30 14 C34 17, 42 20, 50 22 C40 24, 24 22, 18 14 Z"/>
+        <path d="M6 14 L14 9 L14 19 Z"/>
+        <circle cx="24" cy="12" r="1.1" fill="var(--foam)"/>
+      </g>
+    </svg>Ημερολόγιο Ψαρέματος</a></h1>
   <div class="sub">Προσωπική καταγραφή — αποθηκεύεται στη συσκευή σου</div>
 </header>
 
@@ -156,8 +167,9 @@
 
       <div class="row2">
         <div><label>Ημερομηνία</label><input type="date" id="f-date"></div>
-        <div><label>Συντεταγμένες</label><input type="text" id="f-coords" placeholder="π.χ. 37,6623056, 24,0367908"></div>
+        <div><label>Συντεταγμένες</label><textarea id="f-coords" rows="2" placeholder="π.χ. 37,6623056, 24,0367908 ή link/κείμενο από Apple Maps"></textarea></div>
       </div>
+      <div class="geo-row"><button type="button" id="btn-geo">📍 Τρέχουσα τοποθεσία</button></div>
       <div class="coord-preview" id="coord-preview"></div>
 
       <div class="row2">
@@ -231,7 +243,9 @@
   <div class="view" id="view-settings">
     <div class="card">
       <h2>Δεδομένα</h2>
-      <p class="hint">Τα δεδομένα σου αποθηκεύονται μόνο σε αυτή τη συσκευή/browser. Κάνε τακτικά εξαγωγή για αντίγραφο ασφαλείας.</p>
+      <p class="hint">Τα δεδομένα σου αποθηκεύονται μόνο σε αυτή τη συσκευή/browser. Κάνε τακτικά εξαγωγή για αντίγραφο ασφαλείας — ιδανικά μετά από κάθε νέα ψαριά.</p>
+      <p class="hint">Μια αναβάθμιση της εφαρμογής (νέα έκδοση στο GitHub) <strong>δεν διαγράφει</strong> τις αποθηκευμένες καταχωρήσεις σου — παραμένουν στη συσκευή σου όπως ήταν. Παρ' όλα αυτά, κράτα τακτικό αντίγραφο ασφαλείας για κάθε ενδεχόμενο.</p>
+      <p class="hint" style="margin-top:2px;">Σημείωση: όταν ανεβαίνει νέα έκδοση της εφαρμογής, οι καταχωρήσεις σου <b>δεν</b> επηρεάζονται — μένουν ασφαλείς στη συσκευή σου.</p>
       <div class="footer-tools">
         <button type="button" id="btn-export">⬇ Εξαγωγή JSON</button>
         <button type="button" id="btn-import">⬆ Εισαγωγή JSON</button>
@@ -256,7 +270,7 @@
 
     <div class="row2">
       <div><label>Ημερομηνία</label><input type="date" id="e-date"></div>
-      <div><label>Συντεταγμένες</label><input type="text" id="e-coords" placeholder="π.χ. 37,6623056, 24,0367908"></div>
+      <div><label>Συντεταγμένες</label><textarea id="e-coords" rows="2" placeholder="π.χ. 37,6623056, 24,0367908 ή link/κείμενο από Apple Maps"></textarea></div>
     </div>
     <div class="coord-preview" id="e-coord-preview"></div>
 
@@ -472,16 +486,38 @@ function toast(msg){
 }
 
 /* ---------- chip pickers ---------- */
-function renderChipList(listId, items, selSet, countId, onToggle){
+function renderChipList(listId, items, selSet, countId, onToggle, deleteCtx){
   const el = document.getElementById(listId);
   el.innerHTML = '';
   items.forEach(name=>{
     const chip = document.createElement('div');
     chip.className = 'chip' + (selSet.has(name) ? ' sel' : '');
     chip.textContent = name;
+    let pressTimer = null, longPressed = false;
+    const startPress = (ev)=>{
+      longPressed = false;
+      pressTimer = setTimeout(()=>{
+        longPressed = true;
+        if(deleteCtx && confirm(`Διαγραφή "${name}" από τη λίστα;`)){
+          const idx = deleteCtx.arr.indexOf(name);
+          if(idx > -1) deleteCtx.arr.splice(idx,1);
+          selSet.delete(name);
+          LS.set(deleteCtx.storeKey, deleteCtx.arr);
+          deleteCtx.rerender();
+        }
+      }, 550);
+    };
+    const cancelPress = ()=>{ clearTimeout(pressTimer); };
+    chip.addEventListener('touchstart', startPress, {passive:true});
+    chip.addEventListener('touchend', cancelPress);
+    chip.addEventListener('touchmove', cancelPress);
+    chip.addEventListener('mousedown', startPress);
+    chip.addEventListener('mouseup', cancelPress);
+    chip.addEventListener('mouseleave', cancelPress);
     chip.addEventListener('click', ()=>{
+      if(longPressed) return;
       if(selSet.has(name)) selSet.delete(name); else selSet.add(name);
-      renderChipList(listId, items, selSet, countId, onToggle);
+      renderChipList(listId, items, selSet, countId, onToggle, deleteCtx);
       if(onToggle) onToggle();
     });
     el.appendChild(chip);
@@ -489,9 +525,9 @@ function renderChipList(listId, items, selSet, countId, onToggle){
   if(countId){ document.getElementById(countId).textContent = selSet.size ? `(${selSet.size})` : ''; }
 }
 function refreshPickers(){
-  renderChipList('fish-chip-list', species, selFish, 'fish-count-sum', renderFishQty);
-  renderChipList('bait-chip-list', baits, selBait, 'bait-count-sum');
-  renderChipList('equip-chip-list', equips, selEquip, 'equip-count-sum');
+  renderChipList('fish-chip-list', species, selFish, 'fish-count-sum', renderFishQty, {arr:species, storeKey:'psarema_species', rerender:refreshPickers});
+  renderChipList('bait-chip-list', baits, selBait, 'bait-count-sum', null, {arr:baits, storeKey:'psarema_bait', rerender:refreshPickers});
+  renderChipList('equip-chip-list', equips, selEquip, 'equip-count-sum', null, {arr:equips, storeKey:'psarema_equip', rerender:refreshPickers});
 }
 function renderFishQty(){
   const wrap = document.getElementById('fish-qty-list');
@@ -522,13 +558,24 @@ setupAdd('equip-new','equip-add', equips, 'psarema_equip', refreshPickers);
 function parseCoords(raw){
   if(!raw) return null;
   raw = raw.trim();
-  let m = raw.match(/^(-?\d+),(\d+)\s*,\s*(-?\d+),(\d+)$/);
+  // DMS format e.g. 37°59'46.3"N 23°47'17.7"E
+  let m = raw.match(/(\d{1,3})\s*°\s*(\d{1,2})\s*['’]\s*([\d.]+)\s*["″]?\s*([NSns])[,\s]+(\d{1,3})\s*°\s*(\d{1,2})\s*['’]\s*([\d.]+)\s*["″]?\s*([EWew])/);
+  if(m){
+    const lat = (parseFloat(m[1]) + parseFloat(m[2])/60 + parseFloat(m[3])/3600) * (/[Ss]/.test(m[4]) ? -1 : 1);
+    const lng = (parseFloat(m[5]) + parseFloat(m[6])/60 + parseFloat(m[7])/3600) * (/[Ww]/.test(m[8]) ? -1 : 1);
+    return { lat: lat.toFixed(7), lng: lng.toFixed(7) };
+  }
+  // clean comma-decimal pair (Greek style): "37,6623056, 24,0367908"
+  m = raw.match(/^(-?\d+),(\d+)\s*,\s*(-?\d+),(\d+)$/);
   if(m) return { lat: `${m[1]}.${m[2]}`, lng: `${m[3]}.${m[4]}` };
-  m = raw.match(/^(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)$/);
+  // dot-decimal pair, possibly embedded in a URL/text (e.g. Apple/Google Maps share links)
+  m = raw.match(/(-?\d{1,3}\.\d{3,})\s*,\s*(-?\d{1,3}\.\d{3,})/);
   if(m) return { lat: m[1], lng: m[2] };
-  m = raw.match(/^(-?\d+\.\d+)\s+(-?\d+\.\d+)$/);
+  // space separated
+  m = raw.match(/(-?\d{1,3}\.\d{3,})\s+(-?\d{1,3}\.\d{3,})/);
   if(m) return { lat: m[1], lng: m[2] };
-  m = raw.match(/(-?\d+[.,]\d+)\D+(-?\d+[.,]\d+)/);
+  // loose fallback: any two decimal-looking numbers (comma or dot) separated by non-digits
+  m = raw.match(/(-?\d{1,3}[.,]\d{3,})\D+(-?\d{1,3}[.,]\d{3,})/);
   if(m) return { lat: m[1].replace(',','.'), lng: m[2].replace(',','.') };
   return null;
 }
@@ -576,6 +623,16 @@ async function autoFillLocationName(parsed, locNameId){
 }
 wireCoordField('f-coords', 'coord-preview', 'f-locname', 'f');
 wireCoordField('e-coords', 'e-coord-preview', 'e-locname', 'e');
+document.getElementById('btn-geo').addEventListener('click', ()=>{
+  if(!navigator.geolocation){ toast('Η συσκευή δεν υποστηρίζει τοποθεσία'); return; }
+  toast('Λήψη τοποθεσίας...');
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const input = document.getElementById('f-coords');
+    input.value = pos.coords.latitude.toFixed(7) + ', ' + pos.coords.longitude.toFixed(7);
+    input.dispatchEvent(new Event('input'));
+    toast('Η τοποθεσία καταγράφηκε');
+  }, ()=>{ toast('Δεν ήταν δυνατή η λήψη τοποθεσίας'); }, {enableHighAccuracy:true, timeout:8000});
+});
 document.getElementById('f-date').addEventListener('change', ()=>scheduleAutoWeather('f'));
 document.getElementById('f-timein').addEventListener('change', ()=>scheduleAutoWeather('f'));
 document.getElementById('e-date').addEventListener('change', ()=>scheduleAutoWeather('e'));
@@ -849,9 +906,13 @@ async function openDetail(id){
   eSelFish = new Set(Object.keys(e.fish||{}).filter(n=>(e.fish[n]||0) > 0));
   eSelBait = new Set(e.bait || []);
   eSelEquip = new Set(e.equip || []);
-  renderChipList('e-fish-chip-list', species, eSelFish, 'e-fish-count-sum', ()=>renderEditFishQty(e.fish));
-  renderChipList('e-bait-chip-list', baits, eSelBait, 'e-bait-count-sum');
-  renderChipList('e-equip-chip-list', equips, eSelEquip, 'e-equip-count-sum');
+  function bindDeletable(listId, arr, selSet, countId, onToggle, storeKey){
+    const ctx = {arr, storeKey, rerender: ()=> renderChipList(listId, arr, selSet, countId, onToggle, ctx)};
+    renderChipList(listId, arr, selSet, countId, onToggle, ctx);
+  }
+  bindDeletable('e-fish-chip-list', species, eSelFish, 'e-fish-count-sum', ()=>renderEditFishQty(e.fish), 'psarema_species');
+  bindDeletable('e-bait-chip-list', baits, eSelBait, 'e-bait-count-sum', null, 'psarema_bait');
+  bindDeletable('e-equip-chip-list', equips, eSelEquip, 'e-equip-count-sum', null, 'psarema_equip');
   renderEditFishQty(e.fish);
 
   updateMoonPreview('e-date','e-moon-preview','e-moon-text');
@@ -929,7 +990,7 @@ function renderStats(){
   if(entries.length === 0){ wrap.innerHTML = '<div class="empty">Χρειάζονται καταχωρήσεις για στατιστικά</div>'; return; }
 
   let totalFish = 0;
-  const bySpecies = {}, byLocation = {}, byWeather = {}, byWindDir = {};
+  const bySpecies = {}, byLocation = {}, byWeather = {}, byWindDir = {}, byMoonPhase = {};
   const byMonth = new Array(12).fill(0);
   const entryTotals = [];
 
@@ -953,6 +1014,12 @@ function renderStats(){
     }
     const month = new Date(e.date+'T12:00:00').getMonth();
     byMonth[month] += entryFish;
+
+    const ph = moonPhase(e.date);
+    if(ph !== null){
+      const [,label] = moonLabel(ph);
+      byMoonPhase[label] = (byMoonPhase[label]||0) + entryFish;
+    }
 
     if(e.weather){
       byWeather[e.weather.weatherText] = (byWeather[e.weather.weatherText]||0) + 1;
@@ -996,6 +1063,7 @@ function renderStats(){
   wrap.innerHTML = kpi +
     `<div class="stat-block"><h3>Καλύτερες ψαριές</h3>${topCatchesHtml}</div>` +
     barBlock('Ψάρια ανά είδος', bySpecies) +
+    barBlock('Ψάρια ανά φάση σελήνης', byMoonPhase) +
     `<div class="stat-block"><h3>Εποχικότητα (ψάρια ανά μήνα)</h3>${monthBars}</div>` +
     barBlock('Καιρικές συνθήκες κατά την ψαριά', byWeather) +
     barBlock('Κατεύθυνση ανέμου', byWindDir) +
@@ -1017,10 +1085,17 @@ document.getElementById('btn-export').addEventListener('click', async ()=>{
   a.href = url; a.download = 'psarema-backup-' + new Date().toISOString().slice(0,10) + '.json';
   a.click(); URL.revokeObjectURL(url);
 });
-document.getElementById('btn-import').addEventListener('click', ()=>document.getElementById('file-import').click());
+document.getElementById('btn-import').addEventListener('click', ()=>{
+  if(!confirm('Προσοχή: η εισαγωγή αρχείου θα αντικαταστήσει όλα τα τρέχοντα δεδομένα σου (καταχωρήσεις, λίστες, φωτογραφίες). Ό,τι υπάρχει τώρα και δεν το έχεις εξάγει, θα χαθεί οριστικά. Θέλεις να συνεχίσεις;')) return;
+  document.getElementById('file-import').click();
+});
 document.getElementById('file-import').addEventListener('change', (ev)=>{
   const file = ev.target.files[0];
   if(!file) return;
+  if(!confirm('Η εισαγωγή αυτού του αρχείου θα αντικαταστήσει ΟΛΑ τα τρέχοντα δεδομένα σου (καταχωρήσεις, λίστες, φωτογραφίες). Ό,τι υπάρχει τώρα και δεν είναι μέσα στο αρχείο θα χαθεί οριστικά και δεν ανακτάται. Θέλεις σίγουρα να συνεχίσεις;')){
+    ev.target.value = '';
+    return;
+  }
   const reader = new FileReader();
   reader.onload = async ()=>{
     try{
