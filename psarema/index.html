@@ -20,7 +20,7 @@
     color: var(--white); padding: 22px 18px 26px; position: relative; overflow: hidden;
   }
   header::after{ content:""; position:absolute; right:-30px; bottom:-40px; width:160px; height:160px; border-radius:50%; background: rgba(255,255,255,0.06); }
-  header h1{ font-size: 1.5rem; letter-spacing: 0.3px; }
+  header h1{ font-size: 1.5rem; letter-spacing: 0.3px; margin-top: 26px; }
   header h1 a.brand-link{ color: inherit; text-decoration: none; display:inline-flex; align-items:center; }
   header h1 a.brand-link:active{ opacity: 0.75; }
   .equip-link{
@@ -152,7 +152,6 @@
 <header>
   <a href="https://miserlis-fishing.gr/" target="_blank" rel="noopener" class="equip-link" id="equip-link">Εξοπλισμός</a>
   <h1>Ημερολόγιο Ψαρέματος</h1>
-  <div class="sub">Προσωπική καταγραφή — αποθηκεύεται στη συσκευή σου</div>
 </header>
 
 <nav class="tabs">
@@ -181,14 +180,12 @@
       <div class="geo-row"><button type="button" id="btn-geo">📍 Τρέχουσα τοποθεσία</button></div>
       <div class="coord-preview" id="coord-preview"></div>
 
-      <div class="row2">
-        <div><label>Ημερομηνία</label><input type="date" id="f-date"></div>
-        <div><label>Ώρα άφιξης</label><input type="time" id="f-timein"></div>
-      </div>
-      <div class="row2">
-        <div><label>Ώρα αποχώρησης</label><input type="time" id="f-timeout"></div>
-        <div></div>
-      </div>
+      <label>Ημερομηνία</label>
+      <input type="date" id="f-date">
+      <label>Ώρα άφιξης</label>
+      <input type="time" id="f-timein">
+      <label>Ώρα αποχώρησης</label>
+      <input type="time" id="f-timeout">
 
       <div class="moon-preview" id="moon-preview">🌑 <span id="moon-text">Επίλεξε ημερομηνία</span></div>
 
@@ -293,10 +290,10 @@
     </div>
     <div class="coord-preview" id="e-coord-preview"></div>
 
-    <div class="row2">
-      <div><label>Ώρα άφιξης</label><input type="time" id="e-timein"></div>
-      <div><label>Ώρα αποχώρησης</label><input type="time" id="e-timeout"></div>
-    </div>
+    <label>Ώρα άφιξης</label>
+    <input type="time" id="e-timein">
+    <label>Ώρα αποχώρησης</label>
+    <input type="time" id="e-timeout">
 
     <div class="moon-preview" id="e-moon-preview">🌑 <span id="e-moon-text"></span></div>
 
