@@ -137,6 +137,13 @@
   .condition-title{ font-family:'Bitter',serif; font-weight:700; font-size:0.95rem; margin-bottom:10px; }
   .condition-line{ font-size:0.92rem; padding:5px 0; border-top:1px solid rgba(255,255,255,0.15); }
   .condition-line:first-of-type{ border-top:none; }
+  .reorderable{ position: relative; padding-right: 34px; }
+  .reorder-controls{ position:absolute; top:0; right:0; display:flex; flex-direction:column; gap:4px; z-index:2; }
+  .reorder-controls button{
+    width:26px; height:26px; border-radius:6px; border:1px solid var(--line); background:var(--white);
+    color:var(--teal); font-size:0.75rem; cursor:pointer; padding:0; line-height:1;
+  }
+  .reorder-controls button:disabled{ opacity:0.25; cursor:default; }
   .bar-row{ display:flex; align-items:center; gap:8px; margin-bottom:7px; font-size:0.83rem; }
   .bar-label{ width: 92px; flex:none; color: var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .bar-track{ flex:1; background: var(--foam); border-radius:5px; height: 14px; overflow:hidden; }
@@ -214,6 +221,7 @@
         <button type="button" id="f-fetch-weather">🔄 Λήψη καιρικών δεδομένων</button>
         <div class="weather-grid" id="f-weather-grid">
           <div>Καιρός<span>—</span></div>
+          <div>Θερμοκρασία<span>—</span></div>
           <div>Πίεση<span>—</span></div>
           <div>Άνεμος (μποφόρ)<span>—</span></div>
           <div>Κατεύθυνση ανέμου<span>—</span></div>
@@ -334,6 +342,7 @@
       <button type="button" id="e-fetch-weather">🔄 Ανανέωση καιρικών δεδομένων</button>
       <div class="weather-grid" id="e-weather-grid">
         <div>Καιρός<span>—</span></div>
+          <div>Θερμοκρασία<span>—</span></div>
         <div>Πίεση<span>—</span></div>
         <div>Άνεμος (μποφόρ)<span>—</span></div>
         <div>Κατεύθυνση ανέμου<span>—</span></div>
@@ -745,7 +754,7 @@ function computeMoonInfo(dateStr){
 function paintMoonCells(gridId, dateStr){
   const grid = document.getElementById(gridId);
   const cells = grid.children;
-  const moonCell = cells[5], tideCell = cells[6];
+  const moonCell = cells[6], tideCell = cells[7];
   const info = computeMoonInfo(dateStr);
   if(!info){
     moonCell.querySelector('span').textContent = '—';
@@ -811,7 +820,7 @@ async function fetchWeatherAndWave(lat, lng, dateStr, timeStr){
   const base = diffDays > 90 ? 'https://archive-api.open-meteo.com/v1/archive' : 'https://api.open-meteo.com/v1/forecast';
   const hour = timeStr ? parseInt(timeStr.split(':')[0]) : 12;
 
-  const wxUrl = `${base}?latitude=${lat}&longitude=${lng}&hourly=pressure_msl,weathercode,windspeed_10m,winddirection_10m&start_date=${dateStr}&end_date=${dateStr}&timezone=auto`;
+  const wxUrl = `${base}?latitude=${lat}&longitude=${lng}&hourly=pressure_msl,weathercode,windspeed_10m,winddirection_10m,temperature_2m&start_date=${dateStr}&end_date=${dateStr}&timezone=auto`;
   const wxRes = await fetch(wxUrl);
   if(!wxRes.ok) throw new Error('weather');
   const wx = await wxRes.json();
@@ -825,6 +834,7 @@ async function fetchWeatherAndWave(lat, lng, dateStr, timeStr){
     beaufort: beaufort(wx.hourly.windspeed_10m[idx]),
     windDirDeg: wx.hourly.winddirection_10m[idx],
     windDirText: compassDir(wx.hourly.winddirection_10m[idx]),
+    temperature: wx.hourly.temperature_2m ? wx.hourly.temperature_2m[idx] : null,
     wave: null
   };
 
@@ -852,10 +862,11 @@ function paintWeatherGrid(gridId, data){
   const grid = document.getElementById(gridId);
   const cells = grid.children;
   cells[0].querySelector('span').textContent = data.weatherText;
-  cells[1].querySelector('span').textContent = data.pressure != null ? Math.round(data.pressure)+' hPa' : '—';
-  cells[2].querySelector('span').textContent = data.beaufort != null ? data.beaufort+' bf ('+Math.round(data.windKmh)+' km/h)' : '—';
-  cells[3].querySelector('span').textContent = data.windDirText || '—';
-  cells[4].querySelector('span').textContent = data.wave != null ? formatWave(data.wave, data.waveEstimated) : '—';
+  cells[1].querySelector('span').textContent = data.temperature != null ? Math.round(data.temperature*10)/10+' °C' : '—';
+  cells[2].querySelector('span').textContent = data.pressure != null ? Math.round(data.pressure)+' hPa' : '—';
+  cells[3].querySelector('span').textContent = data.beaufort != null ? data.beaufort+' bf ('+Math.round(data.windKmh)+' km/h)' : '—';
+  cells[4].querySelector('span').textContent = data.windDirText || '—';
+  cells[5].querySelector('span').textContent = data.wave != null ? formatWave(data.wave, data.waveEstimated) : '—';
 }
 async function runFetchWeather(prefix){
   const dateEl = document.getElementById(prefix+'-date');
@@ -1200,21 +1211,149 @@ function renderStats(){
     ? Object.keys(bySpecies).sort().map(n=>`<button type="button" class="species-cond-btn" onclick="showSpeciesConditions('${n.replace(/'/g,"\\'")}')">${n}</button>`).join('')
     : '<div class="hint">Δεν υπάρχουν ακόμα καταγεγραμμένα είδη</div>';
 
-  wrap.innerHTML = summaryCard + kpi +
-    `<div class="stat-block"><h3>Καλύτερες εξορμήσεις</h3>${topCatchesHtml}</div>` +
-    barBlock('Ψάρια ανά είδος', bySpecies) +
-    `<div class="stat-block"><h3>Επιτυχία ανά ώρα</h3>${hourRows}</div>` +
-    `<div class="stat-block"><h3>Επιτυχία ανά δόλωμα</h3>${baitHtml}</div>` +
-    barBlock('Ψάρια ανά φάση σελήνης', byMoonPhase) +
-    `<div class="stat-block"><h3>Εποχικότητα (ψάρια ανά μήνα)</h3>${monthBars}</div>` +
-    barBlock('Καιρικές συνθήκες κατά την ψαριά', byWeather) +
-    barBlock('Κατεύθυνση ανέμου', byWindDir) +
-    `<div class="stat-block"><h3>Ανά τοποθεσία</h3>${locRows}</div>` +
-    `<div class="stat-block"><h3>🎯 Καλύτερες συνθήκες ανά είδος</h3>
+  const sections = {
+    summary: summaryCard,
+    kpi: kpi,
+    topCatches: `<div class="stat-block"><h3>Καλύτερες εξορμήσεις</h3>${topCatchesHtml}</div>`,
+    bySpecies: barBlock('Ψάρια ανά είδος', bySpecies),
+    byHour: `<div class="stat-block"><h3>Επιτυχία ανά ώρα</h3>${hourRows}</div>`,
+    byBait: `<div class="stat-block"><h3>Επιτυχία ανά δόλωμα</h3>${baitHtml}</div>`,
+    byMoon: barBlock('Ψάρια ανά φάση σελήνης', byMoonPhase),
+    byMonth: `<div class="stat-block"><h3>Εποχικότητα (ψάρια ανά μήνα)</h3>${monthBars}</div>`,
+    byWeather: barBlock('Καιρικές συνθήκες κατά την ψαριά', byWeather),
+    byWindDir: barBlock('Κατεύθυνση ανέμου', byWindDir),
+    byLocation: `<div class="stat-block"><h3>Ανά τοποθεσία</h3>${locRows}</div>`,
+    speciesConditions: `<div class="stat-block"><h3>🎯 Καλύτερες συνθήκες ανά είδος</h3>
       <div class="species-cond-list">${speciesButtons}</div>
       <div id="species-cond-result"></div>
-    </div>`;
+    </div>`,
+    prediction: `<div class="stat-block"><h3>🔮 Πότε να πάω;</h3>
+      <button type="button" class="species-cond-btn" onclick="predictBestTime()">Υπολόγισε την καλύτερη στιγμή</button>
+      <div id="prediction-result"></div>
+    </div>`
+  };
+
+  const defaultOrder = ['summary','kpi','prediction','topCatches','bySpecies','speciesConditions','byHour','byBait','byMoon','byMonth','byWeather','byWindDir','byLocation'];
+  let order = LS.get('psarema_stats_order', defaultOrder);
+  defaultOrder.forEach(k=>{ if(!order.includes(k)) order.push(k); });
+  order = order.filter(k=>sections[k] !== undefined);
+
+  wrap.innerHTML = order.map((key,i)=>`
+    <div class="reorderable">
+      <div class="reorder-controls">
+        <button type="button" ${i===0?'disabled':''} onclick="moveStatsSection('${key}',-1)">▲</button>
+        <button type="button" ${i===order.length-1?'disabled':''} onclick="moveStatsSection('${key}',1)">▼</button>
+      </div>
+      ${sections[key]}
+    </div>`).join('');
 }
+function moveStatsSection(key, direction){
+  const defaultOrder = ['summary','kpi','prediction','topCatches','bySpecies','speciesConditions','byHour','byBait','byMoon','byMonth','byWeather','byWindDir','byLocation'];
+  let order = LS.get('psarema_stats_order', defaultOrder);
+  defaultOrder.forEach(k=>{ if(!order.includes(k)) order.push(k); });
+  const idx = order.indexOf(key);
+  const newIdx = idx + direction;
+  if(idx === -1 || newIdx < 0 || newIdx >= order.length) return;
+  [order[idx], order[newIdx]] = [order[newIdx], order[idx]];
+  LS.set('psarema_stats_order', order);
+  renderStats();
+}
+window.moveStatsSection = moveStatsSection;
+
+/* ---------- prediction: best upcoming time to fish ---------- */
+async function predictBestTime(){
+  const resultEl = document.getElementById('prediction-result');
+  resultEl.innerHTML = '<div class="hint">Υπολογισμός...</div>';
+
+  const successEntries = entries.filter(e => e.fish && Object.values(e.fish).some(q=>q>0) && parseCoords(e.coords));
+  if(successEntries.length < 5){
+    resultEl.innerHTML = `<div class="hint">Χρειάζονται τουλάχιστον 5 καταχωρήσεις με ψάρια και έγκυρες συντεταγμένες για αξιόπιστη πρόβλεψη (έχεις προς το παρόν ${successEntries.length}).</div>`;
+    return;
+  }
+
+  const weekdayCounts = new Array(7).fill(0);
+  const hourBuckets = new Array(8).fill(0);
+  const windDirCounts = {};
+  let beaufortMin=null, beaufortMax=null;
+  const locFish = {};
+
+  successEntries.forEach(e=>{
+    const totalFish = Object.values(e.fish).reduce((a,b)=>a+b,0);
+    const d = new Date(e.date+'T12:00:00').getDay();
+    weekdayCounts[d] += totalFish;
+    if(e.timeIn){ const h=parseInt(e.timeIn.split(':')[0]); if(!isNaN(h)) hourBuckets[Math.floor(h/3)] += totalFish; }
+    if(e.weather){
+      windDirCounts[e.weather.windDirText] = (windDirCounts[e.weather.windDirText]||0) + totalFish;
+      if(e.weather.beaufort != null){
+        beaufortMin = beaufortMin===null ? e.weather.beaufort : Math.min(beaufortMin, e.weather.beaufort);
+        beaufortMax = beaufortMax===null ? e.weather.beaufort : Math.max(beaufortMax, e.weather.beaufort);
+      }
+    }
+    const loc = e.locName || 'Άγνωστη τοποθεσία';
+    if(!locFish[loc]) locFish[loc] = { fish:0, coords:e.coords, species:{} };
+    locFish[loc].fish += totalFish;
+    locFish[loc].coords = e.coords;
+    Object.entries(e.fish).forEach(([n,q])=>{ if(q>0) locFish[loc].species[n] = (locFish[loc].species[n]||0) + q; });
+  });
+
+  const bestLocEntry = Object.entries(locFish).sort((a,b)=>b[1].fish-a[1].fish)[0];
+  const parsedCoords = bestLocEntry ? parseCoords(bestLocEntry[1].coords) : null;
+  if(!bestLocEntry || !parsedCoords){
+    resultEl.innerHTML = '<div class="hint">Δεν βρέθηκαν αρκετά αξιόπιστα στοιχεία τοποθεσίας για πρόβλεψη.</div>';
+    return;
+  }
+  const bestLocName = bestLocEntry[0];
+  const bestSpecies = Object.entries(bestLocEntry[1].species).sort((a,b)=>b[1]-a[1])[0];
+  const bestWeekdayIdx = weekdayCounts.indexOf(Math.max(...weekdayCounts));
+  const bestHourBucketIdx = hourBuckets.indexOf(Math.max(...hourBuckets));
+  const bestWindDir = Object.entries(windDirCounts).sort((a,b)=>b[1]-a[1])[0];
+
+  try{
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${parsedCoords.lat}&longitude=${parsedCoords.lng}&hourly=windspeed_10m,winddirection_10m&forecast_days=7&timezone=auto`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('forecast fetch failed');
+    const data = await res.json();
+    const times = data.hourly.time;
+    const now = new Date();
+    let bestScore = -1, bestIdx = -1;
+    for(let i=0;i<times.length;i++){
+      const dt = new Date(times[i]);
+      if(dt < now) continue;
+      const wd = dt.getDay();
+      const hr = dt.getHours();
+      const bucket = Math.floor(hr/3);
+      const wsp = data.hourly.windspeed_10m[i];
+      const bf = beaufort(wsp);
+      const wdir = compassDir(data.hourly.winddirection_10m[i]);
+      let score = 0;
+      if(wd === bestWeekdayIdx) score += 3;
+      if(bucket === bestHourBucketIdx) score += 3;
+      if(bestWindDir && wdir === bestWindDir[0]) score += 2;
+      if(beaufortMin != null && bf >= beaufortMin && bf <= beaufortMax) score += 2;
+      if(score > bestScore){ bestScore = score; bestIdx = i; }
+    }
+    if(bestIdx === -1){
+      resultEl.innerHTML = '<div class="hint">Δεν βρέθηκε κατάλληλη στιγμή στις επόμενες 7 ημέρες.</div>';
+      return;
+    }
+    const bestDt = new Date(times[bestIdx]);
+    const dayNames = ['Κυριακή','Δευτέρα','Τρίτη','Τετάρτη','Πέμπτη','Παρασκευή','Σάββατο'];
+    const dateStr = bestDt.toLocaleDateString('el-GR', {day:'numeric', month:'long'});
+    const dayName = dayNames[bestDt.getDay()];
+    const hourStr = String(bestDt.getHours()).padStart(2,'0') + ':00';
+    resultEl.innerHTML = `<div class="condition-card">
+      <div class="condition-title">🔮 Πιθανή καλύτερη στιγμή</div>
+      <div class="condition-line">${dayName}, ${dateStr} γύρω στις ${hourStr}</div>
+      <div class="condition-line">📍 ${bestLocName}</div>
+      ${bestSpecies ? `<div class="condition-line">🐟 Πιθανό είδος: ${bestSpecies[0]}</div>` : ''}
+      <div class="condition-line" style="opacity:0.75; font-size:0.8rem;">Εκτίμηση βάσει του δικού σου ιστορικού και της πρόγνωσης καιρού — όχι εγγύηση.</div>
+    </div>`;
+  }catch(err){
+    console.error('prediction failed', err);
+    resultEl.innerHTML = '<div class="hint">Αποτυχία λήψης πρόγνωσης — έλεγξε τη σύνδεση στο ίντερνετ και δοκίμασε ξανά.</div>';
+  }
+}
+window.predictBestTime = predictBestTime;
 
 /* ---------- best-conditions-per-species analysis ---------- */
 function computeBestConditions(name){
