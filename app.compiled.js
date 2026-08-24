@@ -653,6 +653,7 @@
     const [appLanguage, setAppLanguage] = useState("el");
     const [voiceSettingsOpen, setVoiceSettingsOpen] = useState(false);
     const [listening, setListening] = useState(false);
+    const [micError, setMicError] = useState("");
     const [colorTextMode, setColorTextMode] = useState(false);
     const recognitionRef = useRef(null);
     const speechRecognitionSupported = typeof window !== "undefined" && !!(window.SpeechRecognition || window.webkitSpeechRecognition);
@@ -781,16 +782,31 @@
         } catch (e) {
         }
       }
+      setMicError("");
       const rec = new SR();
       rec.lang = "el-GR";
-      rec.interimResults = false;
+      rec.interimResults = true;
       rec.maxAlternatives = 1;
       rec.onresult = (e) => {
-        const text = e.results[0][0].transcript;
+        let text = "";
+        for (let i = 0; i < e.results.length; i++) {
+          text += e.results[i][0].transcript;
+        }
         setColorQuery(text);
       };
       rec.onend = () => setListening(false);
-      rec.onerror = () => setListening(false);
+      rec.onerror = (e) => {
+        setListening(false);
+        const messages = {
+          "no-speech": "\u0394\u03B5\u03BD \u03AC\u03BA\u03BF\u03C5\u03C3\u03B1 \u03C4\u03AF\u03C0\u03BF\u03C4\u03B1 \u2014 \u03B4\u03BF\u03BA\u03AF\u03BC\u03B1\u03C3\u03B5 \u03BE\u03B1\u03BD\u03AC, \u03C0\u03B9\u03BF \u03BA\u03BF\u03BD\u03C4\u03AC \u03C3\u03C4\u03BF \u03BC\u03B9\u03BA\u03C1\u03CC\u03C6\u03C9\u03BD\u03BF.",
+          "not-allowed": "\u0394\u03B5\u03BD \u03AD\u03C7\u03B5\u03B9\u03C2 \u03B4\u03CE\u03C3\u03B5\u03B9 \u03AC\u03B4\u03B5\u03B9\u03B1 \u03BC\u03B9\u03BA\u03C1\u03BF\u03C6\u03CE\u03BD\u03BF\u03C5. \u0388\u03BB\u03B5\u03B3\u03BE\u03B5 \u03C4\u03B1 \u03B4\u03B9\u03BA\u03B1\u03B9\u03CE\u03BC\u03B1\u03C4\u03B1 \u03C4\u03B7\u03C2 \u03C3\u03B5\u03BB\u03AF\u03B4\u03B1\u03C2.",
+          "audio-capture": "\u0394\u03B5\u03BD \u03B2\u03C1\u03AD\u03B8\u03B7\u03BA\u03B5 \u03BC\u03B9\u03BA\u03C1\u03CC\u03C6\u03C9\u03BD\u03BF \u03C3\u03B5 \u03B1\u03C5\u03C4\u03AE \u03C4\u03B7 \u03C3\u03C5\u03C3\u03BA\u03B5\u03C5\u03AE.",
+          network: "\u03A7\u03C1\u03B5\u03B9\u03AC\u03B6\u03B5\u03C4\u03B1\u03B9 \u03C3\u03CD\u03BD\u03B4\u03B5\u03C3\u03B7 \u03C3\u03C4\u03BF \u03AF\u03BD\u03C4\u03B5\u03C1\u03BD\u03B5\u03C4 \u03B3\u03B9\u03B1 \u03C4\u03B7\u03BD \u03B1\u03BD\u03B1\u03B3\u03BD\u03CE\u03C1\u03B9\u03C3\u03B7 \u03C6\u03C9\u03BD\u03AE\u03C2.",
+          "language-not-supported": "\u0397 \u03B1\u03BD\u03B1\u03B3\u03BD\u03CE\u03C1\u03B9\u03C3\u03B7 \u03C6\u03C9\u03BD\u03AE\u03C2 \u03C3\u03C4\u03B1 \u03B5\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC \u03B4\u03B5\u03BD \u03C5\u03C0\u03BF\u03C3\u03C4\u03B7\u03C1\u03AF\u03B6\u03B5\u03C4\u03B1\u03B9 \u03C3\u03B5 \u03B1\u03C5\u03C4\u03AE \u03C4\u03B7 \u03C3\u03C5\u03C3\u03BA\u03B5\u03C5\u03AE.",
+          aborted: ""
+        };
+        setMicError(messages[e.error] || `\u03A3\u03C6\u03AC\u03BB\u03BC\u03B1 \u03BC\u03B9\u03BA\u03C1\u03BF\u03C6\u03CE\u03BD\u03BF\u03C5: ${e.error}`);
+      };
       recognitionRef.current = rec;
       setListening(true);
       try {
@@ -1348,7 +1364,7 @@
           style: { border: "none", background: "transparent", color: "#999", fontSize: 12.5, fontWeight: 700, cursor: "pointer", textDecoration: "underline" }
         },
         colorTextMode ? "\u{1F3A4} \u03A0\u03B5\u03C2 \u03C4\u03BF \u03B1\u03BD\u03C4' \u03B1\u03C5\u03C4\u03BF\u03CD" : "\u2328\uFE0F \u03A0\u03BB\u03B7\u03BA\u03C4\u03C1\u03BF\u03BB\u03CC\u03B3\u03B7\u03C3\u03B5 \u03B1\u03BD\u03C4' \u03B1\u03C5\u03C4\u03BF\u03CD"
-      ), /* @__PURE__ */ React.createElement("style", null, `@keyframes pulseMic { 0%,100% { opacity:1; transform: translateY(-50%) scale(1); } 50% { opacity:0.5; transform: translateY(-50%) scale(1.15); } }`), colorSuggestions.length > 0 && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" } }, colorSuggestions.map((c) => /* @__PURE__ */ React.createElement(
+      ), /* @__PURE__ */ React.createElement("style", null, `@keyframes pulseMic { 0%,100% { opacity:1; transform: translateY(-50%) scale(1); } 50% { opacity:0.5; transform: translateY(-50%) scale(1.15); } }`), micError && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: "#a05a00", background: "#FFF3E0", padding: "8px 10px", borderRadius: 10, lineHeight: 1.5, textAlign: "center", maxWidth: 280 } }, micError), colorSuggestions.length > 0 && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" } }, colorSuggestions.map((c) => /* @__PURE__ */ React.createElement(
         "button",
         {
           key: c.id,
