@@ -412,7 +412,7 @@ let anglers = LS.get('psarema_anglers', []);
 let selAngler = new Set();
 let eSelAngler = new Set();
 
-let selFish = new Set(), selBait = new Set(), selEquip = new Set();
+let selFish = new Set(), selBait = new Set(), selEquip = new Set(LS.get('psarema_last_equip', []));
 let eSelFish = new Set(), eSelBait = new Set(), eSelEquip = new Set();
 let editingId = null;
 let fWeatherData = null;
@@ -623,6 +623,7 @@ function refreshAnglerPicker(){
   renderChipList('angler-chip-list', anglers, selAngler, 'angler-count-sum', null, {arr:anglers, storeKey:'psarema_anglers', rerender:refreshAnglerPicker});
 }
 setupAdd('angler-new','angler-add', anglers, 'psarema_anglers', refreshAnglerPicker);
+if(selAngler.size === 0 && anglers.length > 0) selAngler.add(anglers[0]);
 refreshAnglerPicker();
 
 /* ---------- coordinate parsing ---------- */
@@ -665,6 +666,13 @@ function wireCoordField(inputId, previewId, locNameId, prefix){
     clearTimeout(geocodeTimer);
     geocodeTimer = setTimeout(()=>{ autoFillLocationName(parsed, locNameId); }, 700);
     scheduleAutoWeather(prefix);
+    if(prefix === 'f'){
+      const timeInEl = document.getElementById('f-timein');
+      if(timeInEl && !timeInEl.value){
+        const now = new Date();
+        timeInEl.value = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+      }
+    }
   });
 }
 function scheduleAutoWeather(prefix){
@@ -762,7 +770,7 @@ function paintMoonCells(gridId, dateStr){
     return;
   }
   moonCell.querySelector('span').textContent = `${info.emoji} ${info.label} (${info.lunarDay}η μέρα)`;
-  tideCell.querySelector('span').innerHTML = `Πλημμυρίδα: ${hoursToHHMM(info.highs[0])}, ${hoursToHHMM(info.highs[1])}<br>Άμπωτη: ${hoursToHHMM(info.lows[0])}, ${hoursToHHMM(info.lows[1])}`;
+  tideCell.querySelector('span').innerHTML = `Πλημμυρίδα: ${hoursToHHMM(info.highs[0])} & ${hoursToHHMM(info.highs[1])}<br>Άμπωτη: ${hoursToHHMM(info.lows[0])} & ${hoursToHHMM(info.lows[1])}`;
 }
 document.getElementById('f-date').addEventListener('change', ()=>paintMoonCells('f-weather-grid', document.getElementById('f-date').value));
 document.getElementById('e-date').addEventListener('change', ()=>paintMoonCells('e-weather-grid', document.getElementById('e-date').value));
@@ -920,6 +928,7 @@ document.getElementById('btn-save').addEventListener('click', async ()=>{
     photos: photoKeys
   };
   entries.push(entry);
+  LS.set('psarema_last_equip', entry.equip);
   LS.set('psarema_entries', entries);
   toast('Η καταχώρηση αποθηκεύτηκε ✓');
   resetForm();
@@ -940,7 +949,8 @@ function resetForm(){
   document.getElementById('f-weather-status').textContent = 'Συμπλήρωσε ημερομηνία και συντεταγμένες, μετά πάτα λήψη.';
   paintWeatherGrid('f-weather-grid', {weatherText:'—', pressure:null, beaufort:null, windKmh:0, windDirText:'—', wave:null});
   fWeatherData = null;
-  selFish.clear(); selBait.clear(); selEquip.clear();
+  selFish.clear(); selBait.clear();
+  selEquip = new Set(LS.get('psarema_last_equip', []));
   refreshPickers(); renderFishQty();
   photoState['f-photo-grid'] = [];
   renderPhotoGrid('f-photo-grid');
