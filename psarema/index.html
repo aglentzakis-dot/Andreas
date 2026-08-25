@@ -24,10 +24,12 @@
   h1,h2,h3{ font-family: 'Bitter', serif; margin: 0; }
   header{
     background: linear-gradient(160deg, var(--deep), #0f4f61 65%, var(--teal));
+    background-size: cover; background-position: center;
     color: var(--white); padding: 22px 18px 26px; position: relative; overflow: hidden;
   }
+  header.has-photo{ background-image: linear-gradient(160deg, rgba(11,59,76,0.72), rgba(15,79,97,0.6) 65%, rgba(28,122,133,0.55)), var(--header-photo); }
   header::after{ content:""; position:absolute; right:-30px; bottom:-40px; width:160px; height:160px; border-radius:50%; background: rgba(255,255,255,0.06); }
-  header h1{ font-size: 1.5rem; letter-spacing: 0.3px; margin-top: 26px; }
+  header h1{ font-size: 1.5rem; letter-spacing: 0.3px; margin-top: 26px; text-shadow: 0 1px 4px rgba(0,0,0,0.35); }
   header h1 a.brand-link{ color: inherit; text-decoration: none; display:inline-flex; align-items:center; }
   header h1 a.brand-link:active{ opacity: 0.75; }
   .equip-link{
@@ -193,9 +195,9 @@
 </head>
 <body>
 
-<header>
+<header id="app-header">
   <a href="https://miserlis-fishing.gr/" target="_blank" rel="noopener" class="equip-link" id="equip-link">Εξοπλισμός</a>
-  <h1>Ημερολόγιο Ψαρέματος</h1>
+  <h1 id="app-title">Ημερολόγιο Ψαρέματος</h1>
 </header>
 
 <nav class="tabs">
@@ -352,6 +354,16 @@
       <label style="margin-top:14px;">Χρώμα κεφαλίδας</label>
       <div class="color-swatches" id="header-swatches"></div>
       <button type="button" class="ghost-btn-sm" id="btn-reset-colors">↺ Επαναφορά προεπιλογών</button>
+
+      <label style="margin-top:18px;">Τίτλος εφαρμογής</label>
+      <input type="text" id="header-title-input" placeholder="Ημερολόγιο Ψαρέματος">
+
+      <label style="margin-top:14px;">Φωτογραφία κεφαλίδας</label>
+      <input type="file" id="header-photo-input" accept="image/*" style="display:none">
+      <div class="footer-tools">
+        <button type="button" id="btn-header-photo">🖼️ Επιλογή φωτογραφίας</button>
+        <button type="button" id="btn-header-photo-clear">✕ Αφαίρεση</button>
+      </div>
     </div>
 
     <div class="card">
@@ -372,7 +384,7 @@
     </div>
 
     <div class="card" style="text-align:center;">
-      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 1.5 · 25 Αυγ 2026</p>
+      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 1.6 · 25 Αυγ 2026</p>
     </div>
   </div>
 
@@ -1837,8 +1849,61 @@ document.getElementById('btn-reset-colors').addEventListener('click', ()=>{
   toast('Επαναφέρθηκαν τα χρώματα');
 });
 
+/* ---------- header title & photo customization ---------- */
+function applyHeaderTitle(){
+  const title = LS.get('psarema_header_title', 'Ημερολόγιο Ψαρέματος');
+  document.getElementById('app-title').textContent = title;
+  document.getElementById('header-title-input').value = title;
+}
+document.getElementById('header-title-input').addEventListener('input', ()=>{
+  const val = document.getElementById('header-title-input').value.trim() || 'Ημερολόγιο Ψαρέματος';
+  LS.set('psarema_header_title', val);
+  document.getElementById('app-title').textContent = val;
+});
+
+async function applyHeaderPhoto(){
+  const has = LS.get('psarema_has_header_photo', false);
+  const header = document.getElementById('app-header');
+  if(!has){ header.classList.remove('has-photo'); return; }
+  try{
+    const dataUrl = await idbGet('header-photo');
+    if(dataUrl){
+      document.documentElement.style.setProperty('--header-photo', `url("${dataUrl}")`);
+      header.classList.add('has-photo');
+    }
+  }catch(e){ console.error('header photo load failed', e); }
+}
+async function saveHeaderPhoto(file){
+  try{
+    const dataUrl = await resizeImageFile(file, 1000, 0.72);
+    await idbPut('header-photo', dataUrl);
+    LS.set('psarema_has_header_photo', true);
+    document.documentElement.style.setProperty('--header-photo', `url("${dataUrl}")`);
+    document.getElementById('app-header').classList.add('has-photo');
+    toast('Η φωτογραφία κεφαλίδας ενημερώθηκε');
+  }catch(e){
+    console.error('header photo save failed', e);
+    toast('Αποτυχία επεξεργασίας φωτογραφίας');
+  }
+}
+async function clearHeaderPhoto(){
+  try{ await idbDelete('header-photo'); }catch(e){}
+  LS.set('psarema_has_header_photo', false);
+  document.getElementById('app-header').classList.remove('has-photo');
+  toast('Η φωτογραφία κεφαλίδας αφαιρέθηκε');
+}
+document.getElementById('btn-header-photo').addEventListener('click', ()=>document.getElementById('header-photo-input').click());
+document.getElementById('header-photo-input').addEventListener('change', (ev)=>{
+  const file = ev.target.files[0];
+  if(file) saveHeaderPhoto(file);
+  ev.target.value = '';
+});
+document.getElementById('btn-header-photo-clear').addEventListener('click', clearHeaderPhoto);
+
 /* ---------- init ---------- */
 applyTheme();
+applyHeaderTitle();
+applyHeaderPhoto();
 refreshPickers();
 renderFishQty();
 renderEntries();
