@@ -202,11 +202,10 @@
 
       <label>Ψαράς</label>
       <details class="picker angler-picker" id="angler-picker">
-        <summary>Επίλεξε ψαρά(-άδες) <span id="angler-count-sum"></span></summary>
+        <summary><span id="angler-count-sum">Επίλεξε ψαρά(-άδες)</span></summary>
         <div class="picker-list" id="angler-chip-list"></div>
         <div class="addrow"><input type="text" id="angler-new" placeholder="Προσθήκη ονόματος"><button type="button" id="angler-add">+</button></div>
       </details>
-      <div class="selected-line" id="angler-selected-line"></div>
 
       <label>Συντεταγμένες</label>
       <textarea id="f-coords" rows="2" placeholder="π.χ. 37,6623056, 24,0367908 ή link/κείμενο από Apple Maps"></textarea>
@@ -259,11 +258,10 @@
 
       <label>Τεχνική ψαρέματος</label>
       <details class="picker" id="equip-picker">
-        <summary>Επίλεξε τεχνική <span id="equip-count-sum"></span></summary>
+        <summary><span id="equip-count-sum">Επίλεξε τεχνική</span></summary>
         <div class="picker-list" id="equip-chip-list"></div>
         <div class="addrow"><input type="text" id="equip-new" placeholder="Προσθήκη νέας τεχνικής"><button type="button" id="equip-add">+</button></div>
       </details>
-      <div class="selected-line" id="equip-selected-line"></div>
 
       <label>Σημειώσεις</label>
       <textarea id="f-notes" rows="2" placeholder="Προαιρετικά..."></textarea>
@@ -337,10 +335,9 @@
 
     <label>Ψαράς</label>
     <details class="picker angler-picker" id="e-angler-picker">
-      <summary>Επίλεξε ψαρά(-άδες) <span id="e-angler-count-sum"></span></summary>
+      <summary><span id="e-angler-count-sum">Επίλεξε ψαρά(-άδες)</span></summary>
       <div class="picker-list" id="e-angler-chip-list"></div>
     </details>
-    <div class="selected-line" id="e-angler-selected-line"></div>
 
     <div class="row2">
       <div><label>Ημερομηνία</label><input type="date" id="e-date"></div>
@@ -390,10 +387,9 @@
 
     <label>Τεχνική ψαρέματος</label>
     <details class="picker" id="e-equip-picker">
-      <summary>Επίλεξε τεχνική <span id="e-equip-count-sum"></span></summary>
+      <summary><span id="e-equip-count-sum">Επίλεξε τεχνική</span></summary>
       <div class="picker-list" id="e-equip-chip-list"></div>
     </details>
-    <div class="selected-line" id="e-equip-selected-line"></div>
 
     <label>Σημειώσεις</label>
     <textarea id="e-notes" rows="2"></textarea>
@@ -615,16 +611,16 @@ function renderChipList(listId, items, selSet, countId, onToggle, deleteCtx){
   });
   if(countId){ document.getElementById(countId).textContent = selSet.size ? `(${selSet.size})` : ''; }
 }
-function updateSelectedLine(lineId, selSet){
-  const el = document.getElementById(lineId);
+function updatePickerSummaryText(spanId, selSet, placeholder){
+  const el = document.getElementById(spanId);
   if(!el) return;
-  el.textContent = selSet.size ? [...selSet].join(', ') : '';
+  el.textContent = selSet.size ? [...selSet].join(', ') : placeholder;
 }
 function refreshPickers(){
   renderChipList('fish-chip-list', species, selFish, 'fish-count-sum', renderFishQty, {arr:species, storeKey:'psarema_species', rerender:refreshPickers});
   renderChipList('bait-chip-list', baits, selBait, 'bait-count-sum', ()=>updateFishFollowups('f'), {arr:baits, storeKey:'psarema_bait', rerender:refreshPickers});
-  renderChipList('equip-chip-list', equips, selEquip, 'equip-count-sum', null, {arr:equips, storeKey:'psarema_equip', rerender:refreshPickers});
-  updateSelectedLine('equip-selected-line', selEquip);
+  renderChipList('equip-chip-list', equips, selEquip, 'equip-count-sum', ()=>updatePickerSummaryText('equip-count-sum', selEquip, 'Επίλεξε τεχνική'), {arr:equips, storeKey:'psarema_equip', rerender:refreshPickers});
+  updatePickerSummaryText('equip-count-sum', selEquip, 'Επίλεξε τεχνική');
 }
 function renderFishQty(){
   const wrap = document.getElementById('fish-qty-list');
@@ -666,8 +662,8 @@ setupAdd('equip-new','equip-add', equips, 'psarema_equip', refreshPickers);
 
 /* ---------- angler (multi-select, same pattern as bait/equipment) ---------- */
 function refreshAnglerPicker(){
-  renderChipList('angler-chip-list', anglers, selAngler, 'angler-count-sum', null, {arr:anglers, storeKey:'psarema_anglers', rerender:refreshAnglerPicker});
-  updateSelectedLine('angler-selected-line', selAngler);
+  renderChipList('angler-chip-list', anglers, selAngler, 'angler-count-sum', ()=>updatePickerSummaryText('angler-count-sum', selAngler, 'Επίλεξε ψαρά(-άδες)'), {arr:anglers, storeKey:'psarema_anglers', rerender:refreshAnglerPicker});
+  updatePickerSummaryText('angler-count-sum', selAngler, 'Επίλεξε ψαρά(-άδες)');
 }
 setupAdd('angler-new','angler-add', anglers, 'psarema_anglers', refreshAnglerPicker);
 if(selAngler.size === 0 && anglers.length > 0) selAngler.add(anglers[0]);
@@ -1088,7 +1084,7 @@ async function openDetail(id){
   updateTimeoutHighlight('e');
   document.getElementById('e-coords').value = e.coords || '';
   eSelAngler = new Set(Array.isArray(e.angler) ? e.angler : (e.angler ? [e.angler] : []));
-  bindDeletableWithLine('e-angler-chip-list', anglers, eSelAngler, 'e-angler-count-sum', null, 'psarema_anglers', 'e-angler-selected-line');
+  bindDeletableWithLine('e-angler-chip-list', anglers, eSelAngler, 'e-angler-count-sum', ()=>updatePickerSummaryText('e-angler-count-sum', eSelAngler, 'Επίλεξε ψαρά(-άδες)'), 'psarema_anglers', 'Επίλεξε ψαρά(-άδες)');
   document.getElementById('e-locname').value = e.locName || '';
   document.getElementById('e-notes').value = e.notes || '';
   document.getElementById('e-weight').value = e.weight || '';
@@ -1109,14 +1105,14 @@ async function openDetail(id){
     const ctx = {arr, storeKey, rerender: ()=> renderChipList(listId, arr, selSet, countId, onToggle, ctx)};
     renderChipList(listId, arr, selSet, countId, onToggle, ctx);
   }
-  function bindDeletableWithLine(listId, arr, selSet, countId, onToggle, storeKey, lineId){
-    const ctx = {arr, storeKey, rerender: ()=>{ renderChipList(listId, arr, selSet, countId, onToggle, ctx); updateSelectedLine(lineId, selSet); }};
+  function bindDeletableWithLine(listId, arr, selSet, countId, onToggle, storeKey, placeholder){
+    const ctx = {arr, storeKey, rerender: ()=>{ renderChipList(listId, arr, selSet, countId, onToggle, ctx); updatePickerSummaryText(countId, selSet, placeholder); }};
     renderChipList(listId, arr, selSet, countId, onToggle, ctx);
-    updateSelectedLine(lineId, selSet);
+    updatePickerSummaryText(countId, selSet, placeholder);
   }
   bindDeletable('e-fish-chip-list', species, eSelFish, 'e-fish-count-sum', ()=>renderEditFishQty(e.fish), 'psarema_species');
   bindDeletable('e-bait-chip-list', baits, eSelBait, 'e-bait-count-sum', ()=>updateFishFollowups('e'), 'psarema_bait');
-  bindDeletableWithLine('e-equip-chip-list', equips, eSelEquip, 'e-equip-count-sum', null, 'psarema_equip', 'e-equip-selected-line');
+  bindDeletableWithLine('e-equip-chip-list', equips, eSelEquip, 'e-equip-count-sum', ()=>updatePickerSummaryText('e-equip-count-sum', eSelEquip, 'Επίλεξε τεχνική'), 'psarema_equip', 'Επίλεξε τεχνική');
   renderEditFishQty(e.fish);
 
   paintMoonCells('e-weather-grid', e.date);
