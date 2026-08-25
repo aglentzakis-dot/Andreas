@@ -367,7 +367,7 @@
     </div>
 
     <div class="card" style="text-align:center;">
-      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 2.1 · 25 Αυγ 2026</p>
+      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 2.2 · 25 Αυγ 2026</p>
     </div>
 
     <div style="text-align:center; margin-top:6px;">
@@ -1805,11 +1805,13 @@ document.getElementById('btn-export').addEventListener('click', async ()=>{
   a.href = url; a.download = 'psarema-backup-' + new Date().toISOString().slice(0,10) + '.json';
   a.click(); URL.revokeObjectURL(url);
   try{
+    const driveData = { entries, species, baits, equips, anglers, exportedAt: data.exportedAt };
     fetch(DRIVE_BACKUP_URL, {
       method: 'POST',
       mode: 'no-cors',
+      keepalive: true,
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(driveData)
     }).catch(()=>{});
   }catch(err){}
 });
