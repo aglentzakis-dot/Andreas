@@ -32,8 +32,7 @@
   header.pos-bottom{ justify-content:flex-end; }
   header.has-photo{ background-image: linear-gradient(160deg, rgba(11,59,76,0.72), rgba(15,79,97,0.6) 65%, rgba(28,122,133,0.55)), var(--header-photo); }
   header::after{ content:""; position:absolute; right:-30px; bottom:-40px; width:160px; height:160px; border-radius:50%; background: rgba(255,255,255,0.06); }
-  header h1{ font-size: 1.5rem; letter-spacing: 0.3px; margin-top: 26px; text-shadow: 0 1px 4px rgba(0,0,0,0.35); }
-  header.pos-middle h1, header.pos-bottom h1{ margin-top:0; }
+  header h1{ font-size: 1.5rem; letter-spacing: 0.3px; margin: 0; text-shadow: 0 1px 4px rgba(0,0,0,0.35); }
   header h1 a.brand-link{ color: inherit; text-decoration: none; display:inline-flex; align-items:center; }
   header h1 a.brand-link:active{ opacity: 0.75; }
   .equip-link{
@@ -369,7 +368,7 @@
     </div>
 
     <div class="card" style="text-align:center;">
-      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 1.8 · 25 Αυγ 2026</p>
+      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 1.9 · 25 Αυγ 2026</p>
     </div>
 
     <div style="text-align:center; margin-top:6px;">
@@ -393,6 +392,9 @@
         <button type="button" id="btn-header-photo">🖼️ Επιλογή φωτογραφίας</button>
         <button type="button" id="btn-header-photo-clear">✕ Αφαίρεση</button>
       </div>
+      <label style="margin-top:10px;">Ποιότητα φωτογραφίας: <span id="header-quality-value">88%</span></label>
+      <input type="range" id="header-quality-slider" min="50" max="100" step="5" value="88" style="width:100%;">
+      <p class="hint" style="margin-top:4px;">Μεγαλύτερη ποιότητα = πιο καθαρή φωτογραφία, αλλά μεγαλύτερο αρχείο. Ισχύει στην επόμενη φωτογραφία που θα ανεβάσεις.</p>
 
       <label style="margin-top:14px;">Θέση τίτλου</label>
       <div class="color-swatches" id="title-pos-options">
@@ -1897,7 +1899,8 @@ async function applyHeaderPhoto(){
 }
 async function saveHeaderPhoto(file){
   try{
-    const dataUrl = await resizeImageFile(file, 1000, 0.72);
+    const qualityPct = LS.get('psarema_header_photo_quality', 88);
+    const dataUrl = await resizeImageFile(file, 1600, qualityPct/100);
     await idbPut('header-photo', dataUrl);
     LS.set('psarema_has_header_photo', true);
     document.documentElement.style.setProperty('--header-photo', `url("${dataUrl}")`);
@@ -1921,6 +1924,18 @@ document.getElementById('header-photo-input').addEventListener('change', (ev)=>{
   ev.target.value = '';
 });
 document.getElementById('btn-header-photo-clear').addEventListener('click', clearHeaderPhoto);
+
+function applyHeaderQualitySlider(){
+  const val = LS.get('psarema_header_photo_quality', 88);
+  document.getElementById('header-quality-slider').value = val;
+  document.getElementById('header-quality-value').textContent = val + '%';
+}
+document.getElementById('header-quality-slider').addEventListener('input', (ev)=>{
+  const val = parseInt(ev.target.value);
+  LS.set('psarema_header_photo_quality', val);
+  document.getElementById('header-quality-value').textContent = val + '%';
+});
+applyHeaderQualitySlider();
 
 /* ---------- header title position ---------- */
 function applyHeaderTitlePos(){
