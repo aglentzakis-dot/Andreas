@@ -66,6 +66,9 @@
   details.picker.angler-picker .chip.sel{ background: #cdeecb; border-color: #a8dba5; color:#1f4d2e; font-weight:700; }
   .selected-line{ font-size:0.85rem; color:var(--deep); margin-top:6px; font-weight:600; min-height:1.2em; }
   input[type=time].needs-fill{ background: #fdecec; border-color:#f0b8b8; }
+  input[type=number].needs-fill{ background: #fdecec; border-color:#f0b8b8; }
+  details.picker.needs-fill-box{ background:#fdecec; border-color:#f0b8b8; }
+  details.picker.needs-fill-box summary{ background:#fdecec; }
   .picker-list{ padding: 6px 10px 10px; display:flex; flex-wrap:wrap; gap: 6px; border-top: 1px solid var(--line); }
   .chip{ padding: 7px 12px; border-radius: 20px; background: var(--white); border: 1.5px solid var(--line); font-size: 0.85rem; cursor:pointer; user-select:none; }
   .chip.sel{ background: var(--teal); border-color: var(--teal); color: var(--white); }
@@ -186,6 +189,7 @@
   <button data-view="new" class="active">Νέα καταχώρηση</button>
   <button data-view="list">Καταχωρήσεις</button>
   <button data-view="stats">Στατιστικά</button>
+  <button data-view="predictions">Προβλέψεις</button>
   <button data-view="settings">Ρυθμίσεις</button>
 </nav>
 
@@ -253,11 +257,11 @@
         <div class="addrow"><input type="text" id="bait-new" placeholder="Προσθήκη νέου δολώματος"><button type="button" id="bait-add">+</button></div>
       </details>
 
-      <label>Εξοπλισμός</label>
+      <label>Τεχνική ψαρέματος</label>
       <details class="picker" id="equip-picker">
-        <summary>Επίλεξε εξοπλισμό <span id="equip-count-sum"></span></summary>
+        <summary>Επίλεξε τεχνική <span id="equip-count-sum"></span></summary>
         <div class="picker-list" id="equip-chip-list"></div>
-        <div class="addrow"><input type="text" id="equip-new" placeholder="Προσθήκη νέου εξοπλισμού"><button type="button" id="equip-add">+</button></div>
+        <div class="addrow"><input type="text" id="equip-new" placeholder="Προσθήκη νέας τεχνικής"><button type="button" id="equip-add">+</button></div>
       </details>
       <div class="selected-line" id="equip-selected-line"></div>
 
@@ -281,6 +285,16 @@
   <!-- STATS -->
   <div class="view" id="view-stats">
     <div class="card"><h2>Στατιστικά</h2><div id="stats-content"></div></div>
+  </div>
+
+  <!-- PREDICTIONS -->
+  <div class="view" id="view-predictions">
+    <div class="card">
+      <h2>🔮 Προβλέψεις</h2>
+      <p class="hint">Υπολογίζει πότε πιθανόν να είναι η καλύτερη στιγμή για ψάρεμα, βάσει του ιστορικού σου και της πρόγνωσης καιρού.</p>
+      <button type="button" class="species-cond-btn" onclick="predictBestTime()">Υπολόγισε την καλύτερη στιγμή</button>
+      <div id="prediction-result"></div>
+    </div>
   </div>
 
   <!-- SETTINGS -->
@@ -374,9 +388,9 @@
       <div class="picker-list" id="e-bait-chip-list"></div>
     </details>
 
-    <label>Εξοπλισμός</label>
+    <label>Τεχνική ψαρέματος</label>
     <details class="picker" id="e-equip-picker">
-      <summary>Επίλεξε εξοπλισμό <span id="e-equip-count-sum"></span></summary>
+      <summary>Επίλεξε τεχνική <span id="e-equip-count-sum"></span></summary>
       <div class="picker-list" id="e-equip-chip-list"></div>
     </details>
     <div class="selected-line" id="e-equip-selected-line"></div>
@@ -406,13 +420,20 @@ const LS = {
 const DEFAULTS = {
   species: ["Τσιπούρα","Λαβράκι","Γόπα","Μπαρμπούνι","Σαργός","Σκορπίνα","Κέφαλος"],
   bait: ["Μονοδόλι","Μάνα","Φαραώ","Ακροβάτης","Γαρίδα","Καραβιδάκι"],
-  equip: ["Καλάμι","Καλάμι surf casting","Πεταχτό","Καμάκι","Δίχτυ","Πετονιά χεριού"]
+  equip: ["🎣 Casting / Surfcasting","🎣 Spinning","🎣 Εγγλέζικο","🎣 Bolognese","🎣 Καθετή","🎣 Συρτή","🎣 Jigging","🎣 LRF / Rock Fishing","🤿 Ψαροντούφεκο","🔱 Καμάκι"]
 };
 let species = LS.get('psarema_species', DEFAULTS.species.slice());
 let baits = LS.get('psarema_bait', DEFAULTS.bait.slice());
 DEFAULTS.bait.forEach(b=>{ if(!baits.includes(b)) baits.push(b); });
 LS.set('psarema_bait', baits);
-let equips = LS.get('psarema_equip', DEFAULTS.equip.slice());
+let equips;
+if(!LS.get('psarema_equip_v2_migrated', false)){
+  equips = DEFAULTS.equip.slice();
+  LS.set('psarema_equip', equips);
+  LS.set('psarema_equip_v2_migrated', true);
+} else {
+  equips = LS.get('psarema_equip', DEFAULTS.equip.slice());
+}
 let entries = LS.get('psarema_entries', []);
 let anglers = LS.get('psarema_anglers', []);
 let selAngler = new Set();
@@ -601,7 +622,7 @@ function updateSelectedLine(lineId, selSet){
 }
 function refreshPickers(){
   renderChipList('fish-chip-list', species, selFish, 'fish-count-sum', renderFishQty, {arr:species, storeKey:'psarema_species', rerender:refreshPickers});
-  renderChipList('bait-chip-list', baits, selBait, 'bait-count-sum', null, {arr:baits, storeKey:'psarema_bait', rerender:refreshPickers});
+  renderChipList('bait-chip-list', baits, selBait, 'bait-count-sum', ()=>updateFishFollowups('f'), {arr:baits, storeKey:'psarema_bait', rerender:refreshPickers});
   renderChipList('equip-chip-list', equips, selEquip, 'equip-count-sum', null, {arr:equips, storeKey:'psarema_equip', rerender:refreshPickers});
   updateSelectedLine('equip-selected-line', selEquip);
 }
@@ -616,6 +637,19 @@ function renderFishQty(){
     row.innerHTML = `<span>${name}</span><input type="number" min="0" value="${prev[name] || 1}">`;
     wrap.appendChild(row);
   });
+  updateFishFollowups('f');
+}
+function updateFishFollowups(prefix){
+  const qtyListId = prefix === 'f' ? 'fish-qty-list' : 'e-fish-qty-list';
+  const weightId = prefix === 'f' ? 'f-weight' : 'e-weight';
+  const pickerId = prefix === 'f' ? 'bait-picker' : 'e-bait-picker';
+  const baitSet = prefix === 'f' ? selBait : eSelBait;
+  const qtyList = document.getElementById(qtyListId);
+  const hasFish = Array.from(qtyList.querySelectorAll('input')).some(inp => (parseInt(inp.value)||0) > 0);
+  const weightEl = document.getElementById(weightId);
+  if(hasFish && !weightEl.value) weightEl.classList.add('needs-fill'); else weightEl.classList.remove('needs-fill');
+  const picker = document.getElementById(pickerId);
+  if(hasFish && baitSet.size === 0) picker.classList.add('needs-fill-box'); else picker.classList.remove('needs-fill-box');
 }
 function setupAdd(inputId, btnId, arr, storeKey, rerender){
   document.getElementById(btnId).addEventListener('click', ()=>{
@@ -731,13 +765,24 @@ document.getElementById('f-timein').addEventListener('change', ()=>scheduleAutoW
 function updateTimeoutHighlight(prefix){
   const timeIn = document.getElementById(prefix+'-timein').value;
   const timeOutEl = document.getElementById(prefix+'-timeout');
-  if(timeIn && !timeOutEl.value) timeOutEl.classList.add('needs-fill');
+  const autoFlag = prefix === 'e' ? eTimeOutIsAuto : false;
+  if((timeIn && !timeOutEl.value) || autoFlag) timeOutEl.classList.add('needs-fill');
   else timeOutEl.classList.remove('needs-fill');
 }
+function addHoursToTime(timeStr, hours){
+  const [h,m] = timeStr.split(':').map(Number);
+  let total = ((h*60 + m + hours*60) % 1440 + 1440) % 1440;
+  return String(Math.floor(total/60)).padStart(2,'0') + ':' + String(total%60).padStart(2,'0');
+}
+let eTimeOutIsAuto = false;
+document.getElementById('fish-qty-list').addEventListener('input', ()=>updateFishFollowups('f'));
+document.getElementById('e-fish-qty-list').addEventListener('input', ()=>updateFishFollowups('e'));
+document.getElementById('f-weight').addEventListener('input', ()=>updateFishFollowups('f'));
+document.getElementById('e-weight').addEventListener('input', ()=>updateFishFollowups('e'));
 document.getElementById('f-timein').addEventListener('input', ()=>updateTimeoutHighlight('f'));
 document.getElementById('f-timeout').addEventListener('input', ()=>updateTimeoutHighlight('f'));
 document.getElementById('e-timein').addEventListener('input', ()=>updateTimeoutHighlight('e'));
-document.getElementById('e-timeout').addEventListener('input', ()=>updateTimeoutHighlight('e'));
+document.getElementById('e-timeout').addEventListener('input', ()=>{ eTimeOutIsAuto = false; updateTimeoutHighlight('e'); });
 document.getElementById('e-date').addEventListener('change', ()=>scheduleAutoWeather('e'));
 document.getElementById('e-timein').addEventListener('change', ()=>scheduleAutoWeather('e'));
 
@@ -935,12 +980,17 @@ document.getElementById('btn-save').addEventListener('click', async ()=>{
   });
   const entryId = Date.now();
   const photoKeys = await persistPhotos('f-photo-grid', entryId);
+  const fTimeIn = document.getElementById('f-timein').value;
+  let fTimeOut = document.getElementById('f-timeout').value;
+  let fTimeOutAuto = false;
+  if(!fTimeOut && fTimeIn){ fTimeOut = addHoursToTime(fTimeIn, 3); fTimeOutAuto = true; }
   const entry = {
     id: entryId,
     date,
     angler: [...selAngler],
-    timeIn: document.getElementById('f-timein').value,
-    timeOut: document.getElementById('f-timeout').value,
+    timeIn: fTimeIn,
+    timeOut: fTimeOut,
+    timeOutAuto: fTimeOutAuto,
     locName: document.getElementById('f-locname').value.trim(),
     coords: document.getElementById('f-coords').value.trim(),
     weather: fWeatherData,
@@ -1034,6 +1084,7 @@ async function openDetail(id){
   document.getElementById('e-date').value = e.date;
   document.getElementById('e-timein').value = e.timeIn || '';
   document.getElementById('e-timeout').value = e.timeOut || '';
+  eTimeOutIsAuto = !!e.timeOutAuto;
   updateTimeoutHighlight('e');
   document.getElementById('e-coords').value = e.coords || '';
   eSelAngler = new Set(Array.isArray(e.angler) ? e.angler : (e.angler ? [e.angler] : []));
@@ -1064,7 +1115,7 @@ async function openDetail(id){
     updateSelectedLine(lineId, selSet);
   }
   bindDeletable('e-fish-chip-list', species, eSelFish, 'e-fish-count-sum', ()=>renderEditFishQty(e.fish), 'psarema_species');
-  bindDeletable('e-bait-chip-list', baits, eSelBait, 'e-bait-count-sum', null, 'psarema_bait');
+  bindDeletable('e-bait-chip-list', baits, eSelBait, 'e-bait-count-sum', ()=>updateFishFollowups('e'), 'psarema_bait');
   bindDeletableWithLine('e-equip-chip-list', equips, eSelEquip, 'e-equip-count-sum', null, 'psarema_equip', 'e-equip-selected-line');
   renderEditFishQty(e.fish);
 
@@ -1095,6 +1146,7 @@ function renderEditFishQty(existingFish){
     row.innerHTML = `<span>${name}</span><input type="number" min="0" value="${val}">`;
     wrap.appendChild(row);
   });
+  updateFishFollowups('e');
 }
 document.getElementById('modal-close').addEventListener('click', closeModal);
 document.getElementById('modal-overlay').addEventListener('click', (ev)=>{ if(ev.target.id === 'modal-overlay') closeModal(); });
@@ -1107,12 +1159,18 @@ document.getElementById('e-btn-save').addEventListener('click', async ()=>{
     fishQty[row.dataset.name] = parseInt(row.querySelector('input').value) || 0;
   });
   const photoKeys = await persistPhotos('e-photo-grid', editingId);
+  const eTimeInVal = document.getElementById('e-timein').value;
+  let eTimeOutVal = document.getElementById('e-timeout').value;
+  let eTimeOutAutoFinal = false;
+  if(!eTimeOutVal && eTimeInVal){ eTimeOutVal = addHoursToTime(eTimeInVal, 3); eTimeOutAutoFinal = true; }
+  else if(eTimeOutVal && eTimeOutIsAuto){ eTimeOutAutoFinal = true; }
   entries[idx] = {
     ...entries[idx],
     date: document.getElementById('e-date').value,
     angler: [...eSelAngler],
-    timeIn: document.getElementById('e-timein').value,
-    timeOut: document.getElementById('e-timeout').value,
+    timeIn: eTimeInVal,
+    timeOut: eTimeOutVal,
+    timeOutAuto: eTimeOutAutoFinal,
     coords: document.getElementById('e-coords').value.trim(),
     locName: document.getElementById('e-locname').value.trim(),
     weather: eWeatherData,
@@ -1267,14 +1325,10 @@ function renderStats(){
     speciesConditions: `<div class="stat-block"><h3>🎯 Καλύτερες συνθήκες ανά είδος</h3>
       <div class="species-cond-list">${speciesButtons}</div>
       <div id="species-cond-result"></div>
-    </div>`,
-    prediction: `<div class="stat-block"><h3>🔮 Πότε να πάω;</h3>
-      <button type="button" class="species-cond-btn" onclick="predictBestTime()">Υπολόγισε την καλύτερη στιγμή</button>
-      <div id="prediction-result"></div>
     </div>`
   };
 
-  const defaultOrder = ['summary','prediction','topCatches','bySpecies','speciesConditions','byMonth','byHour','byBait','byWeather','byWindDir','byMoon','kpi','byLocation'];
+  const defaultOrder = ['summary','topCatches','bySpecies','speciesConditions','byMonth','byHour','byBait','byWeather','byWindDir','byMoon','kpi','byLocation'];
   let order = LS.get('psarema_stats_order', defaultOrder);
   defaultOrder.forEach(k=>{ if(!order.includes(k)) order.push(k); });
   order = order.filter(k=>sections[k] !== undefined);
@@ -1289,7 +1343,7 @@ function renderStats(){
     </div>`).join('');
 }
 function moveStatsSection(key, direction){
-  const defaultOrder = ['summary','prediction','topCatches','bySpecies','speciesConditions','byMonth','byHour','byBait','byWeather','byWindDir','byMoon','kpi','byLocation'];
+  const defaultOrder = ['summary','topCatches','bySpecies','speciesConditions','byMonth','byHour','byBait','byWeather','byWindDir','byMoon','kpi','byLocation'];
   let order = LS.get('psarema_stats_order', defaultOrder);
   defaultOrder.forEach(k=>{ if(!order.includes(k)) order.push(k); });
   const idx = order.indexOf(key);
