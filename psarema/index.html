@@ -288,10 +288,30 @@
   <!-- PREDICTIONS -->
   <div class="view" id="view-predictions">
     <div class="card">
-      <h2>🔮 Προβλέψεις</h2>
+      <h2>🔮 Καλύτερη στιγμή (βάσει ιστορικού)</h2>
       <p class="hint">Υπολογίζει πότε πιθανόν να είναι η καλύτερη στιγμή για ψάρεμα, βάσει του ιστορικού σου και της πρόγνωσης καιρού.</p>
       <button type="button" class="species-cond-btn" onclick="predictBestTime()">Υπολόγισε την καλύτερη στιγμή</button>
       <div id="prediction-result"></div>
+    </div>
+
+    <div class="card">
+      <h2>📍 Καλύτερη ημέρα σε σημείο</h2>
+      <p class="hint">Βάλε συντεταγμένες και θα βρει ποια από τις επόμενες 5 ημέρες έχει τις πιο ευνοϊκές γενικές συνθήκες ψαρέματος εκεί (άνεμος, καιρός, πίεση).</p>
+      <label>Συντεταγμένες</label>
+      <textarea id="pred-coords" rows="2" placeholder="π.χ. 37,6623056, 24,0367908"></textarea>
+      <button type="button" class="species-cond-btn" onclick="predictBestDayByCoords()">Βρες καλύτερη ημέρα</button>
+      <div id="pred-coords-result"></div>
+    </div>
+
+    <div class="card">
+      <h2>📅 Συνθήκες για συγκεκριμένη ημερομηνία</h2>
+      <p class="hint">Βάλε συντεταγμένες και μια ημερομηνία, και θα δεις τις αναμενόμενες γενικές συνθήκες ψαρέματος εκείνη τη μέρα.</p>
+      <label>Συντεταγμένες</label>
+      <textarea id="pred-date-coords" rows="2" placeholder="π.χ. 37,6623056, 24,0367908"></textarea>
+      <label>Ημερομηνία</label>
+      <input type="date" id="pred-date-input">
+      <button type="button" class="species-cond-btn" onclick="showConditionsForDate()">Δες συνθήκες</button>
+      <div id="pred-date-result"></div>
     </div>
   </div>
 
@@ -1445,6 +1465,75 @@ async function predictBestTime(){
   }
 }
 window.predictBestTime = predictBestTime;
+
+/* ---------- best day within next 5 days at given coordinates (general conditions) ---------- */
+async function predictBestDayByCoords(){
+  const resultEl = document.getElementById('pred-coords-result');
+  const parsed = parseCoords(document.getElementById('pred-coords').value);
+  if(!parsed){ resultEl.innerHTML = '<div class="hint">Βάλε έγκυρες συντεταγμένες.</div>'; return; }
+  resultEl.innerHTML = '<div class="hint">Υπολογισμός...</div>';
+  try{
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${parsed.lat}&longitude=${parsed.lng}&hourly=weathercode,windspeed_10m,pressure_msl&forecast_days=5&timezone=auto`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('forecast fetch failed');
+    const data = await res.json();
+    const times = data.hourly.time;
+    const days = {};
+    for(let i=0;i<times.length;i++){
+      if(!times[i].endsWith('T12:00')) continue;
+      const dayKey = times[i].slice(0,10);
+      const wsp = data.hourly.windspeed_10m[i];
+      const bf = beaufort(wsp);
+      const wcode = data.hourly.weathercode[i];
+      const pressure = data.hourly.pressure_msl[i];
+      let score = Math.max(0, 6 - bf);
+      if(wcode <= 2) score += 2;
+      else if(wcode >= 61) score -= 2;
+      days[dayKey] = { score, bf, wcode, pressure, windKmh: wsp };
+    }
+    const sorted = Object.entries(days).sort((a,b)=>b[1].score-a[1].score);
+    if(!sorted.length){ resultEl.innerHTML = '<div class="hint">Δεν βρέθηκαν δεδομένα πρόγνωσης.</div>'; return; }
+    const [bestDate, info] = sorted[0];
+    const dt = new Date(bestDate+'T12:00:00');
+    const dayNames = ['Κυριακή','Δευτέρα','Τρίτη','Τετάρτη','Πέμπτη','Παρασκευή','Σάββατο'];
+    const dateStr = dt.toLocaleDateString('el-GR', {day:'numeric', month:'long'});
+    resultEl.innerHTML = `<div class="condition-card">
+      <div class="condition-title">📍 Καλύτερη ημέρα στις επόμενες 5</div>
+      <div class="condition-line">${dayNames[dt.getDay()]}, ${dateStr}</div>
+      <div class="condition-line">${WEATHER_CODES[info.wcode] || 'Άγνωστο'} · ${info.bf} bf (${Math.round(info.windKmh)} km/h) · ${Math.round(info.pressure)} hPa</div>
+      <div class="condition-line" style="opacity:0.75; font-size:0.8rem;">Γενική εκτίμηση βάσει καιρού (άνεμος, συνθήκες, πίεση) — όχι ειδική για συγκεκριμένο ψάρι.</div>
+    </div>`;
+  }catch(err){
+    console.error('predictBestDayByCoords failed', err);
+    resultEl.innerHTML = '<div class="hint">Αποτυχία λήψης πρόγνωσης — έλεγξε τη σύνδεση στο ίντερνετ.</div>';
+  }
+}
+window.predictBestDayByCoords = predictBestDayByCoords;
+
+/* ---------- general conditions for a chosen date+location ---------- */
+async function showConditionsForDate(){
+  const resultEl = document.getElementById('pred-date-result');
+  const parsed = parseCoords(document.getElementById('pred-date-coords').value);
+  const dateVal = document.getElementById('pred-date-input').value;
+  if(!parsed || !dateVal){ resultEl.innerHTML = '<div class="hint">Βάλε συντεταγμένες και ημερομηνία.</div>'; return; }
+  resultEl.innerHTML = '<div class="hint">Υπολογισμός...</div>';
+  try{
+    const data = await fetchWeatherAndWave(parsed.lat, parsed.lng, dateVal, '12:00');
+    const moon = computeMoonInfo(dateVal);
+    const dateLabel = new Date(dateVal+'T12:00:00').toLocaleDateString('el-GR', {day:'numeric', month:'long', year:'numeric'});
+    resultEl.innerHTML = `<div class="condition-card">
+      <div class="condition-title">📅 Συνθήκες για ${dateLabel}</div>
+      <div class="condition-line">${data.weatherText}${data.temperature != null ? ' · '+(Math.round(data.temperature*10)/10)+' °C' : ''}</div>
+      <div class="condition-line">${data.pressure != null ? Math.round(data.pressure)+' hPa' : '—'} · ${data.beaufort != null ? data.beaufort+' bf ('+data.windDirText+')' : '—'}</div>
+      <div class="condition-line">${data.wave != null ? formatWave(data.wave, data.waveEstimated) : '—'}</div>
+      ${moon ? `<div class="condition-line">${moon.emoji} ${moon.label} (${moon.lunarDay}η μέρα)</div>` : ''}
+    </div>`;
+  }catch(err){
+    console.error('showConditionsForDate failed', err);
+    resultEl.innerHTML = '<div class="hint">Αποτυχία λήψης δεδομένων — έλεγξε τη σύνδεση στο ίντερνετ.</div>';
+  }
+}
+window.showConditionsForDate = showConditionsForDate;
 
 /* ---------- best-conditions-per-species analysis ---------- */
 function computeBestConditions(name){
