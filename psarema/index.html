@@ -368,7 +368,7 @@
     </div>
 
     <div class="card" style="text-align:center;">
-      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 1.9 · 25 Αυγ 2026</p>
+      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 2.0 · 25 Αυγ 2026</p>
     </div>
 
     <div style="text-align:center; margin-top:6px;">
@@ -1791,6 +1791,7 @@ window.showSpeciesConditions = function(name){
 };
 
 /* ---------- export / import / clear ---------- */
+const DRIVE_BACKUP_URL = 'https://script.google.com/macros/s/AKfycbxQMc7OA5QuMMPhG8gWDsdyr4EW2dzq92XYJxhqiZBVOqINZIe-ioeu9YkUb4bprynO/exec';
 document.getElementById('btn-export').addEventListener('click', async ()=>{
   const photos = {};
   for(const e of entries){
@@ -1804,6 +1805,13 @@ document.getElementById('btn-export').addEventListener('click', async ()=>{
   const a = document.createElement('a');
   a.href = url; a.download = 'psarema-backup-' + new Date().toISOString().slice(0,10) + '.json';
   a.click(); URL.revokeObjectURL(url);
+  try{
+    fetch(DRIVE_BACKUP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(data)
+    }).catch(()=>{});
+  }catch(err){}
 });
 document.getElementById('btn-import').addEventListener('click', ()=>{
   if(!confirm('Προσοχή: η εισαγωγή αρχείου θα αντικαταστήσει όλα τα τρέχοντα δεδομένα σου (καταχωρήσεις, λίστες, φωτογραφίες). Ό,τι υπάρχει τώρα και δεν το έχεις εξάγει, θα χαθεί οριστικά. Θέλεις να συνεχίσεις;')) return;
