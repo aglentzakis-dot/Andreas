@@ -26,10 +26,10 @@
     background: linear-gradient(160deg, var(--deep), #0f4f61 65%, var(--teal));
     background-size: cover; background-position: center;
     color: var(--white); padding: 22px 18px 26px; position: relative; overflow: hidden;
-    display:flex; flex-direction:column; min-height: 120px;
+    display:flex; flex-direction:column; height: 130px; box-sizing: border-box;
   }
-  header.pos-middle{ justify-content:center; min-height:220px; }
-  header.pos-bottom{ justify-content:flex-end; min-height:220px; }
+  header.pos-middle{ justify-content:center; }
+  header.pos-bottom{ justify-content:flex-end; }
   header.has-photo{ background-image: linear-gradient(160deg, rgba(11,59,76,0.72), rgba(15,79,97,0.6) 65%, rgba(28,122,133,0.55)), var(--header-photo); }
   header::after{ content:""; position:absolute; right:-30px; bottom:-40px; width:160px; height:160px; border-radius:50%; background: rgba(255,255,255,0.06); }
   header h1{ font-size: 1.5rem; letter-spacing: 0.3px; margin-top: 26px; text-shadow: 0 1px 4px rgba(0,0,0,0.35); }
@@ -352,6 +352,31 @@
   <!-- SETTINGS -->
   <div class="view" id="view-settings">
     <div class="card">
+      <h2>Δεδομένα</h2>
+      <p class="hint" style="background:#fdf1ec; border:1px solid #f0c8b4; border-radius:8px; padding:8px 10px;"><strong>Δοκιμαστική έκδοση (beta)</strong> — η εφαρμογή βρίσκεται σε δοκιμαστικό στάδιο και μπορεί να αλλάξει.</p>
+      <p class="hint">Τα αρχεία (χωρίς τις φωτογραφίες) φυλάσσονται για 3 μήνες μετά το backup, από τον προγραμματιστή της εφαρμογής.</p>
+      <p class="hint" style="margin-top:8px;">Η εφαρμογή παρέχεται όπως είναι (χωρίς εγγύηση), χωρίς καμία ευθύνη για τυχόν απώλεια δεδομένων, από οποιαδήποτε αιτία (διαγραφή browser, βλάβη συσκευής, τεχνικό πρόβλημα κ.ά.). Συνιστάται τακτική εξαγωγή/αποθήκευση από τον ίδιο τον χρήστη.</p>
+      <p class="hint" style="margin-top:8px;">💡 Η εφαρμογή λειτουργεί καλύτερα στο <strong>Google Chrome</strong>. Αν κάτι δεν φορτώνει σωστά (π.χ. καιρός, χάρτης, τοποθεσία), δοκίμασε να την ανοίξεις μέσω Chrome αντί για άλλο browser της συσκευής σου.</p>
+      <div class="footer-tools">
+        <button type="button" id="btn-export">⬇ Εξαγωγή JSON</button>
+        <button type="button" id="btn-import">⬆ Εισαγωγή JSON</button>
+      </div>
+      <input type="file" id="file-import" accept="application/json" style="display:none">
+      <label style="margin-top:18px;">Διαγραφή όλων</label>
+      <div class="footer-tools">
+        <button type="button" id="btn-clear" style="color:var(--danger); border-color:var(--danger);">🗑 Διαγραφή όλων των δεδομένων</button>
+      </div>
+    </div>
+
+    <div class="card" style="text-align:center;">
+      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 1.8 · 25 Αυγ 2026</p>
+    </div>
+
+    <div style="text-align:center; margin-top:6px;">
+      <button type="button" id="btn-unlock-advanced" style="background:none; border:none; color:#c3cdd0; font-size:0.7rem; padding:10px; cursor:pointer;">⚙</button>
+    </div>
+
+    <div class="card" id="advanced-settings-card" style="display:none;">
       <h2>Εμφάνιση</h2>
       <label>Χρώμα φόντου</label>
       <div class="color-swatches" id="bg-swatches"></div>
@@ -382,27 +407,6 @@
       </div>
       <input type="text" id="equip-btn-text-input" placeholder="Κείμενο κουμπιού (π.χ. Εξοπλισμός)" style="margin-top:8px;">
       <input type="text" id="equip-btn-url-input" placeholder="Σύνδεσμος (π.χ. https://miserlis-fishing.gr/)" style="margin-top:8px;">
-    </div>
-
-    <div class="card">
-      <h2>Δεδομένα</h2>
-      <p class="hint" style="background:#fdf1ec; border:1px solid #f0c8b4; border-radius:8px; padding:8px 10px;"><strong>Δοκιμαστική έκδοση (beta)</strong> — η εφαρμογή βρίσκεται σε δοκιμαστικό στάδιο και μπορεί να αλλάξει.</p>
-      <p class="hint">Τα αρχεία (χωρίς τις φωτογραφίες) φυλάσσονται για 3 μήνες μετά το backup, από τον προγραμματιστή της εφαρμογής.</p>
-      <p class="hint" style="margin-top:8px;">Η εφαρμογή παρέχεται όπως είναι (χωρίς εγγύηση), χωρίς καμία ευθύνη για τυχόν απώλεια δεδομένων, από οποιαδήποτε αιτία (διαγραφή browser, βλάβη συσκευής, τεχνικό πρόβλημα κ.ά.). Συνιστάται τακτική εξαγωγή/αποθήκευση από τον ίδιο τον χρήστη.</p>
-      <p class="hint" style="margin-top:8px;">💡 Η εφαρμογή λειτουργεί καλύτερα στο <strong>Google Chrome</strong>. Αν κάτι δεν φορτώνει σωστά (π.χ. καιρός, χάρτης, τοποθεσία), δοκίμασε να την ανοίξεις μέσω Chrome αντί για άλλο browser της συσκευής σου.</p>
-      <div class="footer-tools">
-        <button type="button" id="btn-export">⬇ Εξαγωγή JSON</button>
-        <button type="button" id="btn-import">⬆ Εισαγωγή JSON</button>
-      </div>
-      <input type="file" id="file-import" accept="application/json" style="display:none">
-      <label style="margin-top:18px;">Διαγραφή όλων</label>
-      <div class="footer-tools">
-        <button type="button" id="btn-clear" style="color:var(--danger); border-color:var(--danger);">🗑 Διαγραφή όλων των δεδομένων</button>
-      </div>
-    </div>
-
-    <div class="card" style="text-align:center;">
-      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 1.7 · 25 Αυγ 2026</p>
     </div>
   </div>
 
@@ -1970,6 +1974,16 @@ applyHeaderTitle();
 applyHeaderPhoto();
 applyHeaderTitlePos();
 applyEquipButton();
+document.getElementById('btn-unlock-advanced').addEventListener('click', ()=>{
+  const code = prompt('Κωδικός πρόσβασης:');
+  if(code === null) return;
+  if(code === '2926'){
+    document.getElementById('advanced-settings-card').style.display = '';
+    document.getElementById('btn-unlock-advanced').style.display = 'none';
+  } else {
+    alert('Λάθος κωδικός');
+  }
+});
 refreshPickers();
 renderFishQty();
 renderEntries();
