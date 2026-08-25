@@ -11,6 +11,8 @@
 <meta name="theme-color" content="#0B3B4C">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
   :root{
     --deep: #0B3B4C; --teal: #1C7A85; --foam: #F2ECDD; --sand: #E4D5B7;
@@ -142,6 +144,17 @@
   .condition-title{ font-family:'Bitter',serif; font-weight:700; font-size:0.95rem; margin-bottom:10px; }
   .condition-line{ font-size:0.92rem; padding:5px 0; border-top:1px solid rgba(255,255,255,0.15); }
   .condition-line:first-of-type{ border-top:none; }
+  #prediction-explain{ margin-top:4px; }
+  #prediction-explain summary{ font-size:0.85rem; font-weight:600; color:var(--deep); }
+  .explain-body{ padding: 10px 12px; font-size:0.83rem; color:#4d6169; line-height:1.5; }
+  .explain-body p{ margin: 0 0 10px 0; }
+  .map-picker-overlay{ display:none; position:fixed; inset:0; background:rgba(11,59,76,0.6); z-index:1200; align-items:flex-end; justify-content:center; }
+  .map-picker-overlay.show{ display:flex; }
+  .map-picker-sheet{ background:var(--foam); width:100%; max-width:640px; max-height:92vh; border-radius:18px 18px 0 0; display:flex; flex-direction:column; overflow:hidden; }
+  .map-picker-head{ display:flex; justify-content:space-between; align-items:center; padding:14px 16px; }
+  .map-picker-head h2{ font-size:1rem; color:var(--deep); }
+  #map-picker-map{ flex:1; min-height:360px; }
+  .map-picker-footer{ padding:12px 16px 18px; }
   .reorderable{ position: relative; padding-right: 34px; }
   .reorder-controls{ position:absolute; top:0; right:0; display:flex; flex-direction:column; gap:3px; z-index:2; opacity:0.55; }
   .reorder-controls button{
@@ -209,7 +222,10 @@
 
       <label>Συντεταγμένες</label>
       <textarea id="f-coords" rows="2" placeholder="π.χ. 37,6623056, 24,0367908 ή link/κείμενο από Apple Maps"></textarea>
-      <div class="geo-row"><button type="button" id="btn-geo">📍 Τρέχουσα τοποθεσία</button></div>
+      <div class="geo-row">
+        <button type="button" id="btn-geo">📍 Τρέχουσα τοποθεσία</button>
+        <button type="button" id="btn-map-f">🗺️ Επιλογή στον χάρτη</button>
+      </div>
       <div class="coord-preview" id="coord-preview"></div>
 
       <label>Ημερομηνία</label>
@@ -313,6 +329,18 @@
       <button type="button" class="species-cond-btn" onclick="showConditionsForDate()">Δες συνθήκες</button>
       <div id="pred-date-result"></div>
     </div>
+
+    <details class="picker" id="prediction-explain">
+      <summary>ℹ️ Πώς υπολογίζονται οι προβλέψεις</summary>
+      <div class="explain-body">
+        <p>Οι προβλέψεις βασίζονται στα δεδομένα καιρού/θάλασσας του Open-Meteo και σε απλή στατιστική ανάλυση, όχι σε τεχνητή νοημοσύνη ή εγγυημένη πρόγνωση.</p>
+        <p><strong>Καλύτερη στιγμή (ιστορικό):</strong> ψάχνει ποιες μέρες/ώρες/άνεμο είχες όταν έπιανες περισσότερα ψάρια στο παρελθόν, και βρίσκει πότε μέσα στις επόμενες 7 μέρες θα ξαναμοιάζουν αυτές οι συνθήκες, στο σημείο που έχεις τα περισσότερα ψάρια καταγεγραμμένα.</p>
+        <p><strong>Καλύτερη ημέρα σε σημείο:</strong> εξετάζει τις επόμενες 5 μέρες σε συγκεκριμένες συντεταγμένες και βαθμολογεί κάθε μέρα με βάση άνεμο, καιρικές συνθήκες και πίεση — χωρίς να λαμβάνει υπόψη συγκεκριμένο είδος ψαριού.</p>
+        <p><strong>Συνθήκες για ημερομηνία:</strong> δείχνει απλά τα αναμενόμενα καιρικά/θαλάσσια στοιχεία για μια συγκεκριμένη μέρα, χωρίς βαθμολόγηση.</p>
+        <p><strong>Αξιοπιστία πρόγνωσης:</strong> είναι μεγαλύτερη όσο πιο κοντά είναι η ημερομηνία στο σήμερα, και μειώνεται όσο απομακρύνεται (οι προγνώσεις καιρού γίνονται λιγότερο ακριβείς πέρα από 5-7 μέρες).</p>
+        <p style="margin-bottom:0;">Καμία πρόβλεψη δεν εγγυάται αποτέλεσμα — είναι εκτιμήσεις για να σε βοηθήσουν να αποφασίσεις.</p>
+      </div>
+    </details>
   </div>
 
   <!-- SETTINGS -->
@@ -364,6 +392,7 @@
       <div><label>Συντεταγμένες</label><textarea id="e-coords" rows="2" placeholder="π.χ. 37,6623056, 24,0367908 ή link/κείμενο από Apple Maps"></textarea></div>
     </div>
     <div class="coord-preview" id="e-coord-preview"></div>
+    <div class="geo-row"><button type="button" id="btn-map-e">🗺️ Επιλογή στον χάρτη</button></div>
 
     <div class="row2">
       <div><label>Ώρα άφιξης</label><input type="time" id="e-timein"></div>
@@ -426,6 +455,20 @@
 
 <div class="toast" id="toast"></div>
 <div class="photo-viewer" id="photo-viewer"><button type="button" class="pv-close" id="pv-close">✕</button><img id="pv-img" src=""></div>
+
+<div class="map-picker-overlay" id="map-picker-overlay">
+  <div class="map-picker-sheet">
+    <div class="map-picker-head">
+      <h2>Πάτα στον χάρτη για να επιλέξεις σημείο</h2>
+      <button type="button" class="modal-close" id="map-picker-close">✕</button>
+    </div>
+    <div id="map-picker-map"></div>
+    <div class="map-picker-footer">
+      <div id="map-picker-coords-preview" class="hint">Πάτα πάνω στον χάρτη</div>
+      <button type="button" class="save-btn" id="map-picker-confirm" disabled>Χρήση αυτού του σημείου</button>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ---------- storage helpers ---------- */
@@ -776,6 +819,62 @@ document.getElementById('btn-geo').addEventListener('click', ()=>{
     toast('Η τοποθεσία καταγράφηκε');
   }, ()=>{ toast('Δεν ήταν δυνατή η λήψη τοποθεσίας'); }, {enableHighAccuracy:true, timeout:8000});
 });
+
+/* ---------- interactive map picker (Leaflet) ---------- */
+let mapPickerInstance = null, mapPickerMarker = null, mapPickerLatLng = null, mapPickerTargetPrefix = 'f';
+function openMapPicker(prefix){
+  mapPickerTargetPrefix = prefix;
+  mapPickerLatLng = null;
+  document.getElementById('map-picker-confirm').disabled = true;
+  document.getElementById('map-picker-coords-preview').textContent = 'Πάτα πάνω στον χάρτη';
+  document.getElementById('map-picker-overlay').classList.add('show');
+
+  const existing = parseCoords(document.getElementById(prefix+'-coords').value);
+  const center = existing ? [parseFloat(existing.lat), parseFloat(existing.lng)] : [37.98, 23.73];
+  const zoom = existing ? 13 : 6;
+
+  setTimeout(()=>{
+    if(!mapPickerInstance){
+      mapPickerInstance = L.map('map-picker-map').setView(center, zoom);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(mapPickerInstance);
+      mapPickerInstance.on('click', (ev)=>{
+        mapPickerLatLng = ev.latlng;
+        if(mapPickerMarker){ mapPickerMarker.setLatLng(ev.latlng); }
+        else { mapPickerMarker = L.marker(ev.latlng).addTo(mapPickerInstance); }
+        document.getElementById('map-picker-coords-preview').textContent = `Επιλεγμένο: ${ev.latlng.lat.toFixed(7)}, ${ev.latlng.lng.toFixed(7)}`;
+        document.getElementById('map-picker-confirm').disabled = false;
+      });
+    } else {
+      mapPickerInstance.setView(center, zoom);
+      mapPickerInstance.invalidateSize();
+    }
+    if(existing){
+      const ll = L.latLng(center[0], center[1]);
+      mapPickerLatLng = ll;
+      if(mapPickerMarker) mapPickerMarker.setLatLng(ll); else mapPickerMarker = L.marker(ll).addTo(mapPickerInstance);
+      document.getElementById('map-picker-coords-preview').textContent = `Επιλεγμένο: ${ll.lat.toFixed(7)}, ${ll.lng.toFixed(7)}`;
+      document.getElementById('map-picker-confirm').disabled = false;
+    }
+  }, 50);
+}
+function closeMapPicker(){
+  document.getElementById('map-picker-overlay').classList.remove('show');
+}
+document.getElementById('btn-map-f').addEventListener('click', ()=>openMapPicker('f'));
+document.getElementById('btn-map-e').addEventListener('click', ()=>openMapPicker('e'));
+document.getElementById('map-picker-close').addEventListener('click', closeMapPicker);
+document.getElementById('map-picker-overlay').addEventListener('click', (ev)=>{ if(ev.target.id === 'map-picker-overlay') closeMapPicker(); });
+document.getElementById('map-picker-confirm').addEventListener('click', ()=>{
+  if(!mapPickerLatLng) return;
+  const input = document.getElementById(mapPickerTargetPrefix+'-coords');
+  input.value = mapPickerLatLng.lat.toFixed(7) + ', ' + mapPickerLatLng.lng.toFixed(7);
+  input.dispatchEvent(new Event('input'));
+  toast('Το σημείο καταχωρήθηκε');
+  closeMapPicker();
+});
 document.getElementById('f-date').addEventListener('change', ()=>scheduleAutoWeather('f'));
 document.getElementById('f-timein').addEventListener('change', ()=>scheduleAutoWeather('f'));
 function updateTimeoutHighlight(prefix){
@@ -905,6 +1004,19 @@ function formatWave(waveM, estimated){
 function findHourIndex(times, hour){
   let idx = times.findIndex(t => t.endsWith(pad2(hour)+':00'));
   return idx === -1 ? Math.floor(times.length/2) : idx;
+}
+function forecastConfidence(dateStr){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const target = new Date(dateStr+'T00:00:00');
+  const diffDays = Math.round((target - today) / 86400000);
+  if(diffDays < 0) return 90;
+  if(diffDays <= 1) return 95;
+  if(diffDays <= 3) return 88;
+  if(diffDays <= 5) return 78;
+  if(diffDays <= 7) return 68;
+  if(diffDays <= 10) return 52;
+  if(diffDays <= 14) return 38;
+  return 25;
 }
 async function fetchWeatherAndWave(lat, lng, dateStr, timeStr){
   const today = new Date(); today.setHours(0,0,0,0);
@@ -1521,12 +1633,14 @@ async function showConditionsForDate(){
     const data = await fetchWeatherAndWave(parsed.lat, parsed.lng, dateVal, '12:00');
     const moon = computeMoonInfo(dateVal);
     const dateLabel = new Date(dateVal+'T12:00:00').toLocaleDateString('el-GR', {day:'numeric', month:'long', year:'numeric'});
+    const confidence = forecastConfidence(dateVal);
     resultEl.innerHTML = `<div class="condition-card">
       <div class="condition-title">📅 Συνθήκες για ${dateLabel}</div>
       <div class="condition-line">${data.weatherText}${data.temperature != null ? ' · '+(Math.round(data.temperature*10)/10)+' °C' : ''}</div>
       <div class="condition-line">${data.pressure != null ? Math.round(data.pressure)+' hPa' : '—'} · ${data.beaufort != null ? data.beaufort+' bf ('+data.windDirText+')' : '—'}</div>
       <div class="condition-line">${data.wave != null ? formatWave(data.wave, data.waveEstimated) : '—'}</div>
       ${moon ? `<div class="condition-line">${moon.emoji} ${moon.label} (${moon.lunarDay}η μέρα)</div>` : ''}
+      <div class="condition-line">📊 Αξιοπιστία πρόγνωσης: ${confidence}%</div>
     </div>`;
   }catch(err){
     console.error('showConditionsForDate failed', err);
