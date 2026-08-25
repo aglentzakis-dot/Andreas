@@ -823,7 +823,13 @@ document.getElementById('btn-geo').addEventListener('click', ()=>{
     input.value = pos.coords.latitude.toFixed(7) + ', ' + pos.coords.longitude.toFixed(7);
     input.dispatchEvent(new Event('input'));
     toast('Η τοποθεσία καταγράφηκε');
-  }, ()=>{ toast('Δεν ήταν δυνατή η λήψη τοποθεσίας'); }, {enableHighAccuracy:true, timeout:8000});
+  }, (err)=>{
+    let msg = 'Δεν ήταν δυνατή η λήψη τοποθεσίας';
+    if(err && err.code === 1) msg = 'Δεν επιτράπηκε πρόσβαση στην τοποθεσία — έλεγξε τις άδειες τοποθεσίας του browser στις Ρυθμίσεις του κινητού';
+    else if(err && err.code === 2) msg = 'Η τοποθεσία δεν είναι διαθέσιμη αυτή τη στιγμή';
+    else if(err && err.code === 3) msg = 'Η αναζήτηση τοποθεσίας άργησε πολύ — δοκίμασε ξανά';
+    toast(msg);
+  }, {enableHighAccuracy:true, timeout:8000});
 });
 
 /* ---------- interactive map picker (Leaflet) ---------- */
