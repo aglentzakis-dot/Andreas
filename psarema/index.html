@@ -42,6 +42,12 @@
     border:1px solid rgba(255,255,255,0.3); letter-spacing:0.2px;
   }
   .equip-link:active{ background: rgba(255,255,255,0.24); }
+  .lang-toggle-btn{
+    position:absolute; top:18px; left:16px; z-index:10;
+    background: rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.3);
+    border-radius:20px; padding:6px 10px; font-size:1.1rem; cursor:pointer; line-height:1;
+  }
+  .lang-toggle-btn:active{ background: rgba(255,255,255,0.24); }
   header .sub{ font-size: 0.85rem; opacity: 0.8; margin-top: 4px; }
   nav.tabs{ display:flex; gap: 6px; padding: 10px 12px 0; background: var(--deep); overflow-x:auto; }
   nav.tabs button{
@@ -200,6 +206,7 @@
 
 <header id="app-header">
   <a href="https://miserlis-fishing.gr/" target="_blank" rel="noopener" class="equip-link" id="equip-link">Εξοπλισμός</a>
+  <button type="button" id="lang-toggle" class="lang-toggle-btn" aria-label="Language">🇬🇷</button>
   <h1 id="app-title">Ημερολόγιο Ψαρέματος</h1>
 </header>
 
@@ -216,9 +223,9 @@
   <!-- NEW ENTRY -->
   <div class="view active" id="view-new">
     <div class="card">
-      <h2>Στοιχεία εξόδου</h2>
+      <h2 id="i18n-trip-details">Στοιχεία εξόδου</h2>
 
-      <label>Ψαράς</label>
+      <label id="i18n-angler-label">Ψαράς</label>
       <details class="picker angler-picker" id="angler-picker">
         <summary><span id="angler-count-sum">Επίλεξε ψαρά(-άδες)</span></summary>
         <div class="picker-list" id="angler-chip-list"></div>
@@ -233,17 +240,17 @@
       </div>
       <div class="coord-preview" id="coord-preview"></div>
 
-      <label>Ημερομηνία</label>
+      <label id="i18n-date-label">Ημερομηνία</label>
       <input type="date" id="f-date">
       <div class="row2">
-        <div><label>Ώρα άφιξης</label><input type="time" id="f-timein"></div>
-        <div><label>Ώρα αποχώρησης</label><input type="time" id="f-timeout"></div>
+        <div><label id="i18n-timein-label">Ώρα άφιξης</label><input type="time" id="f-timein"></div>
+        <div><label id="i18n-timeout-label">Ώρα αποχώρησης</label><input type="time" id="f-timeout"></div>
       </div>
 
-      <label>Τοποθεσία (όνομα)</label>
+      <label id="i18n-locname-label">Τοποθεσία (όνομα)</label>
       <input type="text" id="f-locname" placeholder="Συμπληρώνεται αυτόματα από τις συντεταγμένες">
 
-      <label>Καιρός & θάλασσα (αυτόματα)</label>
+      <label id="i18n-weather-label">Καιρός & θάλασσα (αυτόματα)</label>
       <div class="weather-box" id="f-weather-box">
         <button type="button" id="f-fetch-weather">🔄 Λήψη καιρικών δεδομένων</button>
         <div class="weather-grid" id="f-weather-grid">
@@ -259,7 +266,7 @@
         <div class="weather-status" id="f-weather-status">Συμπλήρωσε ημερομηνία και συντεταγμένες, μετά πάτα λήψη.</div>
       </div>
 
-      <label>Είδη ψαριών</label>
+      <label id="i18n-species-label">Είδη ψαριών</label>
       <details class="picker" id="fish-picker">
         <summary>Επίλεξε είδη <span id="fish-count-sum"></span></summary>
         <div class="picker-list" id="fish-chip-list"></div>
@@ -267,27 +274,27 @@
       </details>
       <div class="qty-list" id="fish-qty-list"></div>
 
-      <label>Συνολικά κιλά ψαριάς</label>
+      <label id="i18n-weight-label">Συνολικά κιλά ψαριάς</label>
       <input type="number" id="f-weight" min="0" step="0.1" placeholder="π.χ. 2.5">
 
-      <label>Δολώματα</label>
+      <label id="i18n-bait-label">Δολώματα</label>
       <details class="picker" id="bait-picker">
         <summary>Επίλεξε δολώματα <span id="bait-count-sum"></span></summary>
         <div class="picker-list" id="bait-chip-list"></div>
         <div class="addrow"><input type="text" id="bait-new" placeholder="Προσθήκη νέου δολώματος"><button type="button" id="bait-add">+</button></div>
       </details>
 
-      <label>Τεχνική ψαρέματος</label>
+      <label id="i18n-technique-label">Τεχνική ψαρέματος</label>
       <details class="picker" id="equip-picker">
         <summary><span id="equip-count-sum">Επίλεξε τεχνική</span></summary>
         <div class="picker-list" id="equip-chip-list"></div>
         <div class="addrow"><input type="text" id="equip-new" placeholder="Προσθήκη νέας τεχνικής"><button type="button" id="equip-add">+</button></div>
       </details>
 
-      <label>Σημειώσεις</label>
+      <label id="i18n-notes-label">Σημειώσεις</label>
       <textarea id="f-notes" rows="2" placeholder="Προαιρετικά..."></textarea>
 
-      <label>Φωτογραφίες (έως 3)</label>
+      <label id="i18n-photos-label">Φωτογραφίες (έως 3)</label>
       <input type="file" id="f-photo-input" accept="image/*" multiple style="display:none">
       <div class="photo-grid" id="f-photo-grid"></div>
       <button type="button" class="photo-add-btn" id="f-photo-add-btn">📷 Προσθήκη φωτογραφιών</button>
@@ -298,25 +305,25 @@
 
   <!-- LIST -->
   <div class="view" id="view-list">
-    <div class="card"><h2>Καταχωρήσεις</h2><div id="entries-list"></div></div>
+    <div class="card"><h2 id="i18n-entries-header">Καταχωρήσεις</h2><div id="entries-list"></div></div>
   </div>
 
   <!-- STATS -->
   <div class="view" id="view-stats">
-    <div class="card"><h2>Στατιστικά</h2><div id="stats-content"></div></div>
+    <div class="card"><h2 id="i18n-stats-header">Στατιστικά</h2><div id="stats-content"></div></div>
   </div>
 
   <!-- PREDICTIONS -->
   <div class="view" id="view-predictions">
     <div class="card">
-      <h2>🔮 Καλύτερη στιγμή (βάσει ιστορικού)</h2>
+      <h2 id="i18n-pred1-header">🔮 Καλύτερη στιγμή (βάσει ιστορικού)</h2>
       <p class="hint">Υπολογίζει πότε πιθανόν να είναι η καλύτερη στιγμή για ψάρεμα, βάσει του ιστορικού σου και της πρόγνωσης καιρού.</p>
       <button type="button" class="species-cond-btn" onclick="predictBestTime()">Υπολόγισε την καλύτερη στιγμή</button>
       <div id="prediction-result"></div>
     </div>
 
     <div class="card">
-      <h2>📍 Καλύτερη ημέρα σε σημείο</h2>
+      <h2 id="i18n-pred2-header">📍 Καλύτερη ημέρα σε σημείο</h2>
       <p class="hint">Βάλε συντεταγμένες και θα βρει ποια από τις επόμενες 5 ημέρες έχει τις πιο ευνοϊκές γενικές συνθήκες ψαρέματος εκεί (άνεμος, καιρός, πίεση).</p>
       <label>Συντεταγμένες</label>
       <textarea id="pred-coords" rows="2" placeholder="π.χ. 37,6623056, 24,0367908"></textarea>
@@ -325,7 +332,7 @@
     </div>
 
     <div class="card">
-      <h2>📅 Συνθήκες για συγκεκριμένη ημερομηνία</h2>
+      <h2 id="i18n-pred3-header">📅 Συνθήκες για συγκεκριμένη ημερομηνία</h2>
       <p class="hint">Βάλε συντεταγμένες και μια ημερομηνία, και θα δεις τις αναμενόμενες γενικές συνθήκες ψαρέματος εκείνη τη μέρα.</p>
       <label>Συντεταγμένες</label>
       <textarea id="pred-date-coords" rows="2" placeholder="π.χ. 37,6623056, 24,0367908"></textarea>
@@ -351,8 +358,9 @@
   <!-- SETTINGS -->
   <div class="view" id="view-settings">
     <div class="card">
-      <h2>Δεδομένα</h2>
+      <h2 id="i18n-data-header">Δεδομένα</h2>
       <p class="hint" style="background:#fdf1ec; border:1px solid #f0c8b4; border-radius:8px; padding:8px 10px;"><strong>Δοκιμαστική έκδοση (beta)</strong> — η εφαρμογή βρίσκεται σε δοκιμαστικό στάδιο και μπορεί να αλλάξει.</p>
+      <p class="hint">Τα αρχεία (χωρίς τις φωτογραφίες) φυλάσσονται για 3 μήνες μετά το backup, από τον προγραμματιστή της εφαρμογής.</p>
       <p class="hint" style="margin-top:8px;">Η εφαρμογή παρέχεται όπως είναι (χωρίς εγγύηση), χωρίς καμία ευθύνη για τυχόν απώλεια δεδομένων, από οποιαδήποτε αιτία (διαγραφή browser, βλάβη συσκευής, τεχνικό πρόβλημα κ.ά.). Συνιστάται τακτική εξαγωγή/αποθήκευση από τον ίδιο τον χρήστη.</p>
       <p class="hint" style="margin-top:8px;">💡 Η εφαρμογή λειτουργεί καλύτερα στο <strong>Google Chrome</strong>. Αν κάτι δεν φορτώνει σωστά (π.χ. καιρός, χάρτης, τοποθεσία), δοκίμασε να την ανοίξεις μέσω Chrome αντί για άλλο browser της συσκευής σου.</p>
       <div class="footer-tools">
@@ -367,7 +375,7 @@
     </div>
 
     <div class="card" style="text-align:center;">
-      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 2.3 · 26 Αυγ 2026</p>
+      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 2.4 · 26 Αυγ 2026</p>
     </div>
 
     <div style="text-align:center; margin-top:6px;">
@@ -417,7 +425,7 @@
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal-sheet">
     <div class="modal-head">
-      <h2>Λεπτομέρειες καταχώρησης</h2>
+      <h2 id="i18n-modal-title">Λεπτομέρειες καταχώρησης</h2>
       <button type="button" class="modal-close" id="modal-close">✕</button>
     </div>
 
@@ -1378,10 +1386,25 @@ function renderStats(){
   if(entries.length === 0){ wrap.innerHTML = '<div class="empty">Χρειάζονται καταχωρήσεις για στατιστικά</div>'; return; }
 
   let totalFish = 0, totalWeight = 0;
-  const bySpecies = {}, byLocation = {}, byWeather = {}, byWindDir = {}, byMoonPhase = {}, byBait = {};
+  const bySpecies = {}, byLocation = {}, byWeather = {}, byWindDir = {}, byMoonPhase = {}, byBait = {}, byPressure = {}, byTide = {};
   const byMonth = new Array(12).fill(0);
   const byHourBucket = new Array(8).fill(0); // 3h buckets covering 24h
   const entryTotals = [];
+
+  function pressureBucket(p){
+    if(p < 1005) return '< 1005 hPa';
+    if(p < 1010) return '1005–1010 hPa';
+    if(p < 1015) return '1010–1015 hPa';
+    if(p < 1020) return '1015–1020 hPa';
+    return '≥ 1020 hPa';
+  }
+  function tideBucket(diffHours){
+    if(diffHours <= -3) return '>3ω πριν πλημμυρίδα';
+    if(diffHours <= -1) return '1–3ω πριν πλημμυρίδα';
+    if(diffHours < 1) return 'κοντά σε πλημμυρίδα (±1ω)';
+    if(diffHours < 3) return '1–3ω μετά πλημμυρίδα';
+    return '>3ω μετά πλημμυρίδα';
+  }
 
   entries.forEach(e=>{
     const loc = e.locName || 'Άγνωστη τοποθεσία';
@@ -1420,6 +1443,29 @@ function renderStats(){
     if(e.weather){
       byWeather[e.weather.weatherText] = (byWeather[e.weather.weatherText]||0) + 1;
       byWindDir[e.weather.windDirText] = (byWindDir[e.weather.windDirText]||0) + 1;
+      if(e.weather.pressure != null){
+        const pb = pressureBucket(e.weather.pressure);
+        byPressure[pb] = (byPressure[pb]||0) + entryFish;
+      }
+    }
+
+    if(e.timeIn){
+      const tideInfo = computeMoonInfo(e.date);
+      if(tideInfo){
+        const [hh,mm] = e.timeIn.split(':').map(Number);
+        const catchHour = hh + (mm||0)/60;
+        let minDiff = null;
+        tideInfo.highs.forEach(h=>{
+          let diff = catchHour - h;
+          if(diff > 12) diff -= 24;
+          if(diff < -12) diff += 24;
+          if(minDiff === null || Math.abs(diff) < Math.abs(minDiff)) minDiff = diff;
+        });
+        if(minDiff !== null){
+          const tb = tideBucket(minDiff);
+          byTide[tb] = (byTide[tb]||0) + entryFish;
+        }
+      }
     }
   });
 
@@ -1492,7 +1538,9 @@ function renderStats(){
     bySpecies: barBlock('Ψάρια ανά είδος', bySpecies),
     byHour: `<div class="stat-block"><h3>Επιτυχία ανά ώρα</h3>${hourRows}</div>`,
     byBait: `<div class="stat-block"><h3>Επιτυχία ανά δόλωμα</h3>${baitHtml}</div>`,
-    byMoon: barBlock('Ψάρια ανά φάση σελήνης', byMoonPhase),
+    byMoon: barBlock('Ψάρια ανά φεγγάρι', byMoonPhase),
+    byPressure: barBlock('Ψάρια ανά πίεση', byPressure),
+    byTide: barBlock('Ψάρια ανά παλίρροια', byTide),
     byMonth: `<div class="stat-block"><h3>Εποχικότητα (ψάρια ανά μήνα)</h3>${monthBars}</div>`,
     byWeather: barBlock('Καιρικές συνθήκες κατά την ψαριά', byWeather),
     byWindDir: barBlock('Κατεύθυνση ανέμου', byWindDir),
@@ -1503,7 +1551,7 @@ function renderStats(){
     </div>`
   };
 
-  const defaultOrder = ['summary','topCatches','bySpecies','speciesConditions','byMonth','byHour','byBait','byWeather','byWindDir','byMoon','kpi','byLocation'];
+  const defaultOrder = ['summary','topCatches','bySpecies','speciesConditions','byMonth','byHour','byBait','byMoon','byPressure','byTide','byWeather','byWindDir','kpi','byLocation'];
   let order = LS.get('psarema_stats_order', defaultOrder);
   defaultOrder.forEach(k=>{ if(!order.includes(k)) order.push(k); });
   order = order.filter(k=>sections[k] !== undefined);
@@ -1518,7 +1566,7 @@ function renderStats(){
     </div>`).join('');
 }
 function moveStatsSection(key, direction){
-  const defaultOrder = ['summary','topCatches','bySpecies','speciesConditions','byMonth','byHour','byBait','byWeather','byWindDir','byMoon','kpi','byLocation'];
+  const defaultOrder = ['summary','topCatches','bySpecies','speciesConditions','byMonth','byHour','byBait','byMoon','byPressure','byTide','byWeather','byWindDir','kpi','byLocation'];
   let order = LS.get('psarema_stats_order', defaultOrder);
   defaultOrder.forEach(k=>{ if(!order.includes(k)) order.push(k); });
   const idx = order.indexOf(key);
@@ -1578,6 +1626,17 @@ async function predictBestTime(){
   const bestHourBucketIdx = hourBuckets.indexOf(Math.max(...hourBuckets));
   const bestWindDir = Object.entries(windDirCounts).sort((a,b)=>b[1]-a[1])[0];
 
+  const moonPhaseCounts = {};
+  successEntries.forEach(e=>{
+    const totalFish = Object.values(e.fish).reduce((a,b)=>a+b,0);
+    const ph = moonPhase(e.date);
+    if(ph !== null){
+      const [,label] = moonLabel(ph);
+      moonPhaseCounts[label] = (moonPhaseCounts[label]||0) + totalFish;
+    }
+  });
+  const bestMoonLabel = Object.entries(moonPhaseCounts).sort((a,b)=>b[1]-a[1])[0];
+
   try{
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${parsedCoords.lat}&longitude=${parsedCoords.lng}&hourly=windspeed_10m,winddirection_10m&forecast_days=7&timezone=auto`;
     const res = await fetch(url);
@@ -1600,6 +1659,13 @@ async function predictBestTime(){
       if(bucket === bestHourBucketIdx) score += 3;
       if(bestWindDir && wdir === bestWindDir[0]) score += 2;
       if(beaufortMin != null && bf >= beaufortMin && bf <= beaufortMax) score += 2;
+      const dph = moonPhase(times[i].slice(0,10));
+      if(dph !== null){
+        const [,dLabel] = moonLabel(dph);
+        if(bestMoonLabel && dLabel === bestMoonLabel[0]) score += 2;
+        const distFromFull = Math.min(Math.abs(dph - 0.5), 1 - Math.abs(dph - 0.5));
+        if(distFromFull < 0.07) score += 1;
+      }
       if(score > bestScore){ bestScore = score; bestIdx = i; }
     }
     if(bestIdx === -1){
@@ -1611,11 +1677,14 @@ async function predictBestTime(){
     const dateStr = bestDt.toLocaleDateString('el-GR', {day:'numeric', month:'long'});
     const dayName = dayNames[bestDt.getDay()];
     const hourStr = String(bestDt.getHours()).padStart(2,'0') + ':00';
+    const bestDtMoonPh = moonPhase(times[bestIdx].slice(0,10));
+    const moonLine = bestDtMoonPh !== null ? (()=>{ const [em,lb] = moonLabel(bestDtMoonPh); return `<div class="condition-line">${em} ${lb}</div>`; })() : '';
     resultEl.innerHTML = `<div class="condition-card">
       <div class="condition-title">🔮 Πιθανή καλύτερη στιγμή</div>
       <div class="condition-line">${dayName}, ${dateStr} γύρω στις ${hourStr}</div>
       <div class="condition-line">📍 ${bestLocName}</div>
       ${bestSpecies ? `<div class="condition-line">🐟 Πιθανό είδος: ${bestSpecies[0]}</div>` : ''}
+      ${moonLine}
       <div class="condition-line" style="opacity:0.75; font-size:0.8rem;">Εκτίμηση βάσει του δικού σου ιστορικού και της πρόγνωσης καιρού — όχι εγγύηση.</div>
     </div>`;
   }catch(err){
@@ -2001,6 +2070,60 @@ applyHeaderTitle();
 applyHeaderPhoto();
 applyHeaderTitlePos();
 applyEquipButton();
+
+/* ---------- language toggle (partial translation of core UI) ---------- */
+const I18N = {
+  en: {
+    'nav-new': 'New entry', 'nav-list': 'Entries', 'nav-stats': 'Statistics', 'nav-predictions': 'Predictions', 'nav-settings': 'Settings',
+    'i18n-trip-details': 'Trip details', 'i18n-angler-label': 'Angler', 'i18n-date-label': 'Date',
+    'i18n-timein-label': 'Arrival time', 'i18n-timeout-label': 'Departure time', 'i18n-locname-label': 'Location (name)',
+    'i18n-weather-label': 'Weather & sea (automatic)', 'i18n-species-label': 'Fish species', 'i18n-weight-label': 'Total catch weight',
+    'i18n-bait-label': 'Bait', 'i18n-technique-label': 'Fishing technique', 'i18n-notes-label': 'Notes', 'i18n-photos-label': 'Photos (up to 3)',
+    'i18n-entries-header': 'Entries', 'i18n-stats-header': 'Statistics',
+    'i18n-pred1-header': '🔮 Best time (based on history)', 'i18n-pred2-header': '📍 Best day at a location', 'i18n-pred3-header': '📅 Conditions for a specific date',
+    'i18n-data-header': 'Data', 'i18n-modal-title': 'Entry details',
+    'btn-save': 'Save entry', 'btn-geo': '📍 Current location', 'btn-map-f': '🗺️ Pick on map',
+    'btn-export': '⬇ Export JSON', 'btn-import': '⬆ Import JSON', 'btn-clear': '🗑 Delete all data',
+    'e-btn-save': 'Save changes', 'e-btn-delete': 'Delete entry',
+    'equip-link': 'Equipment'
+  },
+  el: {} // filled at runtime from the current (Greek) textContent, so "Reset to Greek" always works
+};
+let currentLang = LS.get('psarema_lang', 'el');
+function applyLanguage(lang){
+  const navMap = { new:'nav-new', list:'nav-list', stats:'nav-stats', predictions:'nav-predictions', settings:'nav-settings' };
+  Object.entries(navMap).forEach(([view,key])=>{
+    const btn = document.querySelector(`nav.tabs button[data-view="${view}"]`);
+    if(!btn) return;
+    if(!I18N.el[key]) I18N.el[key] = btn.textContent;
+    btn.textContent = lang === 'en' ? I18N.en[key] : I18N.el[key];
+  });
+  const idKeys = ['i18n-trip-details','i18n-angler-label','i18n-date-label','i18n-timein-label','i18n-timeout-label',
+    'i18n-locname-label','i18n-weather-label','i18n-species-label','i18n-weight-label','i18n-bait-label','i18n-technique-label',
+    'i18n-notes-label','i18n-photos-label','i18n-entries-header','i18n-stats-header','i18n-pred1-header','i18n-pred2-header',
+    'i18n-pred3-header','i18n-data-header','i18n-modal-title'];
+  idKeys.forEach(key=>{
+    const el = document.getElementById(key);
+    if(!el) return;
+    if(!I18N.el[key]) I18N.el[key] = el.textContent;
+    el.textContent = lang === 'en' ? I18N.en[key] : I18N.el[key];
+  });
+  const btnKeys = ['btn-save','btn-geo','btn-map-f','btn-export','btn-import','btn-clear','e-btn-save','e-btn-delete'];
+  btnKeys.forEach(key=>{
+    const el = document.getElementById(key);
+    if(!el) return;
+    if(!I18N.el[key]) I18N.el[key] = el.textContent;
+    el.textContent = lang === 'en' ? I18N.en[key] : I18N.el[key];
+  });
+  document.getElementById('lang-toggle').textContent = lang === 'en' ? '🇬🇧' : '🇬🇷';
+  currentLang = lang;
+  LS.set('psarema_lang', lang);
+}
+document.getElementById('lang-toggle').addEventListener('click', ()=>{
+  applyLanguage(currentLang === 'en' ? 'el' : 'en');
+});
+applyLanguage(currentLang);
+
 document.getElementById('btn-unlock-advanced').addEventListener('click', ()=>{
   const code = prompt('Κωδικός πρόσβασης:');
   if(code === null) return;
