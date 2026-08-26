@@ -367,7 +367,7 @@
     </div>
 
     <div class="card" style="text-align:center;">
-      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 2.2 · 25 Αυγ 2026</p>
+      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 2.3 · 26 Αυγ 2026</p>
     </div>
 
     <div style="text-align:center; margin-top:6px;">
@@ -1806,14 +1806,16 @@ document.getElementById('btn-export').addEventListener('click', async ()=>{
   a.click(); URL.revokeObjectURL(url);
   try{
     const driveData = { entries, species, baits, equips, anglers, exportedAt: data.exportedAt };
+    toast('Στέλνεται αντίγραφο στο Drive...');
     fetch(DRIVE_BACKUP_URL, {
       method: 'POST',
       mode: 'no-cors',
       keepalive: true,
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(driveData)
-    }).catch(()=>{});
-  }catch(err){}
+    }).then(()=>{ console.log('Drive backup fetch completed (no-cors, opaque response)'); })
+      .catch((err)=>{ console.error('Drive backup fetch error:', err); });
+  }catch(err){ console.error('Drive backup outer error:', err); }
 });
 document.getElementById('btn-import').addEventListener('click', ()=>{
   if(!confirm('Προσοχή: η εισαγωγή αρχείου θα αντικαταστήσει όλα τα τρέχοντα δεδομένα σου (καταχωρήσεις, λίστες, φωτογραφίες). Ό,τι υπάρχει τώρα και δεν το έχεις εξάγει, θα χαθεί οριστικά. Θέλεις να συνεχίσεις;')) return;
