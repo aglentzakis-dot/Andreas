@@ -155,7 +155,11 @@
   .condition-title{ font-family:'Bitter',serif; font-weight:700; font-size:0.95rem; margin-bottom:10px; }
   .condition-line{ font-size:0.92rem; padding:5px 0; border-top:1px solid rgba(255,255,255,0.15); }
   .condition-line:first-of-type{ border-top:none; }
-  .score-row{ display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .score-row{ display:flex; flex-direction:column; gap:3px; padding:8px 0; }
+  .score-label{ font-size:0.85rem; opacity:0.85; }
+  .score-stars-value{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .score-stars{ letter-spacing:1px; color:#f4c542; font-size:0.95rem; }
+  .score-value{ font-weight:700; font-size:0.92rem; text-align:right; }
   .best-spots-table{ width:100%; border-collapse:collapse; font-size:0.9rem; }
   .best-spots-table th{ text-align:left; font-size:0.75rem; text-transform:uppercase; color:#7c8f95; padding:6px 4px; border-bottom:2px solid var(--line); }
   .best-spots-table td{ padding:9px 4px; border-bottom:1px solid var(--line); }
@@ -390,7 +394,7 @@
     </div>
 
     <div class="card" style="text-align:center;">
-      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 3.1 · 27 Αυγ 2026</p>
+      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 3.2 · 27 Αυγ 2026</p>
     </div>
 
     <div class="card" id="advanced-settings-card" style="display:none;">
@@ -1973,6 +1977,12 @@ function overallFromScores(s){
   }
   return { avg, overall, label };
 }
+function scoreRowHtml(emoji, labelKey, stars, value){
+  return `<div class="condition-line score-row">
+    <div class="score-label">${emoji} ${tr(labelKey)}</div>
+    <div class="score-stars-value"><span class="score-stars">${stars}</span><span class="score-value">${value}</span></div>
+  </div>`;
+}
 function buildScoreCardHtml(scores, overallInfo, moonInfo, data, extraLines){
   const moonValue = moonInfo ? `${moonInfo.emoji} ${moonInfo.label}` : '—';
   const windValue = data.beaufort != null ? `${data.beaufort} bf (${data.windDirText||''})` : '—';
@@ -1983,11 +1993,11 @@ function buildScoreCardHtml(scores, overallInfo, moonInfo, data, extraLines){
   return `<div class="condition-card">
     <div class="condition-line" style="font-weight:800; font-size:1.05rem;">${starRating(overallInfo.avg)} ${overallInfo.overall}/100</div>
     <div class="condition-line">${overallInfo.label}</div>
-    <div class="condition-line score-row"><span>🌙 ${tr('Σελήνη')} ${starRating(scores.moonScore)}</span><span>${moonValue}</span></div>
-    <div class="condition-line score-row"><span>🌬 ${tr('Άνεμος')} ${starRating(scores.windScore)}</span><span>${windValue}</span></div>
-    <div class="condition-line score-row"><span>🌡 ${tr('Καιρός')} ${starRating(scores.weatherScore)}</span><span>${weatherValue}${tempValue ? ' · '+tempValue : ''}</span></div>
-    <div class="condition-line score-row"><span>📈 ${tr('Πίεση')} ${starRating(scores.pressureScore)}</span><span>${pressureValue}</span></div>
-    <div class="condition-line score-row"><span>🌊 ${tr('Θάλασσα')} ${starRating(scores.waveScore)}</span><span>${waveValue}</span></div>
+    ${scoreRowHtml('🌙','Σελήνη', starRating(scores.moonScore), moonValue)}
+    ${scoreRowHtml('🌬','Άνεμος', starRating(scores.windScore), windValue)}
+    ${scoreRowHtml('🌡','Καιρός', starRating(scores.weatherScore), weatherValue + (tempValue ? ' · '+tempValue : ''))}
+    ${scoreRowHtml('📈','Πίεση', starRating(scores.pressureScore), pressureValue)}
+    ${scoreRowHtml('🌊','Θάλασσα', starRating(scores.waveScore), waveValue)}
     ${extraLines || ''}
   </div>`;
 }
