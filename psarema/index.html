@@ -155,6 +155,7 @@
   .condition-title{ font-family:'Bitter',serif; font-weight:700; font-size:0.95rem; margin-bottom:10px; }
   .condition-line{ font-size:0.92rem; padding:5px 0; border-top:1px solid rgba(255,255,255,0.15); }
   .condition-line:first-of-type{ border-top:none; }
+  .score-row{ display:flex; justify-content:space-between; align-items:center; gap:8px; }
   .best-spots-table{ width:100%; border-collapse:collapse; font-size:0.9rem; }
   .best-spots-table th{ text-align:left; font-size:0.75rem; text-transform:uppercase; color:#7c8f95; padding:6px 4px; border-bottom:2px solid var(--line); }
   .best-spots-table td{ padding:9px 4px; border-bottom:1px solid var(--line); }
@@ -353,8 +354,8 @@
     </div>
 
     <details class="picker" id="prediction-explain">
-      <summary>ℹ️ Πώς υπολογίζονται οι προβλέψεις</summary>
-      <div class="explain-body">
+      <summary id="i18n-explain-summary">ℹ️ Πώς υπολογίζονται οι προβλέψεις</summary>
+      <div class="explain-body" id="i18n-explain-body">
         <p>Οι προβλέψεις βασίζονται στα δεδομένα καιρού/θάλασσας του Open-Meteo και σε απλή στατιστική ανάλυση, όχι σε τεχνητή νοημοσύνη ή εγγυημένη πρόγνωση.</p>
         <p><strong>Καλύτερη στιγμή (ιστορικό):</strong> ψάχνει ποιες μέρες/ώρες/άνεμο είχες όταν έπιανες περισσότερα ψάρια στο παρελθόν, και βρίσκει πότε μέσα στις επόμενες 7 μέρες θα ξαναμοιάζουν αυτές οι συνθήκες, στο σημείο που έχεις τα περισσότερα ψάρια καταγεγραμμένα.</p>
         <p><strong>Καλύτερη ημέρα σε σημείο:</strong> εξετάζει τις επόμενες 5 μέρες σε συγκεκριμένες συντεταγμένες και βαθμολογεί κάθε μέρα με βάση άνεμο, καιρικές συνθήκες και πίεση — χωρίς να λαμβάνει υπόψη συγκεκριμένο είδος ψαριού.</p>
@@ -384,22 +385,12 @@
       </div>
     </div>
 
-    <div class="card">
-      <h2 id="i18n-contact-header">Επικοινωνία με διαχειριστή</h2>
-      <p class="hint" id="i18n-contact-hint">Έχεις ιδέα, βελτίωση ή παράπονο για την εφαρμογή; Γράψε το εδώ.</p>
-      <label id="i18n-contact-name-label">Όνομα (προαιρετικό)</label>
-      <input type="text" id="contact-name">
-      <label id="i18n-contact-email-label" style="margin-top:10px;">Email (προαιρετικό, για απάντηση)</label>
-      <input type="email" id="contact-email">
-      <label id="i18n-contact-message-label" style="margin-top:10px;">Μήνυμα</label>
-      <textarea id="contact-message" rows="4"></textarea>
-      <div class="footer-tools">
-        <button type="button" id="btn-contact-send">📨 Αποστολή</button>
-      </div>
+    <div class="card" style="text-align:center;">
+      <button type="button" class="species-cond-btn" id="btn-open-contact">📨 <span class="i18n-plain">Επικοινωνία με διαχειριστή</span></button>
     </div>
 
     <div class="card" style="text-align:center;">
-      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 3.0 · 27 Αυγ 2026</p>
+      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 3.1 · 27 Αυγ 2026</p>
     </div>
 
     <div class="card" id="advanced-settings-card" style="display:none;">
@@ -523,6 +514,27 @@
 
 <div class="toast" id="toast"></div>
 <div class="photo-viewer" id="photo-viewer"><button type="button" class="pv-close" id="pv-close">✕</button><img id="pv-img" src=""></div>
+
+<div class="map-picker-overlay" id="contact-modal-overlay">
+  <div class="map-picker-sheet" style="max-width:460px;">
+    <div class="map-picker-head">
+      <h2 id="i18n-contact-header">Επικοινωνία με διαχειριστή</h2>
+      <button type="button" class="modal-close" id="contact-modal-close">✕</button>
+    </div>
+    <div style="padding:0 16px 16px; overflow-y:auto;">
+      <p class="hint" id="i18n-contact-hint">Έχεις ιδέα, βελτίωση ή παράπονο για την εφαρμογή; Γράψε το εδώ.</p>
+      <label id="i18n-contact-name-label">Όνομα (προαιρετικό)</label>
+      <input type="text" id="contact-name">
+      <label id="i18n-contact-email-label" style="margin-top:10px;">Email (προαιρετικό, για απάντηση)</label>
+      <input type="email" id="contact-email">
+      <label id="i18n-contact-message-label" style="margin-top:10px;">Μήνυμα</label>
+      <textarea id="contact-message" rows="4"></textarea>
+      <div class="footer-tools">
+        <button type="button" id="btn-contact-send">📨 Αποστολή</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div id="admin-trigger-bl" style="position:fixed; bottom:0; left:0; width:56px; height:56px; z-index:2000;"></div>
 <div id="admin-trigger-br" style="position:fixed; bottom:0; right:0; width:56px; height:56px; z-index:2000;"></div>
@@ -1750,7 +1762,6 @@ function renderStats(){
 
   const sections = {
     summary: summaryCard,
-    kpi: kpi,
     topCatches: `<div class="stat-block"><h3>${tr("Καλύτερες εξορμήσεις")}</h3>${topCatchesHtml}</div>`,
     bySpecies: barBlock('Ψάρια ανά είδος', bySpecies),
     byHour: `<div class="stat-block"><h3>${tr("Επιτυχία ανά ώρα")}</h3>${hourRows}</div>`,
@@ -1772,7 +1783,7 @@ function renderStats(){
     </div>`
   };
 
-  const defaultOrder = ['summary','topCatches','bySpecies','speciesConditions','byMonth','byMoon','byPressure','byTide','byHour','byWindDir','byBait','byWeather','byLocationWeather','kpi','byLocation','bestSpots'];
+  const defaultOrder = ['summary','topCatches','bySpecies','speciesConditions','byMonth','byMoon','byPressure','byTide','byHour','byWindDir','byBait','byWeather','byLocationWeather','byLocation','bestSpots'];
   let order = LS.get('psarema_stats_order', defaultOrder);
   defaultOrder.forEach(k=>{ if(!order.includes(k)) order.push(k); });
   order = order.filter(k=>sections[k] !== undefined);
@@ -1787,7 +1798,7 @@ function renderStats(){
     </div>`).join('');
 }
 function moveStatsSection(key, direction){
-  const defaultOrder = ['summary','topCatches','bySpecies','speciesConditions','byMonth','byMoon','byPressure','byTide','byHour','byWindDir','byBait','byWeather','byLocationWeather','kpi','byLocation','bestSpots'];
+  const defaultOrder = ['summary','topCatches','bySpecies','speciesConditions','byMonth','byMoon','byPressure','byTide','byHour','byWindDir','byBait','byWeather','byLocationWeather','byLocation','bestSpots'];
   let order = LS.get('psarema_stats_order', defaultOrder);
   defaultOrder.forEach(k=>{ if(!order.includes(k)) order.push(k); });
   const idx = order.indexOf(key);
@@ -1922,6 +1933,64 @@ function starRating(n){
   n = Math.max(0, Math.min(5, Math.round(n)));
   return '★'.repeat(n) + '☆'.repeat(5-n);
 }
+function scoreComponents(data, dateStr){
+  let moonScore = 3;
+  const ph = moonPhase(dateStr);
+  if(ph !== null){
+    const distFromFull = Math.min(Math.abs(ph - 0.5), 1 - Math.abs(ph - 0.5));
+    moonScore = distFromFull < 0.07 ? 5 : distFromFull < 0.15 ? 4 : distFromFull < 0.28 ? 3 : distFromFull < 0.4 ? 2 : 1;
+  }
+  let windScore = 3;
+  if(data.beaufort != null){
+    const bf = data.beaufort;
+    windScore = (bf===1||bf===2||bf===3) ? 5 : (bf===0||bf===4) ? 4 : bf===5 ? 3 : bf===6 ? 2 : 1;
+  }
+  let weatherScore = 3;
+  if(data.weathercode != null){
+    const wc = data.weathercode;
+    weatherScore = wc<=2 ? 5 : wc<=3 ? 4 : wc<=55 ? 3 : wc<=65 ? 2 : 1;
+  }
+  let pressureScore = 3;
+  if(data.pressure != null){
+    const p = data.pressure;
+    pressureScore = (p>=1010 && p<=1020) ? 5 : ((p>=1005 && p<1010) || (p>1020 && p<=1025)) ? 4 : (p<1005 || p>1025) ? 3 : 2;
+  }
+  let waveScore = 3;
+  if(data.wave != null){
+    const w = data.wave;
+    waveScore = (w>=0.2 && w<=0.6) ? 5 : ((w>=0 && w<0.2) || (w>0.6 && w<=1.0)) ? 4 : (w>1.0 && w<=1.5) ? 3 : (w>1.5 && w<=2.0) ? 2 : 1;
+  }
+  return { moonScore, windScore, weatherScore, pressureScore, waveScore };
+}
+function overallFromScores(s){
+  const avg = (s.moonScore + s.windScore + s.weatherScore + s.pressureScore + s.waveScore) / 5;
+  const overall = Math.round(avg * 20);
+  let label;
+  if(currentLang === 'en'){
+    label = overall>=80 ? 'Very good day for fishing' : overall>=60 ? 'Good day for fishing' : overall>=40 ? 'Average day for fishing' : 'Not a great day for fishing';
+  } else {
+    label = overall>=80 ? 'Πολύ καλή ημέρα για ψάρεμα' : overall>=60 ? 'Καλή ημέρα για ψάρεμα' : overall>=40 ? 'Μέτρια ημέρα για ψάρεμα' : 'Όχι ιδανική ημέρα για ψάρεμα';
+  }
+  return { avg, overall, label };
+}
+function buildScoreCardHtml(scores, overallInfo, moonInfo, data, extraLines){
+  const moonValue = moonInfo ? `${moonInfo.emoji} ${moonInfo.label}` : '—';
+  const windValue = data.beaufort != null ? `${data.beaufort} bf (${data.windDirText||''})` : '—';
+  const weatherValue = data.weatherText || '—';
+  const pressureValue = data.pressure != null ? Math.round(data.pressure)+' hPa' : '—';
+  const waveValue = data.wave != null ? formatWave(data.wave, data.waveEstimated) : '—';
+  const tempValue = data.temperature != null ? (Math.round(data.temperature*10)/10)+' °C' : null;
+  return `<div class="condition-card">
+    <div class="condition-line" style="font-weight:800; font-size:1.05rem;">${starRating(overallInfo.avg)} ${overallInfo.overall}/100</div>
+    <div class="condition-line">${overallInfo.label}</div>
+    <div class="condition-line score-row"><span>🌙 ${tr('Σελήνη')} ${starRating(scores.moonScore)}</span><span>${moonValue}</span></div>
+    <div class="condition-line score-row"><span>🌬 ${tr('Άνεμος')} ${starRating(scores.windScore)}</span><span>${windValue}</span></div>
+    <div class="condition-line score-row"><span>🌡 ${tr('Καιρός')} ${starRating(scores.weatherScore)}</span><span>${weatherValue}${tempValue ? ' · '+tempValue : ''}</span></div>
+    <div class="condition-line score-row"><span>📈 ${tr('Πίεση')} ${starRating(scores.pressureScore)}</span><span>${pressureValue}</span></div>
+    <div class="condition-line score-row"><span>🌊 ${tr('Θάλασσα')} ${starRating(scores.waveScore)}</span><span>${waveValue}</span></div>
+    ${extraLines || ''}
+  </div>`;
+}
 function computeTodayScore(){
   const resultEl = document.getElementById('today-score-result');
   resultEl.innerHTML = `<div class="hint">${tr('Υπολογισμός...')}</div>`;
@@ -1952,51 +2021,12 @@ function computeTodayScore(){
   const nowTime = String(nowH).padStart(2,'0') + ':00';
 
   fetchWeatherAndWave(parsed.lat, parsed.lng, todayStr, nowTime).then(data=>{
-    let moonScore = 3;
-    const ph = moonPhase(todayStr);
-    if(ph !== null){
-      const distFromFull = Math.min(Math.abs(ph - 0.5), 1 - Math.abs(ph - 0.5));
-      moonScore = distFromFull < 0.07 ? 5 : distFromFull < 0.15 ? 4 : distFromFull < 0.28 ? 3 : distFromFull < 0.4 ? 2 : 1;
-    }
-    let windScore = 3;
-    if(data.beaufort != null){
-      const bf = data.beaufort;
-      windScore = (bf===1||bf===2||bf===3) ? 5 : (bf===0||bf===4) ? 4 : bf===5 ? 3 : bf===6 ? 2 : 1;
-    }
-    let weatherScore = 3;
-    if(data.weathercode != null){
-      const wc = data.weathercode;
-      weatherScore = wc<=2 ? 5 : wc<=3 ? 4 : wc<=55 ? 3 : wc<=65 ? 2 : 1;
-    }
-    let pressureScore = 3;
-    if(data.pressure != null){
-      const p = data.pressure;
-      pressureScore = (p>=1010 && p<=1020) ? 5 : ((p>=1005 && p<1010) || (p>1020 && p<=1025)) ? 4 : (p<1005 || p>1025) ? 3 : 2;
-    }
-    let waveScore = 3;
-    if(data.wave != null){
-      const w = data.wave;
-      waveScore = (w>=0.2 && w<=0.6) ? 5 : ((w>=0 && w<0.2) || (w>0.6 && w<=1.0)) ? 4 : (w>1.0 && w<=1.5) ? 3 : (w>1.5 && w<=2.0) ? 2 : 1;
-    }
-    const avg = (moonScore + windScore + weatherScore + pressureScore + waveScore) / 5;
-    const overall = Math.round(avg * 20);
-    let label;
-    if(currentLang === 'en'){
-      label = overall>=80 ? 'Very good day for fishing' : overall>=60 ? 'Good day for fishing' : overall>=40 ? 'Average day for fishing' : 'Not a great day for fishing';
-    } else {
-      label = overall>=80 ? 'Πολύ καλή ημέρα για ψάρεμα' : overall>=60 ? 'Καλή ημέρα για ψάρεμα' : overall>=40 ? 'Μέτρια ημέρα για ψάρεμα' : 'Όχι ιδανική ημέρα για ψάρεμα';
-    }
-    const overallStars = starRating(avg);
-    resultEl.innerHTML = `<div class="condition-card">
-      <div class="condition-line" style="font-weight:800; font-size:1.05rem;">${overallStars} ${overall}/100</div>
-      <div class="condition-line">${label}</div>
-      <div class="condition-line">🌙 ${tr('Σελήνη')} ${starRating(moonScore)}</div>
-      <div class="condition-line">🌬 ${tr('Άνεμος')} ${starRating(windScore)}</div>
-      <div class="condition-line">🌡 ${tr('Καιρός')} ${starRating(weatherScore)}</div>
-      <div class="condition-line">📈 ${tr('Πίεση')} ${starRating(pressureScore)}</div>
-      <div class="condition-line">🌊 ${tr('Θάλασσα')} ${starRating(waveScore)}</div>
-      <div class="condition-line" style="opacity:0.75; font-size:0.8rem;">📍 ${Object.keys(locCounts).find(k=>locCounts[k]===best) || ''}</div>
-    </div>`;
+    const scores = scoreComponents(data, todayStr);
+    const overallInfo = overallFromScores(scores);
+    const moonInfo = computeMoonInfo(todayStr);
+    const locName = Object.keys(locCounts).find(k=>locCounts[k]===best) || '';
+    const extra = `<div class="condition-line" style="opacity:0.75; font-size:0.8rem;">📍 ${locName}</div>`;
+    resultEl.innerHTML = buildScoreCardHtml(scores, overallInfo, moonInfo, data, extra);
   }).catch(()=>{
     resultEl.innerHTML = `<div class="hint">${tr('Αποτυχία λήψης δεδομένων καιρού.')}</div>`;
   });
@@ -2030,18 +2060,20 @@ async function predictBestDayByCoords(){
     }
     const sorted = Object.entries(days).sort((a,b)=>b[1].score-a[1].score);
     if(!sorted.length){ resultEl.innerHTML = `<div class="hint">${tr('Δεν βρέθηκαν δεδομένα πρόγνωσης.')}</div>`; return; }
-    const [bestDate, info] = sorted[0];
+    const [bestDate] = sorted[0];
     const dt = new Date(bestDate+'T12:00:00');
     const dayNamesEL2 = ['Κυριακή','Δευτέρα','Τρίτη','Τετάρτη','Πέμπτη','Παρασκευή','Σάββατο'];
     const dayNamesEN2 = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     const dayNames = currentLang === 'en' ? dayNamesEN2 : dayNamesEL2;
     const dateStr = dt.toLocaleDateString(currentLang === 'en' ? 'en-GB' : 'el-GR', {day:'numeric', month:'long'});
-    resultEl.innerHTML = `<div class="condition-card">
-      <div class="condition-title">📍 ${tr('Καλύτερη ημέρα στις επόμενες 5')}</div>
-      <div class="condition-line">${dayNames[dt.getDay()]}, ${dateStr}</div>
-      <div class="condition-line">${getWeatherText({weathercode:info.wcode})} · ${info.bf} bf (${Math.round(info.windKmh)} km/h) · ${Math.round(info.pressure)} hPa</div>
-      <div class="condition-line" style="opacity:0.75; font-size:0.8rem;">${tr('Γενική εκτίμηση βάσει καιρού (άνεμος, συνθήκες, πίεση) — όχι ειδική για συγκεκριμένο ψάρι.')}</div>
-    </div>`;
+    const fullData = await fetchWeatherAndWave(parsed.lat, parsed.lng, bestDate, '12:00');
+    const scores = scoreComponents(fullData, bestDate);
+    const overallInfo = overallFromScores(scores);
+    const moonInfo = computeMoonInfo(bestDate);
+    const extra = `
+      <div class="condition-line" style="opacity:0.75; font-size:0.8rem;">${tr('Γενική εκτίμηση βάσει καιρού (άνεμος, συνθήκες, πίεση) — όχι ειδική για συγκεκριμένο ψάρι.')}</div>`;
+    resultEl.innerHTML = `<div class="condition-title" style="margin-bottom:6px;">📍 ${tr('Καλύτερη ημέρα στις επόμενες 5')}: ${dayNames[dt.getDay()]}, ${dateStr}</div>`
+      + buildScoreCardHtml(scores, overallInfo, moonInfo, fullData, extra);
   }catch(err){
     console.error('predictBestDayByCoords failed', err);
     resultEl.innerHTML = `<div class="hint">${tr('Αποτυχία λήψης πρόγνωσης — έλεγξε τη σύνδεση στο ίντερνετ.')}</div>`;
@@ -2061,14 +2093,11 @@ async function showConditionsForDate(){
     const moon = computeMoonInfo(dateVal);
     const dateLabel = new Date(dateVal+'T12:00:00').toLocaleDateString(currentLang === 'en' ? 'en-GB' : 'el-GR', {day:'numeric', month:'long', year:'numeric'});
     const confidence = forecastConfidence(dateVal);
-    resultEl.innerHTML = `<div class="condition-card">
-      <div class="condition-title">📅 ${tr('Συνθήκες για')} ${dateLabel}</div>
-      <div class="condition-line">${data.weatherText}${data.temperature != null ? ' · '+(Math.round(data.temperature*10)/10)+' °C' : ''}</div>
-      <div class="condition-line">${data.pressure != null ? Math.round(data.pressure)+' hPa' : '—'} · ${data.beaufort != null ? data.beaufort+' bf ('+getWindDirText(data)+')' : '—'}</div>
-      <div class="condition-line">${data.wave != null ? formatWave(data.wave, data.waveEstimated) : '—'}</div>
-      ${moon ? `<div class="condition-line">${moon.emoji} ${moon.label} (${moon.lunarDay}${currentLang==='en' ? 'th day' : 'η μέρα'})</div>` : ''}
-      <div class="condition-line">📊 ${tr('Αξιοπιστία πρόγνωσης:')} ${confidence}%</div>
-    </div>`;
+    const scores = scoreComponents(data, dateVal);
+    const overallInfo = overallFromScores(scores);
+    const extra = `<div class="condition-line">📊 ${tr('Αξιοπιστία πρόγνωσης:')} ${confidence}%</div>`;
+    resultEl.innerHTML = `<div class="condition-title" style="margin-bottom:6px;">📅 ${tr('Συνθήκες για')} ${dateLabel}</div>`
+      + buildScoreCardHtml(scores, overallInfo, moon, data, extra);
   }catch(err){
     console.error('showConditionsForDate failed', err);
     resultEl.innerHTML = `<div class="hint">${tr('Αποτυχία λήψης δεδομένων — έλεγξε τη σύνδεση στο ίντερνετ.')}</div>`;
@@ -2237,6 +2266,15 @@ document.getElementById('btn-export').addEventListener('click', async ()=>{
   }catch(err){ console.error('Drive backup outer error:', err); }
 });
 
+document.getElementById('btn-open-contact').addEventListener('click', ()=>{
+  document.getElementById('contact-modal-overlay').classList.add('show');
+});
+document.getElementById('contact-modal-close').addEventListener('click', ()=>{
+  document.getElementById('contact-modal-overlay').classList.remove('show');
+});
+document.getElementById('contact-modal-overlay').addEventListener('click', (ev)=>{
+  if(ev.target.id === 'contact-modal-overlay') document.getElementById('contact-modal-overlay').classList.remove('show');
+});
 document.getElementById('btn-contact-send').addEventListener('click', ()=>{
   const name = document.getElementById('contact-name').value.trim();
   const email = document.getElementById('contact-email').value.trim();
@@ -2256,6 +2294,7 @@ document.getElementById('btn-contact-send').addEventListener('click', ()=>{
     document.getElementById('contact-email').value = '';
     document.getElementById('contact-message').value = '';
     toast(tr('Το μήνυμα στάλθηκε ✓'));
+    document.getElementById('contact-modal-overlay').classList.remove('show');
   });
 });
 document.getElementById('btn-import').addEventListener('click', ()=>{
@@ -2566,9 +2605,38 @@ function applyLanguage(lang){
   ['pred-coords','pred-date-coords'].forEach(id=>{ const el = document.getElementById(id); if(el) el.placeholder = coordsPlaceholderShort; });
   const locnameEl = document.getElementById('f-locname');
   if(locnameEl) locnameEl.placeholder = lang === 'en' ? 'Fills in automatically from coordinates' : 'Συμπληρώνεται αυτόματα από τις συντεταγμένες';
+  const explainSummary = document.getElementById('i18n-explain-summary');
+  if(explainSummary) explainSummary.textContent = lang === 'en' ? 'ℹ️ How predictions are calculated' : 'ℹ️ Πώς υπολογίζονται οι προβλέψεις';
+  const explainBody = document.getElementById('i18n-explain-body');
+  if(explainBody){
+    explainBody.innerHTML = lang === 'en'
+      ? `<p>Predictions are based on Open-Meteo weather/sea data and simple statistical analysis, not artificial intelligence or a guaranteed forecast.</p>
+         <p><strong>Best time (history):</strong> looks at which days/hours/wind you had when you caught more fish in the past, and finds when within the next 7 days those conditions are likely to occur again, at the spot with the most fish recorded.</p>
+         <p><strong>Best day at a location:</strong> examines the next 5 days at specific coordinates and scores each day based on wind, weather conditions and pressure — without considering a specific fish species.</p>
+         <p><strong>Conditions for a date:</strong> simply shows the expected weather/sea data for a specific day, without scoring.</p>
+         <p><strong>Forecast confidence:</strong> is higher the closer the date is to today, and decreases the further away it is (weather forecasts become less accurate beyond 5-7 days).</p>
+         <p style="margin-bottom:0;">No prediction guarantees a result — these are estimates to help you decide.</p>`
+      : `<p>Οι προβλέψεις βασίζονται στα δεδομένα καιρού/θάλασσας του Open-Meteo και σε απλή στατιστική ανάλυση, όχι σε τεχνητή νοημοσύνη ή εγγυημένη πρόγνωση.</p>
+         <p><strong>Καλύτερη στιγμή (ιστορικό):</strong> ψάχνει ποιες μέρες/ώρες/άνεμο είχες όταν έπιανες περισσότερα ψάρια στο παρελθόν, και βρίσκει πότε μέσα στις επόμενες 7 μέρες θα ξαναμοιάζουν αυτές οι συνθήκες, στο σημείο που έχεις τα περισσότερα ψάρια καταγεγραμμένα.</p>
+         <p><strong>Καλύτερη ημέρα σε σημείο:</strong> εξετάζει τις επόμενες 5 μέρες σε συγκεκριμένες συντεταγμένες και βαθμολογεί κάθε μέρα με βάση άνεμο, καιρικές συνθήκες και πίεση — χωρίς να λαμβάνει υπόψη συγκεκριμένο είδος ψαριού.</p>
+         <p><strong>Συνθήκες για ημερομηνία:</strong> δείχνει απλά τα αναμενόμενα καιρικά/θαλάσσια στοιχεία για μια συγκεκριμένη μέρα, χωρίς βαθμολόγηση.</p>
+         <p><strong>Αξιοπιστία πρόγνωσης:</strong> είναι μεγαλύτερη όσο πιο κοντά είναι η ημερομηνία στο σήμερα, και μειώνεται όσο απομακρύνεται (οι προγνώσεις καιρού γίνονται λιγότερο ακριβείς πέρα από 5-7 μέρες).</p>
+         <p style="margin-bottom:0;">Καμία πρόβλεψη δεν εγγυάται αποτέλεσμα — είναι εκτιμήσεις για να σε βοηθήσουν να αποφασίσεις.</p>`;
+  }
   document.getElementById('lang-toggle').textContent = lang === 'en' ? '🇬🇧' : '🇬🇷';
   currentLang = lang;
   LS.set('psarema_lang', lang);
+
+  // Re-render all dynamic, already-generated content so nothing stays in the old language
+  if(typeof refreshPickers === 'function') refreshPickers();
+  if(typeof refreshAnglerPicker === 'function') refreshAnglerPicker();
+  if(typeof renderFishQty === 'function') renderFishQty();
+  if(typeof renderEntries === 'function') renderEntries();
+  if(typeof renderStats === 'function') renderStats();
+  ['prediction-result','pred-coords-result','pred-date-result','today-score-result','species-cond-result','location-cond-result'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = '';
+  });
 }
 document.getElementById('lang-toggle').addEventListener('click', ()=>{
   applyLanguage(currentLang === 'en' ? 'el' : 'en');
