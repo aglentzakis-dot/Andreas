@@ -263,12 +263,12 @@
           <div><span class="wxg-label" data-key="moon">Σελήνη</span><span class="wxg-value">—</span></div>
           <div style="grid-column: 1 / -1;"><span class="wxg-label" data-key="tide">Παλίρροια (εκτίμηση)</span><span class="wxg-value">—</span></div>
         </div>
-        <div class="weather-status" id="f-weather-status">Συμπλήρωσε ημερομηνία και συντεταγμένες, μετά πάτα λήψη.</div>
+        <div class="weather-status" id="f-weather-status" data-i18n-key="Συμπλήρωσε ημερομηνία και συντεταγμένες, μετά πάτα λήψη.">Συμπλήρωσε ημερομηνία και συντεταγμένες, μετά πάτα λήψη.</div>
       </div>
 
       <label id="i18n-species-label">Είδη ψαριών</label>
       <details class="picker" id="fish-picker">
-        <summary>Επίλεξε είδη <span id="fish-count-sum"></span></summary>
+        <summary><span class="i18n-plain">Επίλεξε είδη</span> <span id="fish-count-sum"></span></summary>
         <div class="picker-list" id="fish-chip-list"></div>
         <div class="addrow"><input type="text" id="fish-new" placeholder="Προσθήκη νέου είδους"><button type="button" id="fish-add">+</button></div>
       </details>
@@ -279,7 +279,7 @@
 
       <label id="i18n-bait-label">Δολώματα</label>
       <details class="picker" id="bait-picker">
-        <summary>Επίλεξε δολώματα <span id="bait-count-sum"></span></summary>
+        <summary><span class="i18n-plain">Επίλεξε δολώματα</span> <span id="bait-count-sum"></span></summary>
         <div class="picker-list" id="bait-chip-list"></div>
         <div class="addrow"><input type="text" id="bait-new" placeholder="Προσθήκη νέου δολώματος"><button type="button" id="bait-add">+</button></div>
       </details>
@@ -359,23 +359,23 @@
   <div class="view" id="view-settings">
     <div class="card">
       <h2 id="i18n-data-header">Δεδομένα</h2>
-      <p class="hint" style="background:#fdf1ec; border:1px solid #f0c8b4; border-radius:8px; padding:8px 10px;"><strong>Δοκιμαστική έκδοση (beta)</strong> — η εφαρμογή βρίσκεται σε δοκιμαστικό στάδιο και μπορεί να αλλάξει.</p>
-      <p class="hint">Τα αρχεία (χωρίς τις φωτογραφίες) φυλάσσονται για 3 μήνες μετά το backup, από τον προγραμματιστή της εφαρμογής.</p>
-      <p class="hint" style="margin-top:8px;">Η εφαρμογή παρέχεται όπως είναι (χωρίς εγγύηση), χωρίς καμία ευθύνη για τυχόν απώλεια δεδομένων, από οποιαδήποτε αιτία (διαγραφή browser, βλάβη συσκευής, τεχνικό πρόβλημα κ.ά.). Συνιστάται τακτική εξαγωγή/αποθήκευση από τον ίδιο τον χρήστη.</p>
-      <p class="hint" style="margin-top:8px;">💡 Η εφαρμογή λειτουργεί καλύτερα στο <strong>Google Chrome</strong>. Αν κάτι δεν φορτώνει σωστά (π.χ. καιρός, χάρτης, τοποθεσία), δοκίμασε να την ανοίξεις μέσω Chrome αντί για άλλο browser της συσκευής σου.</p>
+      <p class="hint" id="i18n-beta-notice" style="background:#fdf1ec; border:1px solid #f0c8b4; border-radius:8px; padding:8px 10px;"><strong>Δοκιμαστική έκδοση (beta)</strong> — η εφαρμογή βρίσκεται σε δοκιμαστικό στάδιο και μπορεί να αλλάξει.</p>
+      <p class="hint" id="i18n-retention-text">Τα αρχεία (χωρίς τις φωτογραφίες) φυλάσσονται για 3 μήνες μετά το backup, από τον προγραμματιστή της εφαρμογής.</p>
+      <p class="hint" id="i18n-disclaimer-text" style="margin-top:8px;">Η εφαρμογή παρέχεται όπως είναι (χωρίς εγγύηση), χωρίς καμία ευθύνη για τυχόν απώλεια δεδομένων, από οποιαδήποτε αιτία (διαγραφή browser, βλάβη συσκευής, τεχνικό πρόβλημα κ.ά.). Συνιστάται τακτική εξαγωγή/αποθήκευση από τον ίδιο τον χρήστη.</p>
+      <p class="hint" id="i18n-chrome-tip" style="margin-top:8px;">💡 Αν κάποια λειτουργία δεν φορτώνει σωστά (π.χ. καιρός, χάρτης, τοποθεσία), δοκίμασε να ανοίξεις την εφαρμογή σε άλλο browser (π.χ. <strong>Chrome</strong>) — μερικοί browsers περιορίζουν αυτού του τύπου τις λειτουργίες.</p>
       <div class="footer-tools">
         <button type="button" id="btn-export">⬇ Εξαγωγή JSON</button>
         <button type="button" id="btn-import">⬆ Εισαγωγή JSON</button>
       </div>
       <input type="file" id="file-import" accept="application/json" style="display:none">
-      <label style="margin-top:18px;">Διαγραφή όλων</label>
+      <label id="i18n-delete-all-label" style="margin-top:18px;">Διαγραφή όλων</label>
       <div class="footer-tools">
         <button type="button" id="btn-clear" style="color:var(--danger); border-color:var(--danger);">🗑 Διαγραφή όλων των δεδομένων</button>
       </div>
     </div>
 
     <div class="card" style="text-align:center;">
-      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 2.6 · 26 Αυγ 2026</p>
+      <p class="hint" style="margin:0; color:#a3b0b5;">Ημερολόγιο Ψαρέματος · έκδοση 2.7 · 27 Αυγ 2026</p>
     </div>
 
     <div style="text-align:center; margin-top:6px;">
@@ -468,7 +468,7 @@
 
     <label id="i18n-e-species-label">Είδη ψαριών</label>
     <details class="picker" id="e-fish-picker">
-      <summary>Επίλεξε είδη <span id="e-fish-count-sum"></span></summary>
+      <summary><span class="i18n-plain">Επίλεξε είδη</span> <span id="e-fish-count-sum"></span></summary>
       <div class="picker-list" id="e-fish-chip-list"></div>
     </details>
     <div class="qty-list" id="e-fish-qty-list"></div>
@@ -478,7 +478,7 @@
 
     <label id="i18n-e-bait-label">Δολώματα</label>
     <details class="picker" id="e-bait-picker">
-      <summary>Επίλεξε δολώματα <span id="e-bait-count-sum"></span></summary>
+      <summary><span class="i18n-plain">Επίλεξε δολώματα</span> <span id="e-bait-count-sum"></span></summary>
       <div class="picker-list" id="e-bait-chip-list"></div>
     </details>
 
@@ -597,6 +597,15 @@ const GR_TO_EN = {
   "Χρειάζονται καταχωρήσεις για στατιστικά":"Entries are needed for statistics",
   "Επιλεγμένο:":"Selected:",
   "Άνεμος (μποφόρ)":"Wind (Beaufort)","Παλίρροια (εκτίμηση)":"Tide (estimate)",
+  "Καιρός":"Weather","Θερμοκρασία":"Temperature","Πίεση":"Pressure","Κύμα":"Wave","Σελήνη":"Moon",
+  "Επίλεξε είδη":"Select species","Επίλεξε δολώματα":"Select bait",
+  "Συμπλήρωσε ημερομηνία και συντεταγμένες, μετά πάτα λήψη.":"Fill in a date and coordinates, then press fetch.",
+  "Δοκιμαστική έκδοση (beta)":"Beta version","η εφαρμογή βρίσκεται σε δοκιμαστικό στάδιο και μπορεί να αλλάξει.":"the app is in a testing stage and may change.",
+  "Τα αρχεία (χωρίς τις φωτογραφίες) φυλάσσονται για 3 μήνες μετά το backup, από τον προγραμματιστή της εφαρμογής.":"Files (excluding photos) are kept for 3 months after backup, by the app's developer.",
+  "Η εφαρμογή παρέχεται όπως είναι (χωρίς εγγύηση), χωρίς καμία ευθύνη για τυχόν απώλεια δεδομένων, από οποιαδήποτε αιτία (διαγραφή browser, βλάβη συσκευής, τεχνικό πρόβλημα κ.ά.). Συνιστάται τακτική εξαγωγή/αποθήκευση από τον ίδιο τον χρήστη.":"The app is provided as-is (no warranty), with no liability for any data loss, from any cause (browser data clearing, device failure, technical issue, etc.). Regular export/backup by the user is recommended.",
+  "Αν κάποια λειτουργία δεν φορτώνει σωστά (π.χ. καιρός, χάρτης, τοποθεσία), δοκίμασε να ανοίξεις την εφαρμογή σε άλλο browser (π.χ.":"If a feature doesn't load correctly (e.g. weather, map, location), try opening the app in a different browser (e.g.","— μερικοί browsers περιορίζουν αυτού του τύπου τις λειτουργίες.":"— some browsers restrict this type of functionality.",
+  "Διαγραφή όλων":"Delete all",
+  "Τοποθεσίες ανά καιρό":"Locations by weather","Δεν υπάρχουν ακόμα αρκετά δεδομένα καιρού ανά τοποθεσία":"Not enough weather data per location yet",
   "άνεμος":"wind","κύμα":"wave","δόλωμα:":"bait:",
   "Πιθανή καλύτερη στιγμή":"Likely best time","Πιθανό είδος:":"Likely species:",
   "Εκτίμηση βάσει του δικού σου ιστορικού και της πρόγνωσης καιρού — όχι εγγύηση.":"Estimate based on your own history and the weather forecast — not a guarantee.",
@@ -1341,7 +1350,7 @@ function resetForm(){
   document.getElementById('coord-preview').innerHTML = '';
   document.getElementById('f-notes').value = '';
   document.getElementById('f-weight').value = '';
-  document.getElementById('f-weather-status').textContent = 'Συμπλήρωσε ημερομηνία και συντεταγμένες, μετά πάτα λήψη.';
+  document.getElementById('f-weather-status').textContent = tr('Συμπλήρωσε ημερομηνία και συντεταγμένες, μετά πάτα λήψη.');
   paintWeatherGrid('f-weather-grid', {weatherText:'—', pressure:null, beaufort:null, windKmh:0, windDirText:'—', wave:null});
   fWeatherData = null;
   selFish.clear(); selBait.clear();
@@ -1591,6 +1600,11 @@ function renderStats(){
         const pb = pressureBucket(e.weather.pressure);
         byPressure[pb] = (byPressure[pb]||0) + entryFish;
       }
+      if(!byLocation[loc].weatherCounts) byLocation[loc].weatherCounts = {};
+      if(!byLocation[loc].windCounts) byLocation[loc].windCounts = {};
+      const wxt = getWeatherText(e.weather), wdt = getWindDirText(e.weather);
+      byLocation[loc].weatherCounts[wxt] = (byLocation[loc].weatherCounts[wxt]||0) + 1;
+      byLocation[loc].windCounts[wdt] = (byLocation[loc].windCounts[wdt]||0) + 1;
     }
 
     if(e.timeIn){
@@ -1674,6 +1688,18 @@ function renderStats(){
     </div>`;
   }).join('');
 
+  const locWeatherRows = Object.entries(byLocation)
+    .filter(([,d])=>d.weatherCounts && Object.keys(d.weatherCounts).length)
+    .sort((a,b)=>b[1].fish-a[1].fish)
+    .map(([n,d])=>{
+      const topWx = Object.entries(d.weatherCounts).sort((a,b)=>b[1]-a[1])[0];
+      const topWind = Object.entries(d.windCounts).sort((a,b)=>b[1]-a[1])[0];
+      return `<div class="bar-row" style="align-items:flex-start;">
+        <div class="bar-label" style="width:auto; flex:1;">${n}<br><span style="font-weight:400; color:#7c8f95; font-size:0.75rem;">${tr(topWx[0])} · ${tr(topWind[0])} (${topWind[1]}/${d.trips})</span></div>
+      </div>`;
+    }).join('');
+  const locWeatherHtml = locWeatherRows || `<div class="hint">${tr('Δεν υπάρχουν ακόμα αρκετά δεδομένα καιρού ανά τοποθεσία')}</div>`;
+
   const speciesButtons = Object.keys(bySpecies).length
     ? Object.keys(bySpecies).sort().map(n=>`<button type="button" class="species-cond-btn" onclick="showSpeciesConditions('${n.replace(/'/g,"\\'")}')">${tr(n)}</button>`).join('')
     : `<div class="hint">${tr('Δεν υπάρχουν ακόμα καταγεγραμμένα είδη')}</div>`;
@@ -1694,13 +1720,14 @@ function renderStats(){
     byWeather: barBlock('Καιρικές συνθήκες κατά την ψαριά', byWeather),
     byWindDir: barBlock('Κατεύθυνση ανέμου', byWindDir),
     byLocation: `<div class="stat-block"><h3>${tr("Ανά τοποθεσία")}</h3>${locRows}</div>`,
+    byLocationWeather: `<div class="stat-block"><h3>${tr("Τοποθεσίες ανά καιρό")}</h3>${locWeatherHtml}</div>`,
     speciesConditions: `<div class="stat-block"><h3>${tr("🎯 Καλύτερες συνθήκες ανά είδος")}</h3>
       <div class="species-cond-list">${speciesButtons}</div>
       <div id="species-cond-result"></div>
     </div>`
   };
 
-  const defaultOrder = ['summary','topCatches','bySpecies','speciesConditions','byMonth','byMoon','byPressure','byTide','byHour','byBait','byWeather','byWindDir','kpi','byLocation'];
+  const defaultOrder = ['summary','topCatches','bySpecies','speciesConditions','byMonth','byMoon','byPressure','byTide','byHour','byWindDir','byBait','byWeather','byLocationWeather','kpi','byLocation'];
   let order = LS.get('psarema_stats_order', defaultOrder);
   defaultOrder.forEach(k=>{ if(!order.includes(k)) order.push(k); });
   order = order.filter(k=>sections[k] !== undefined);
@@ -1715,7 +1742,7 @@ function renderStats(){
     </div>`).join('');
 }
 function moveStatsSection(key, direction){
-  const defaultOrder = ['summary','topCatches','bySpecies','speciesConditions','byMonth','byMoon','byPressure','byTide','byHour','byBait','byWeather','byWindDir','kpi','byLocation'];
+  const defaultOrder = ['summary','topCatches','bySpecies','speciesConditions','byMonth','byMoon','byPressure','byTide','byHour','byWindDir','byBait','byWeather','byLocationWeather','kpi','byLocation'];
   let order = LS.get('psarema_stats_order', defaultOrder);
   defaultOrder.forEach(k=>{ if(!order.includes(k)) order.push(k); });
   const idx = order.indexOf(key);
@@ -2255,6 +2282,7 @@ const I18N = {
   el: {} // filled at runtime from the current (Greek) textContent, so "Reset to Greek" always works
 };
 function applyLanguage(lang){
+  currentLang = lang;
   const navMap = { new:'nav-new', list:'nav-list', stats:'nav-stats', predictions:'nav-predictions', settings:'nav-settings' };
   Object.entries(navMap).forEach(([view,key])=>{
     const btn = document.querySelector(`nav.tabs button[data-view="${view}"]`);
@@ -2301,6 +2329,32 @@ function applyLanguage(lang){
     if(!I18N.el[key]) I18N.el[key] = el.textContent;
     el.textContent = lang === 'en' ? I18N.en[key] : I18N.el[key];
   });
+  document.querySelectorAll('.i18n-plain').forEach(el=>{
+    if(!el.dataset.orig) el.dataset.orig = el.textContent;
+    el.textContent = lang === 'en' ? tr(el.dataset.orig) : el.dataset.orig;
+  });
+  document.querySelectorAll('[data-i18n-key]').forEach(el=>{
+    const key = el.dataset.i18nKey;
+    el.textContent = lang === 'en' ? tr(key) : key;
+  });
+  const betaEl = document.getElementById('i18n-beta-notice');
+  if(betaEl){
+    betaEl.innerHTML = lang === 'en'
+      ? `<strong>${tr('Δοκιμαστική έκδοση (beta)')}</strong> — ${tr('η εφαρμογή βρίσκεται σε δοκιμαστικό στάδιο και μπορεί να αλλάξει.')}`
+      : `<strong>Δοκιμαστική έκδοση (beta)</strong> — η εφαρμογή βρίσκεται σε δοκιμαστικό στάδιο και μπορεί να αλλάξει.`;
+  }
+  const retentionEl = document.getElementById('i18n-retention-text');
+  if(retentionEl) retentionEl.textContent = tr('Τα αρχεία (χωρίς τις φωτογραφίες) φυλάσσονται για 3 μήνες μετά το backup, από τον προγραμματιστή της εφαρμογής.');
+  const disclaimerEl = document.getElementById('i18n-disclaimer-text');
+  if(disclaimerEl) disclaimerEl.textContent = tr('Η εφαρμογή παρέχεται όπως είναι (χωρίς εγγύηση), χωρίς καμία ευθύνη για τυχόν απώλεια δεδομένων, από οποιαδήποτε αιτία (διαγραφή browser, βλάβη συσκευής, τεχνικό πρόβλημα κ.ά.). Συνιστάται τακτική εξαγωγή/αποθήκευση από τον ίδιο τον χρήστη.');
+  const chromeEl = document.getElementById('i18n-chrome-tip');
+  if(chromeEl){
+    chromeEl.innerHTML = lang === 'en'
+      ? `💡 ${tr('Αν κάποια λειτουργία δεν φορτώνει σωστά (π.χ. καιρός, χάρτης, τοποθεσία), δοκίμασε να ανοίξεις την εφαρμογή σε άλλο browser (π.χ.')} <strong>Chrome</strong>) ${tr('— μερικοί browsers περιορίζουν αυτού του τύπου τις λειτουργίες.')}`
+      : `💡 Αν κάποια λειτουργία δεν φορτώνει σωστά (π.χ. καιρός, χάρτης, τοποθεσία), δοκίμασε να ανοίξεις την εφαρμογή σε άλλο browser (π.χ. <strong>Chrome</strong>) — μερικοί browsers περιορίζουν αυτού του τύπου τις λειτουργίες.`;
+  }
+  const deleteAllLabel = document.getElementById('i18n-delete-all-label');
+  if(deleteAllLabel) deleteAllLabel.textContent = tr('Διαγραφή όλων');
   document.querySelectorAll('.i18n-coords-label').forEach(el=>{
     el.textContent = lang === 'en' ? 'Coordinates' : 'Συντεταγμένες';
   });
