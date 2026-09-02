@@ -245,7 +245,71 @@
       soft: "#EAF1FB",
       isGame: "mathgame",
       items: []
+    },
+    {
+      id: "alfavito",
+      name: "\u0391\u03BB\u03C6\u03AC\u03B2\u03B7\u03C4\u03BF",
+      emoji: "\u{1F524}",
+      color: "#FF9F5B",
+      dark: "#B5551A",
+      soft: "#FFF0E0",
+      isGame: "alphagame",
+      items: []
     }
+  ];
+  const ALPHABET_EL = [
+    { letter: "\u0391", word: "\u0391\u03C1\u03BA\u03BF\u03CD\u03B4\u03B1", emoji: "\u{1F43B}" },
+    { letter: "\u0392", word: "\u0392\u03AC\u03C1\u03BA\u03B1", emoji: "\u26F5" },
+    { letter: "\u0393", word: "\u0393\u03AC\u03C4\u03B1", emoji: "\u{1F431}" },
+    { letter: "\u0394", word: "\u0394\u03AD\u03BD\u03C4\u03C1\u03BF", emoji: "\u{1F333}" },
+    { letter: "\u0395", word: "\u0395\u03BB\u03AD\u03C6\u03B1\u03BD\u03C4\u03B1\u03C2", emoji: "\u{1F418}" },
+    { letter: "\u0396", word: "\u0396\u03AD\u03B2\u03C1\u03B1", emoji: "\u{1F993}" },
+    { letter: "\u0397", word: "\u0389\u03BB\u03B9\u03BF\u03C2", emoji: "\u2600\uFE0F" },
+    { letter: "\u0398", word: "\u0398\u03AC\u03BB\u03B1\u03C3\u03C3\u03B1", emoji: "\u{1F30A}" },
+    { letter: "\u0399", word: "\u0399\u03C0\u03C0\u03BF\u03C0\u03CC\u03C4\u03B1\u03BC\u03BF\u03C2", emoji: "\u{1F99B}" },
+    { letter: "\u039A", word: "\u039A\u03CC\u03C4\u03B1", emoji: "\u{1F414}" },
+    { letter: "\u039B", word: "\u039B\u03B9\u03BF\u03BD\u03C4\u03AC\u03C1\u03B9", emoji: "\u{1F981}" },
+    { letter: "\u039C", word: "\u039C\u03AE\u03BB\u03BF", emoji: "\u{1F34E}" },
+    { letter: "\u039D", word: "\u039D\u03B5\u03C1\u03CC", emoji: "\u{1F4A7}" },
+    { letter: "\u039E", word: "\u039E\u03CD\u03BB\u03BF", emoji: "\u{1FAB5}" },
+    { letter: "\u039F", word: "\u039F\u03BC\u03C0\u03C1\u03AD\u03BB\u03B1", emoji: "\u2602\uFE0F" },
+    { letter: "\u03A0", word: "\u03A0\u03BF\u03C5\u03BB\u03AF", emoji: "\u{1F426}" },
+    { letter: "\u03A1", word: "\u03A1\u03BF\u03BB\u03CC\u03B9", emoji: "\u23F0" },
+    { letter: "\u03A3", word: "\u03A3\u03BA\u03CD\u03BB\u03BF\u03C2", emoji: "\u{1F436}" },
+    { letter: "\u03A4", word: "\u03A4\u03AF\u03B3\u03C1\u03B7\u03C2", emoji: "\u{1F42F}" },
+    { letter: "\u03A5", word: "\u038E\u03C0\u03BD\u03BF\u03C2", emoji: "\u{1F634}" },
+    { letter: "\u03A6", word: "\u03A6\u03B5\u03B3\u03B3\u03AC\u03C1\u03B9", emoji: "\u{1F319}" },
+    { letter: "\u03A7", word: "\u03A7\u03B5\u03BB\u03CE\u03BD\u03B1", emoji: "\u{1F422}" },
+    { letter: "\u03A8", word: "\u03A8\u03AC\u03C1\u03B9", emoji: "\u{1F41F}" },
+    { letter: "\u03A9", word: "\u03A9\u03BC\u03AD\u03B3\u03B1", emoji: "\u{1F524}" }
+  ];
+  const ALPHABET_EN = [
+    { letter: "A", word: "Apple", emoji: "\u{1F34E}" },
+    { letter: "B", word: "Ball", emoji: "\u26BD" },
+    { letter: "C", word: "Cat", emoji: "\u{1F431}" },
+    { letter: "D", word: "Dog", emoji: "\u{1F436}" },
+    { letter: "E", word: "Elephant", emoji: "\u{1F418}" },
+    { letter: "F", word: "Fish", emoji: "\u{1F41F}" },
+    { letter: "G", word: "Giraffe", emoji: "\u{1F992}" },
+    { letter: "H", word: "House", emoji: "\u{1F3E0}" },
+    { letter: "I", word: "Ice cream", emoji: "\u{1F366}" },
+    { letter: "J", word: "Juice", emoji: "\u{1F9C3}" },
+    { letter: "K", word: "Koala", emoji: "\u{1F428}" },
+    { letter: "L", word: "Lion", emoji: "\u{1F981}" },
+    { letter: "M", word: "Moon", emoji: "\u{1F319}" },
+    { letter: "N", word: "Nose", emoji: "\u{1F443}" },
+    { letter: "O", word: "Orange", emoji: "\u{1F34A}" },
+    { letter: "P", word: "Pizza", emoji: "\u{1F355}" },
+    { letter: "Q", word: "Queen", emoji: "\u{1F478}" },
+    { letter: "R", word: "Rabbit", emoji: "\u{1F430}" },
+    { letter: "S", word: "Sun", emoji: "\u2600\uFE0F" },
+    { letter: "T", word: "Tiger", emoji: "\u{1F42F}" },
+    { letter: "U", word: "Umbrella", emoji: "\u2602\uFE0F" },
+    { letter: "V", word: "Violin", emoji: "\u{1F3BB}" },
+    { letter: "W", word: "Water", emoji: "\u{1F4A7}" },
+    { letter: "X", word: "X-ray", emoji: "\u{1FA7B}" },
+    { letter: "Y", word: "Yo-yo", emoji: "\u{1FA80}" },
+    { letter: "Z", word: "Zebra", emoji: "\u{1F993}" }
   ];
   const PALETTE = [
     { color: "#FF6B5E", dark: "#C8412F", soft: "#FFEDE9" },
@@ -561,6 +625,12 @@
     );
   }
   const NUM_EMOJI = ["0\uFE0F\u20E3", "1\uFE0F\u20E3", "2\uFE0F\u20E3", "3\uFE0F\u20E3", "4\uFE0F\u20E3", "5\uFE0F\u20E3", "6\uFE0F\u20E3", "7\uFE0F\u20E3", "8\uFE0F\u20E3", "9\uFE0F\u20E3", "\u{1F51F}"];
+  const FEEDBACK_PHRASES = {
+    el: { correct: "\u039C\u03C0\u03C1\u03AC\u03B2\u03BF! \u03A3\u03C9\u03C3\u03C4\u03AC!", wrong: "\u039E\u03B1\u03BD\u03B1\u03B4\u03BF\u03BA\u03AF\u03BC\u03B1\u03C3\u03B5" },
+    en: { correct: "Well done! Correct!", wrong: "Try again" },
+    it: { correct: "Bravo! Corretto!", wrong: "Riprova" },
+    es: { correct: "\xA1Muy bien! \xA1Correcto!", wrong: "Int\xE9ntalo de nuevo" }
+  };
   function guessVoiceGender(voice) {
     const n = (voice.name || "").toLowerCase();
     if (/female|woman|γυναικ/.test(n)) return "\u{1F469}";
@@ -668,6 +738,8 @@
     const [mathMode, setMathMode] = useState("add");
     const [mathProblem, setMathProblem] = useState(null);
     const [mathFeedback, setMathFeedback] = useState(null);
+    const [alphaLang, setAlphaLang] = useState("el");
+    const [alphaSpeakingLetter, setAlphaSpeakingLetter] = useState(null);
     const [colorTextMode, setColorTextMode] = useState(false);
     const recognitionRef = useRef(null);
     const speechRecognitionSupported = typeof window !== "undefined" && !!(window.SpeechRecognition || window.webkitSpeechRecognition);
@@ -1002,14 +1074,15 @@
       setMathFeedback(null);
     }
     function answerMath(choice) {
+      var _a, _b;
       if (!mathProblem) return;
       if (choice === mathProblem.answer) {
         setMathFeedback("correct");
-        speak("\u039C\u03C0\u03C1\u03AC\u03B2\u03BF! \u03A3\u03C9\u03C3\u03C4\u03AC!", "mathgame-correct", "el");
+        speak(((_a = FEEDBACK_PHRASES[appLanguage]) == null ? void 0 : _a.correct) || FEEDBACK_PHRASES.el.correct, "mathgame-correct");
         setTimeout(() => newMathProblem(mathMode), 1300);
       } else {
         setMathFeedback("wrong");
-        speak("\u039E\u03B1\u03BD\u03B1\u03B4\u03BF\u03BA\u03AF\u03BC\u03B1\u03C3\u03B5", "mathgame-wrong", "el");
+        speak(((_b = FEEDBACK_PHRASES[appLanguage]) == null ? void 0 : _b.wrong) || FEEDBACK_PHRASES.el.wrong, "mathgame-wrong");
         setTimeout(() => setMathFeedback(null), 700);
       }
     }
@@ -1104,7 +1177,7 @@
               letterSpacing: 0.2
             }
           },
-          screen.view === "home" ? "\u039C\u03B1\u03B8\u03B1\u03AF\u03BD\u03C9 \u039B\u03AD\u03BE\u03B5\u03B9\u03C2" : screen.view === "colorgame" ? "\u0393\u03C1\u03AC\u03C8\u03B5 \u03AD\u03BD\u03B1 \u03C7\u03C1\u03CE\u03BC\u03B1" : screen.view === "mathgame" ? "\u039C\u03B1\u03B8\u03B7\u03BC\u03B1\u03C4\u03B9\u03BA\u03AC" : activeCategory == null ? void 0 : activeCategory.name
+          screen.view === "home" ? "\u039C\u03B1\u03B8\u03B1\u03AF\u03BD\u03C9 \u039B\u03AD\u03BE\u03B5\u03B9\u03C2" : screen.view === "colorgame" ? "\u0393\u03C1\u03AC\u03C8\u03B5 \u03AD\u03BD\u03B1 \u03C7\u03C1\u03CE\u03BC\u03B1" : screen.view === "mathgame" ? "\u039C\u03B1\u03B8\u03B7\u03BC\u03B1\u03C4\u03B9\u03BA\u03AC" : screen.view === "alphagame" ? "\u0391\u03BB\u03C6\u03AC\u03B2\u03B7\u03C4\u03BF" : activeCategory == null ? void 0 : activeCategory.name
         ),
         /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 4 } }, /* @__PURE__ */ React.createElement(
           "button",
@@ -1564,7 +1637,70 @@
           }
         },
         "\u{1F504} \u039D\u03AD\u03B1 \u03AC\u03C3\u03BA\u03B7\u03C3\u03B7"
-      ))),
+      )), screen.view === "alphagame" && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 14, paddingTop: 6 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 6 } }, /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: () => setAlphaLang("el"),
+          style: {
+            border: alphaLang === "el" ? "2px solid #FF9F5B" : "2px solid #eee",
+            background: alphaLang === "el" ? "#FFF0E0" : "#fafafa",
+            color: "#333",
+            fontWeight: 800,
+            fontSize: 14,
+            padding: "9px 18px",
+            borderRadius: 999,
+            cursor: "pointer"
+          }
+        },
+        "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC"
+      ), /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: () => setAlphaLang("en"),
+          style: {
+            border: alphaLang === "en" ? "2px solid #FF9F5B" : "2px solid #eee",
+            background: alphaLang === "en" ? "#FFF0E0" : "#fafafa",
+            color: "#333",
+            fontWeight: 800,
+            fontSize: 14,
+            padding: "9px 18px",
+            borderRadius: 999,
+            cursor: "pointer"
+          }
+        },
+        "English"
+      )), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, width: "100%" } }, (alphaLang === "el" ? ALPHABET_EL : ALPHABET_EN).map((entry) => {
+        const isSpeaking = alphaSpeakingLetter === entry.letter;
+        return /* @__PURE__ */ React.createElement(
+          "button",
+          {
+            key: entry.letter,
+            onClick: () => {
+              setAlphaSpeakingLetter(entry.letter);
+              const phrase = alphaLang === "el" ? `${entry.letter}, \u03CC\u03C0\u03C9\u03C2 ${entry.word}` : `${entry.letter}, for ${entry.word}`;
+              speak(phrase, `alpha-${entry.letter}`, alphaLang);
+              setTimeout(() => setAlphaSpeakingLetter(null), 900);
+            },
+            style: {
+              border: `2.5px solid #FF9F5B`,
+              borderRadius: 16,
+              background: isSpeaking ? "#FFF0E0" : "#fff",
+              cursor: "pointer",
+              padding: "10px 4px 8px 4px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 2,
+              boxShadow: isSpeaking ? "0 0 0 4px #FF9F5B55" : "0 4px 8px rgba(0,0,0,0.06)",
+              transform: isSpeaking ? "scale(1.06)" : "scale(1)",
+              transition: "all 0.15s ease"
+            }
+          },
+          /* @__PURE__ */ React.createElement("span", { style: { fontSize: 30, fontWeight: 900, color: "#B5551A" } }, entry.letter),
+          /* @__PURE__ */ React.createElement("span", { style: { fontSize: 22 } }, entry.emoji),
+          /* @__PURE__ */ React.createElement("span", { style: { fontSize: 10.5, fontWeight: 700, color: "#B5551A", textAlign: "center" } }, entry.word)
+        );
+      })))),
       editingItem && /* @__PURE__ */ React.createElement(
         "div",
         {
