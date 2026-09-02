@@ -235,6 +235,16 @@
         { id: "podi", emoji: "\u{1F9B6}", label: "\u03A0\u03CC\u03B4\u03B9", en: "Foot", it: "Piede", es: "Pie" },
         { id: "mallia", emoji: "\u{1F487}", label: "\u039C\u03B1\u03BB\u03BB\u03B9\u03AC", en: "Hair", it: "Capelli", es: "Cabello" }
       ]
+    },
+    {
+      id: "mathimatika",
+      name: "\u039C\u03B1\u03B8\u03B7\u03BC\u03B1\u03C4\u03B9\u03BA\u03AC",
+      emoji: "\u{1F9EE}",
+      color: "#3D6FB4",
+      dark: "#254A78",
+      soft: "#EAF1FB",
+      isGame: "mathgame",
+      items: []
     }
   ];
   const PALETTE = [
@@ -550,6 +560,7 @@
       }
     );
   }
+  const NUM_EMOJI = ["0\uFE0F\u20E3", "1\uFE0F\u20E3", "2\uFE0F\u20E3", "3\uFE0F\u20E3", "4\uFE0F\u20E3", "5\uFE0F\u20E3", "6\uFE0F\u20E3", "7\uFE0F\u20E3", "8\uFE0F\u20E3", "9\uFE0F\u20E3", "\u{1F51F}"];
   function guessVoiceGender(voice) {
     const n = (voice.name || "").toLowerCase();
     if (/female|woman|γυναικ/.test(n)) return "\u{1F469}";
@@ -654,6 +665,9 @@
     const [voiceSettingsOpen, setVoiceSettingsOpen] = useState(false);
     const [listening, setListening] = useState(false);
     const [micError, setMicError] = useState("");
+    const [mathMode, setMathMode] = useState("add");
+    const [mathProblem, setMathProblem] = useState(null);
+    const [mathFeedback, setMathFeedback] = useState(null);
     const [colorTextMode, setColorTextMode] = useState(false);
     const recognitionRef = useRef(null);
     const speechRecognitionSupported = typeof window !== "undefined" && !!(window.SpeechRecognition || window.webkitSpeechRecognition);
@@ -951,9 +965,54 @@
       }
       if (!colorMatch) setLastSpokenColorId(null);
     }, [colorMatch, lastSpokenColorId, speak]);
+    useEffect(() => {
+      if (screen.view === "mathgame" && !mathProblem) {
+        setMathProblem(generateMathProblem(mathMode));
+        setMathFeedback(null);
+      }
+    }, [screen.view]);
     const allCategories = [...CATEGORIES, ...customCategories];
     const activeCategory = allCategories.find((c) => c.id === screen.categoryId);
     const activeItems = activeCategory ? [...activeCategory.items, ...customItemsByCat[activeCategory.id] || []] : [];
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function generateMathProblem(mode) {
+      let a, b, answer;
+      if (mode === "sub") {
+        a = randInt(1, 10);
+        b = randInt(0, a);
+        answer = a - b;
+      } else {
+        a = randInt(0, 9);
+        b = randInt(0, 10 - a);
+        answer = a + b;
+      }
+      const wrongSet = /* @__PURE__ */ new Set([answer]);
+      while (wrongSet.size < 3) {
+        const delta = randInt(-3, 3);
+        const candidate = answer + delta;
+        if (candidate >= 0 && candidate <= 10) wrongSet.add(candidate);
+      }
+      const choices = [...wrongSet].sort(() => Math.random() - 0.5);
+      return { a, b, mode, answer, choices };
+    }
+    function newMathProblem(mode) {
+      setMathProblem(generateMathProblem(mode));
+      setMathFeedback(null);
+    }
+    function answerMath(choice) {
+      if (!mathProblem) return;
+      if (choice === mathProblem.answer) {
+        setMathFeedback("correct");
+        speak("\u039C\u03C0\u03C1\u03AC\u03B2\u03BF! \u03A3\u03C9\u03C3\u03C4\u03AC!", "mathgame-correct", "el");
+        setTimeout(() => newMathProblem(mathMode), 1300);
+      } else {
+        setMathFeedback("wrong");
+        speak("\u039E\u03B1\u03BD\u03B1\u03B4\u03BF\u03BA\u03AF\u03BC\u03B1\u03C3\u03B5", "mathgame-wrong", "el");
+        setTimeout(() => setMathFeedback(null), 700);
+      }
+    }
     return /* @__PURE__ */ React.createElement(
       "div",
       {
@@ -1045,7 +1104,7 @@
               letterSpacing: 0.2
             }
           },
-          screen.view === "home" ? "\u039C\u03B1\u03B8\u03B1\u03AF\u03BD\u03C9 \u039B\u03AD\u03BE\u03B5\u03B9\u03C2" : screen.view === "colorgame" ? "\u0393\u03C1\u03AC\u03C8\u03B5 \u03AD\u03BD\u03B1 \u03C7\u03C1\u03CE\u03BC\u03B1" : activeCategory == null ? void 0 : activeCategory.name
+          screen.view === "home" ? "\u039C\u03B1\u03B8\u03B1\u03AF\u03BD\u03C9 \u039B\u03AD\u03BE\u03B5\u03B9\u03C2" : screen.view === "colorgame" ? "\u0393\u03C1\u03AC\u03C8\u03B5 \u03AD\u03BD\u03B1 \u03C7\u03C1\u03CE\u03BC\u03B1" : screen.view === "mathgame" ? "\u039C\u03B1\u03B8\u03B7\u03BC\u03B1\u03C4\u03B9\u03BA\u03AC" : activeCategory == null ? void 0 : activeCategory.name
         ),
         /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 4 } }, /* @__PURE__ */ React.createElement(
           "button",
@@ -1134,7 +1193,7 @@
       /* @__PURE__ */ React.createElement("div", { style: { position: "relative", padding: "12px 16px 26px 16px" } }, screen.view === "home" && /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 } }, allCategories.map((cat, i) => /* @__PURE__ */ React.createElement("div", { key: cat.id, style: { position: "relative" } }, /* @__PURE__ */ React.createElement(
         "button",
         {
-          onClick: () => setScreen({ view: "items", categoryId: cat.id }),
+          onClick: () => setScreen({ view: cat.isGame || "items", categoryId: cat.id }),
           style: {
             border: `3px solid ${cat.color}`,
             cursor: "pointer",
@@ -1411,6 +1470,100 @@
           style: { border: "none", background: "transparent", color: "#999", fontSize: 13, fontWeight: 700, cursor: "pointer", textDecoration: "underline" }
         },
         "\u039A\u03B1\u03B8\u03B1\u03C1\u03B9\u03C3\u03BC\u03CC\u03C2"
+      )), screen.view === "mathgame" && mathProblem && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 18, paddingTop: 6 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 6 } }, /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: () => {
+            setMathMode("add");
+            newMathProblem("add");
+          },
+          style: {
+            border: mathMode === "add" ? "2px solid #3D6FB4" : "2px solid #eee",
+            background: mathMode === "add" ? "#EAF1FB" : "#fafafa",
+            color: "#333",
+            fontWeight: 800,
+            fontSize: 14,
+            padding: "9px 16px",
+            borderRadius: 999,
+            cursor: "pointer"
+          }
+        },
+        "\u2795 \u03A0\u03C1\u03CC\u03C3\u03B8\u03B5\u03C3\u03B7"
+      ), /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: () => {
+            setMathMode("sub");
+            newMathProblem("sub");
+          },
+          style: {
+            border: mathMode === "sub" ? "2px solid #3D6FB4" : "2px solid #eee",
+            background: mathMode === "sub" ? "#EAF1FB" : "#fafafa",
+            color: "#333",
+            fontWeight: 800,
+            fontSize: 14,
+            padding: "9px 16px",
+            borderRadius: 999,
+            cursor: "pointer"
+          }
+        },
+        "\u2796 \u0391\u03C6\u03B1\u03AF\u03C1\u03B5\u03C3\u03B7"
+      )), /* @__PURE__ */ React.createElement(
+        "div",
+        {
+          style: {
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            background: "#fff",
+            borderRadius: 24,
+            padding: "22px 20px",
+            boxShadow: mathFeedback === "correct" ? "0 0 0 5px #5FBF6755" : mathFeedback === "wrong" ? "0 0 0 5px #E24C4C55" : "0 6px 16px rgba(0,0,0,0.08)",
+            border: `3px solid ${(activeCategory == null ? void 0 : activeCategory.color) || "#3D6FB4"}`,
+            transition: "box-shadow 0.2s ease"
+          }
+        },
+        /* @__PURE__ */ React.createElement("span", { style: { fontSize: 46 } }, NUM_EMOJI[mathProblem.a]),
+        /* @__PURE__ */ React.createElement("span", { style: { fontSize: 34, fontWeight: 800, color: "#999" } }, mathProblem.mode === "sub" ? "\u2212" : "+"),
+        /* @__PURE__ */ React.createElement("span", { style: { fontSize: 46 } }, NUM_EMOJI[mathProblem.b]),
+        /* @__PURE__ */ React.createElement("span", { style: { fontSize: 34, fontWeight: 800, color: "#999" } }, "="),
+        /* @__PURE__ */ React.createElement("span", { style: { fontSize: 46 } }, mathFeedback === "correct" ? NUM_EMOJI[mathProblem.answer] : "\u2753")
+      ), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 12 } }, mathProblem.choices.map((choice, idx) => /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          key: idx,
+          onClick: () => answerMath(choice),
+          disabled: mathFeedback === "correct",
+          style: {
+            width: 76,
+            height: 76,
+            borderRadius: 20,
+            border: `3px solid ${(activeCategory == null ? void 0 : activeCategory.color) || "#3D6FB4"}`,
+            background: "#fff",
+            fontSize: 32,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            boxShadow: "0 4px 8px rgba(0,0,0,0.08)"
+          }
+        },
+        NUM_EMOJI[choice]
+      ))), /* @__PURE__ */ React.createElement("div", { style: { minHeight: 30, fontSize: 20, fontWeight: 800 } }, mathFeedback === "correct" && /* @__PURE__ */ React.createElement("span", { style: { color: "#2F7A38" } }, "\u2705 \u039C\u03C0\u03C1\u03AC\u03B2\u03BF!"), mathFeedback === "wrong" && /* @__PURE__ */ React.createElement("span", { style: { color: "#C8412F" } }, "\u274C \u039E\u03B1\u03BD\u03B1\u03B4\u03BF\u03BA\u03AF\u03BC\u03B1\u03C3\u03B5")), /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          onClick: () => newMathProblem(mathMode),
+          style: {
+            border: "none",
+            background: "transparent",
+            color: "#999",
+            fontSize: 12.5,
+            fontWeight: 700,
+            cursor: "pointer",
+            textDecoration: "underline"
+          }
+        },
+        "\u{1F504} \u039D\u03AD\u03B1 \u03AC\u03C3\u03BA\u03B7\u03C3\u03B7"
       ))),
       editingItem && /* @__PURE__ */ React.createElement(
         "div",
