@@ -87,6 +87,16 @@
       ]
     },
     {
+      id: "alfavito",
+      name: "\u0391\u03BB\u03C6\u03AC\u03B2\u03B7\u03C4\u03BF",
+      emoji: "\u{1F524}",
+      color: "#FF9F5B",
+      dark: "#B5551A",
+      soft: "#FFF0E0",
+      isGame: "alphagame",
+      items: []
+    },
+    {
       id: "xromata",
       name: "\u03A7\u03C1\u03CE\u03BC\u03B1\u03C4\u03B1",
       emoji: "\u{1F3A8}",
@@ -178,6 +188,7 @@
     },
     {
       id: "routina",
+      hidden: true,
       name: "\u039A\u03B1\u03B8\u03B7\u03BC\u03B5\u03C1\u03B9\u03BD\u03AE \u03C1\u03BF\u03C5\u03C4\u03AF\u03BD\u03B1",
       emoji: "\u23F0",
       color: "#8C7853",
@@ -198,6 +209,7 @@
     },
     {
       id: "rimata",
+      hidden: true,
       name: "\u03A1\u03AE\u03BC\u03B1\u03C4\u03B1 / \u0395\u03BD\u03AD\u03C1\u03B3\u03B5\u03B9\u03B5\u03C2",
       emoji: "\u{1F3C3}",
       color: "#7C83FD",
@@ -244,16 +256,6 @@
       dark: "#254A78",
       soft: "#EAF1FB",
       isGame: "mathgame",
-      items: []
-    },
-    {
-      id: "alfavito",
-      name: "\u0391\u03BB\u03C6\u03AC\u03B2\u03B7\u03C4\u03BF",
-      emoji: "\u{1F524}",
-      color: "#FF9F5B",
-      dark: "#B5551A",
-      soft: "#FFF0E0",
-      isGame: "alphagame",
       items: []
     }
   ];
@@ -625,6 +627,21 @@
     );
   }
   const NUM_EMOJI = ["0\uFE0F\u20E3", "1\uFE0F\u20E3", "2\uFE0F\u20E3", "3\uFE0F\u20E3", "4\uFE0F\u20E3", "5\uFE0F\u20E3", "6\uFE0F\u20E3", "7\uFE0F\u20E3", "8\uFE0F\u20E3", "9\uFE0F\u20E3", "\u{1F51F}"];
+  function NumDisplay({ n, size = 46 }) {
+    if (n >= 0 && n <= 10) return /* @__PURE__ */ React.createElement("span", { style: { fontSize: size } }, NUM_EMOJI[n]);
+    return /* @__PURE__ */ React.createElement("span", { style: { fontSize: size * 0.7, fontWeight: 900, color: "#333" } }, n);
+  }
+  function IconGroup({ count, size = 22, groupOf }) {
+    const icons = Array.from({ length: count });
+    if (groupOf && groupOf > 0 && groupOf < count) {
+      const groups = [];
+      for (let i = 0; i < count; i += groupOf) {
+        groups.push(icons.slice(i, i + groupOf));
+      }
+      return /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center" } }, groups.map((g, gi) => /* @__PURE__ */ React.createElement("div", { key: gi, style: { display: "flex", gap: 1, padding: 3, borderRadius: 8, border: "2px dashed #ccc" } }, g.map((_, i) => /* @__PURE__ */ React.createElement("span", { key: i, style: { fontSize: size } }, "\u{1F34E}")))));
+    }
+    return /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 1, flexWrap: "wrap", justifyContent: "center", maxWidth: 130 } }, icons.map((_, i) => /* @__PURE__ */ React.createElement("span", { key: i, style: { fontSize: size } }, "\u{1F34E}")));
+  }
   const FEEDBACK_PHRASES = {
     el: { correct: "\u039C\u03C0\u03C1\u03AC\u03B2\u03BF! \u03A3\u03C9\u03C3\u03C4\u03AC!", wrong: "\u039E\u03B1\u03BD\u03B1\u03B4\u03BF\u03BA\u03AF\u03BC\u03B1\u03C3\u03B5" },
     en: { correct: "Well done! Correct!", wrong: "Try again" },
@@ -736,6 +753,7 @@
     const [listening, setListening] = useState(false);
     const [micError, setMicError] = useState("");
     const [mathMode, setMathMode] = useState("add");
+    const [mathRepMode, setMathRepMode] = useState("numbers");
     const [mathProblem, setMathProblem] = useState(null);
     const [mathFeedback, setMathFeedback] = useState(null);
     const [alphaLang, setAlphaLang] = useState("el");
@@ -1055,16 +1073,26 @@
         a = randInt(1, 10);
         b = randInt(0, a);
         answer = a - b;
+      } else if (mode === "mul") {
+        a = randInt(1, 4);
+        b = randInt(1, 4);
+        answer = a * b;
+      } else if (mode === "div") {
+        b = randInt(2, 4);
+        const q = randInt(1, 4);
+        a = b * q;
+        answer = q;
       } else {
         a = randInt(0, 9);
         b = randInt(0, 10 - a);
         answer = a + b;
       }
+      const maxRange = Math.max(10, answer + 5);
       const wrongSet = /* @__PURE__ */ new Set([answer]);
       while (wrongSet.size < 3) {
         const delta = randInt(-3, 3);
         const candidate = answer + delta;
-        if (candidate >= 0 && candidate <= 10) wrongSet.add(candidate);
+        if (candidate >= 0 && candidate <= maxRange) wrongSet.add(candidate);
       }
       const choices = [...wrongSet].sort(() => Math.random() - 0.5);
       return { a, b, mode, answer, choices };
@@ -1263,7 +1291,7 @@
         },
         screen.view === "home" ? "\u039B\u03B5\u03B9\u03C4\u03BF\u03C5\u03C1\u03B3\u03AF\u03B1 \u03B5\u03C0\u03B5\u03BE\u03B5\u03C1\u03B3\u03B1\u03C3\u03AF\u03B1\u03C2 \u03B5\u03BD\u03B5\u03C1\u03B3\u03AE \u2014 \u03C0\u03B1\u03C4\u03AE\u03C3\u03C4\u03B5 \u270F\uFE0F \u03C3\u03B5 \u03BC\u03B9\u03B1 \u03BA\u03B1\u03C4\u03B7\u03B3\u03BF\u03C1\u03AF\u03B1 \u03AE \u03C0\u03C1\u03BF\u03C3\u03B8\u03AD\u03C3\u03C4\u03B5 \u03BD\u03AD\u03B1." : "\u039B\u03B5\u03B9\u03C4\u03BF\u03C5\u03C1\u03B3\u03AF\u03B1 \u03B5\u03C0\u03B5\u03BE\u03B5\u03C1\u03B3\u03B1\u03C3\u03AF\u03B1\u03C2 \u03B5\u03BD\u03B5\u03C1\u03B3\u03AE \u2014 \u03C0\u03B1\u03C4\u03AE\u03C3\u03C4\u03B5 \u270F\uFE0F \u03C3\u03B5 \u03BC\u03B9\u03B1 \u03B5\u03B9\u03BA\u03CC\u03BD\u03B1 \u03AE \u03C0\u03C1\u03BF\u03C3\u03B8\u03AD\u03C3\u03C4\u03B5 \u03BD\u03AD\u03B1."
       ),
-      /* @__PURE__ */ React.createElement("div", { style: { position: "relative", padding: "12px 16px 26px 16px" } }, screen.view === "home" && /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 } }, allCategories.map((cat, i) => /* @__PURE__ */ React.createElement("div", { key: cat.id, style: { position: "relative" } }, /* @__PURE__ */ React.createElement(
+      /* @__PURE__ */ React.createElement("div", { style: { position: "relative", padding: "12px 16px 26px 16px" } }, screen.view === "home" && /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 } }, allCategories.filter((c) => !c.hidden).map((cat, i) => /* @__PURE__ */ React.createElement("div", { key: cat.id, style: { position: "relative" } }, /* @__PURE__ */ React.createElement(
         "button",
         {
           onClick: () => setScreen({ view: cat.isGame || "items", categoryId: cat.id }),
@@ -1543,73 +1571,80 @@
           style: { border: "none", background: "transparent", color: "#999", fontSize: 13, fontWeight: 700, cursor: "pointer", textDecoration: "underline" }
         },
         "\u039A\u03B1\u03B8\u03B1\u03C1\u03B9\u03C3\u03BC\u03CC\u03C2"
-      )), screen.view === "mathgame" && mathProblem && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 18, paddingTop: 6 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 6 } }, /* @__PURE__ */ React.createElement(
+      )), screen.view === "mathgame" && mathProblem && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 14, paddingTop: 6 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "center" } }, [
+        { id: "add", label: "\u2795 \u03A0\u03C1\u03CC\u03C3\u03B8\u03B5\u03C3\u03B7" },
+        { id: "sub", label: "\u2796 \u0391\u03C6\u03B1\u03AF\u03C1\u03B5\u03C3\u03B7" },
+        { id: "mul", label: "\u2716\uFE0F \u03A0\u03BF\u03BB\u03BB\u03B1\u03C0\u03BB\u03B1\u03C3\u03B9\u03B1\u03C3\u03BC\u03CC\u03C2" },
+        { id: "div", label: "\u2797 \u0394\u03B9\u03B1\u03AF\u03C1\u03B5\u03C3\u03B7" }
+      ].map((op) => /* @__PURE__ */ React.createElement(
         "button",
         {
+          key: op.id,
           onClick: () => {
-            setMathMode("add");
-            newMathProblem("add");
+            setMathMode(op.id);
+            newMathProblem(op.id);
           },
           style: {
-            border: mathMode === "add" ? "2px solid #3D6FB4" : "2px solid #eee",
-            background: mathMode === "add" ? "#EAF1FB" : "#fafafa",
+            border: mathMode === op.id ? "2px solid #3D6FB4" : "2px solid #eee",
+            background: mathMode === op.id ? "#EAF1FB" : "#fafafa",
             color: "#333",
             fontWeight: 800,
-            fontSize: 14,
-            padding: "9px 16px",
+            fontSize: 12.5,
+            padding: "8px 12px",
             borderRadius: 999,
             cursor: "pointer"
           }
         },
-        "\u2795 \u03A0\u03C1\u03CC\u03C3\u03B8\u03B5\u03C3\u03B7"
-      ), /* @__PURE__ */ React.createElement(
+        op.label
+      ))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 5 } }, [
+        { id: "numbers", label: "\u{1F522} \u0391\u03C1\u03B9\u03B8\u03BC\u03BF\u03AF" },
+        { id: "icons", label: "\u{1F34E} \u0395\u03B9\u03BA\u03CC\u03BD\u03B5\u03C2" }
+      ].map((rep) => /* @__PURE__ */ React.createElement(
         "button",
         {
-          onClick: () => {
-            setMathMode("sub");
-            newMathProblem("sub");
-          },
+          key: rep.id,
+          onClick: () => setMathRepMode(rep.id),
           style: {
-            border: mathMode === "sub" ? "2px solid #3D6FB4" : "2px solid #eee",
-            background: mathMode === "sub" ? "#EAF1FB" : "#fafafa",
+            border: mathRepMode === rep.id ? "2px solid #3D6FB4" : "2px solid #eee",
+            background: mathRepMode === rep.id ? "#EAF1FB" : "#fafafa",
             color: "#333",
             fontWeight: 800,
-            fontSize: 14,
-            padding: "9px 16px",
+            fontSize: 12.5,
+            padding: "7px 14px",
             borderRadius: 999,
             cursor: "pointer"
           }
         },
-        "\u2796 \u0391\u03C6\u03B1\u03AF\u03C1\u03B5\u03C3\u03B7"
-      )), /* @__PURE__ */ React.createElement(
+        rep.label
+      ))), /* @__PURE__ */ React.createElement(
         "div",
         {
           style: {
             display: "flex",
             alignItems: "center",
-            gap: 14,
+            gap: 12,
             background: "#fff",
             borderRadius: 24,
-            padding: "22px 20px",
+            padding: "18px 16px",
             boxShadow: mathFeedback === "correct" ? "0 0 0 5px #5FBF6755" : mathFeedback === "wrong" ? "0 0 0 5px #E24C4C55" : "0 6px 16px rgba(0,0,0,0.08)",
             border: `3px solid ${(activeCategory == null ? void 0 : activeCategory.color) || "#3D6FB4"}`,
-            transition: "box-shadow 0.2s ease"
+            transition: "box-shadow 0.2s ease",
+            minHeight: 90,
+            flexWrap: "wrap",
+            justifyContent: "center"
           }
         },
-        /* @__PURE__ */ React.createElement("span", { style: { fontSize: 46 } }, NUM_EMOJI[mathProblem.a]),
-        /* @__PURE__ */ React.createElement("span", { style: { fontSize: 34, fontWeight: 800, color: "#999" } }, mathProblem.mode === "sub" ? "\u2212" : "+"),
-        /* @__PURE__ */ React.createElement("span", { style: { fontSize: 46 } }, NUM_EMOJI[mathProblem.b]),
-        /* @__PURE__ */ React.createElement("span", { style: { fontSize: 34, fontWeight: 800, color: "#999" } }, "="),
-        /* @__PURE__ */ React.createElement("span", { style: { fontSize: 46 } }, mathFeedback === "correct" ? NUM_EMOJI[mathProblem.answer] : "\u2753")
-      ), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 12 } }, mathProblem.choices.map((choice, idx) => /* @__PURE__ */ React.createElement(
+        mathRepMode === "icons" ? mathProblem.mode === "mul" ? /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 8 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 15, fontWeight: 700, color: "#999" } }, mathProblem.a, " \xD7 ", mathProblem.b), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 12 } }, /* @__PURE__ */ React.createElement(IconGroup, { count: mathProblem.a * mathProblem.b, groupOf: mathProblem.b }), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 26, fontWeight: 800, color: "#999" } }, "="), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 40 } }, mathFeedback === "correct" ? /* @__PURE__ */ React.createElement(NumDisplay, { n: mathProblem.answer }) : "\u2753"))) : mathProblem.mode === "div" ? /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 8 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 15, fontWeight: 700, color: "#999" } }, mathProblem.a, " \xF7 ", mathProblem.b, " (\u03C3\u03B5 ", mathProblem.b, " \u03AF\u03C3\u03B5\u03C2 \u03BF\u03BC\u03AC\u03B4\u03B5\u03C2)"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 12 } }, /* @__PURE__ */ React.createElement(IconGroup, { count: mathProblem.a, groupOf: mathProblem.a / mathProblem.b }), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 26, fontWeight: 800, color: "#999" } }, "="), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 40 } }, mathFeedback === "correct" ? /* @__PURE__ */ React.createElement(NumDisplay, { n: mathProblem.answer }) : "\u2753"))) : /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(IconGroup, { count: mathProblem.a }), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 26, fontWeight: 800, color: "#999" } }, mathProblem.mode === "sub" ? "\u2212" : "+"), /* @__PURE__ */ React.createElement(IconGroup, { count: mathProblem.b }), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 26, fontWeight: 800, color: "#999" } }, "="), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 40 } }, mathFeedback === "correct" ? /* @__PURE__ */ React.createElement(NumDisplay, { n: mathProblem.answer }) : "\u2753")) : /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(NumDisplay, { n: mathProblem.a }), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 34, fontWeight: 800, color: "#999" } }, mathProblem.mode === "sub" ? "\u2212" : mathProblem.mode === "mul" ? "\xD7" : mathProblem.mode === "div" ? "\xF7" : "+"), /* @__PURE__ */ React.createElement(NumDisplay, { n: mathProblem.b }), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 34, fontWeight: 800, color: "#999" } }, "="), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 46 } }, mathFeedback === "correct" ? /* @__PURE__ */ React.createElement(NumDisplay, { n: mathProblem.answer }) : "\u2753"))
+      ), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center" } }, mathProblem.choices.map((choice, idx) => /* @__PURE__ */ React.createElement(
         "button",
         {
           key: idx,
           onClick: () => answerMath(choice),
           disabled: mathFeedback === "correct",
           style: {
-            width: 76,
-            height: 76,
+            minWidth: 72,
+            height: mathRepMode === "icons" ? "auto" : 76,
+            padding: mathRepMode === "icons" ? "8px 10px" : 0,
             borderRadius: 20,
             border: `3px solid ${(activeCategory == null ? void 0 : activeCategory.color) || "#3D6FB4"}`,
             background: "#fff",
@@ -1621,7 +1656,7 @@
             boxShadow: "0 4px 8px rgba(0,0,0,0.08)"
           }
         },
-        NUM_EMOJI[choice]
+        mathRepMode === "icons" ? /* @__PURE__ */ React.createElement(IconGroup, { count: choice, size: 16 }) : /* @__PURE__ */ React.createElement(NumDisplay, { n: choice })
       ))), /* @__PURE__ */ React.createElement("div", { style: { minHeight: 30, fontSize: 20, fontWeight: 800 } }, mathFeedback === "correct" && /* @__PURE__ */ React.createElement("span", { style: { color: "#2F7A38" } }, "\u2705 \u039C\u03C0\u03C1\u03AC\u03B2\u03BF!"), mathFeedback === "wrong" && /* @__PURE__ */ React.createElement("span", { style: { color: "#C8412F" } }, "\u274C \u039E\u03B1\u03BD\u03B1\u03B4\u03BF\u03BA\u03AF\u03BC\u03B1\u03C3\u03B5")), /* @__PURE__ */ React.createElement(
         "button",
         {
