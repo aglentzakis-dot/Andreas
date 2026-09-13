@@ -276,7 +276,7 @@
     { letter: "\u039E", word: "\u039E\u03CD\u03BB\u03BF", emoji: "\u{1FAB5}" },
     { letter: "\u039F", word: "\u039F\u03BC\u03C0\u03C1\u03AD\u03BB\u03B1", emoji: "\u2602\uFE0F" },
     { letter: "\u03A0", word: "\u03A0\u03BF\u03C5\u03BB\u03AF", emoji: "\u{1F426}" },
-    { letter: "\u03A1", word: "\u03A1\u03BF\u03BB\u03CC\u03B9", emoji: "\u23F0" },
+    { letter: "\u03A1", word: "\u03A1\u03BF\u03CD\u03C7\u03B1", emoji: "\u{1F455}" },
     { letter: "\u03A3", word: "\u03A3\u03BA\u03CD\u03BB\u03BF\u03C2", emoji: "\u{1F436}" },
     { letter: "\u03A4", word: "\u03A4\u03AF\u03B3\u03C1\u03B7\u03C2", emoji: "\u{1F42F}" },
     { letter: "\u03A5", word: "\u038E\u03C0\u03BD\u03BF\u03C2", emoji: "\u{1F634}" },
@@ -1712,7 +1712,7 @@
             key: entry.letter,
             onClick: () => {
               setAlphaSpeakingLetter(entry.letter);
-              const phrase = alphaLang === "el" ? `${entry.letter}, \u03CC\u03C0\u03C9\u03C2 ${entry.word}` : `${entry.letter}, for ${entry.word}`;
+              const phrase = `${entry.letter}. ${entry.word}.`;
               speak(phrase, `alpha-${entry.letter}`, alphaLang);
               setTimeout(() => setAlphaSpeakingLetter(null), 900);
             },
