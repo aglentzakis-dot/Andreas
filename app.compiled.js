@@ -632,15 +632,16 @@
     return /* @__PURE__ */ React.createElement("span", { style: { fontSize: size * 0.7, fontWeight: 900, color: "#333" } }, n);
   }
   function IconGroup({ count, size = 22, groupOf }) {
-    const icons = Array.from({ length: count });
+    function renderGrid(n) {
+      const cols = Math.min(5, Math.max(n, 1));
+      return /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 4, justifyItems: "center" } }, Array.from({ length: n }).map((_, i) => /* @__PURE__ */ React.createElement("span", { key: i, style: { fontSize: size, lineHeight: 1 } }, "\u{1F34E}")));
+    }
     if (groupOf && groupOf > 0 && groupOf < count) {
       const groups = [];
-      for (let i = 0; i < count; i += groupOf) {
-        groups.push(icons.slice(i, i + groupOf));
-      }
-      return /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center" } }, groups.map((g, gi) => /* @__PURE__ */ React.createElement("div", { key: gi, style: { display: "flex", gap: 1, padding: 3, borderRadius: 8, border: "2px dashed #ccc" } }, g.map((_, i) => /* @__PURE__ */ React.createElement("span", { key: i, style: { fontSize: size } }, "\u{1F34E}")))));
+      for (let i = 0; i < count; i += groupOf) groups.push(Math.min(groupOf, count - i));
+      return /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" } }, groups.map((g, gi) => /* @__PURE__ */ React.createElement("div", { key: gi, style: { padding: 5, borderRadius: 10, border: "2px dashed #ccc" } }, renderGrid(g))));
     }
-    return /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 1, flexWrap: "wrap", justifyContent: "center", maxWidth: 130 } }, icons.map((_, i) => /* @__PURE__ */ React.createElement("span", { key: i, style: { fontSize: size } }, "\u{1F34E}")));
+    return renderGrid(count);
   }
   const FEEDBACK_PHRASES = {
     el: { correct: "\u039C\u03C0\u03C1\u03AC\u03B2\u03BF! \u03A3\u03C9\u03C3\u03C4\u03AC!", wrong: "\u039E\u03B1\u03BD\u03B1\u03B4\u03BF\u03BA\u03AF\u03BC\u03B1\u03C3\u03B5" },
@@ -753,6 +754,7 @@
     const [listening, setListening] = useState(false);
     const [micError, setMicError] = useState("");
     const [mathMode, setMathMode] = useState("add");
+    const [mathDifficulty, setMathDifficulty] = useState("easy");
     const [mathRepMode, setMathRepMode] = useState("numbers");
     const [mathProblem, setMathProblem] = useState(null);
     const [mathFeedback, setMathFeedback] = useState(null);
@@ -788,6 +790,15 @@
       };
       holdRafRef.current = requestAnimationFrame(tick);
     }, [clearHold]);
+    useEffect(() => {
+      window.history.pushState({ app: true }, "");
+      function handlePopState() {
+        window.history.pushState({ app: true }, "");
+        setScreen((prev) => prev.view === "home" ? prev : { view: "home", categoryId: null });
+      }
+      window.addEventListener("popstate", handlePopState);
+      return () => window.removeEventListener("popstate", handlePopState);
+    }, []);
     useEffect(() => {
       (async () => {
         try {
@@ -1057,7 +1068,7 @@
     }, [colorMatch, lastSpokenColorId, speak]);
     useEffect(() => {
       if (screen.view === "mathgame" && !mathProblem) {
-        setMathProblem(generateMathProblem(mathMode));
+        setMathProblem(generateMathProblem(mathMode, mathDifficulty));
         setMathFeedback(null);
       }
     }, [screen.view]);
@@ -1067,24 +1078,24 @@
     function randInt(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    function generateMathProblem(mode) {
+    function generateMathProblem(mode, difficulty) {
       let a, b, answer;
       if (mode === "sub") {
-        a = randInt(1, 10);
+        a = difficulty === "easy" ? randInt(1, 5) : randInt(1, 10);
         b = randInt(0, a);
         answer = a - b;
       } else if (mode === "mul") {
-        a = randInt(1, 4);
-        b = randInt(1, 4);
+        a = difficulty === "easy" ? randInt(1, 2) : randInt(1, 4);
+        b = difficulty === "easy" ? randInt(1, 3) : randInt(1, 4);
         answer = a * b;
       } else if (mode === "div") {
-        b = randInt(2, 4);
-        const q = randInt(1, 4);
+        b = difficulty === "easy" ? randInt(2, 3) : randInt(2, 4);
+        const q = difficulty === "easy" ? randInt(1, 2) : randInt(1, 4);
         a = b * q;
         answer = q;
       } else {
-        a = randInt(0, 9);
-        b = randInt(0, 10 - a);
+        a = difficulty === "easy" ? randInt(0, 3) : randInt(0, 9);
+        b = difficulty === "easy" ? randInt(0, 5 - a) : randInt(0, 10 - a);
         answer = a + b;
       }
       const maxRange = Math.max(10, answer + 5);
@@ -1097,8 +1108,8 @@
       const choices = [...wrongSet].sort(() => Math.random() - 0.5);
       return { a, b, mode, answer, choices };
     }
-    function newMathProblem(mode) {
-      setMathProblem(generateMathProblem(mode));
+    function newMathProblem(mode, difficulty) {
+      setMathProblem(generateMathProblem(mode, difficulty || mathDifficulty));
       setMathFeedback(null);
     }
     function answerMath(choice) {
@@ -1596,6 +1607,29 @@
           }
         },
         op.label
+      ))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 5 } }, [
+        { id: "easy", label: "\u{1F60A} \u0395\u03CD\u03BA\u03BF\u03BB\u03BF" },
+        { id: "hard", label: "\u{1F913} \u0394\u03CD\u03C3\u03BA\u03BF\u03BB\u03BF" }
+      ].map((d) => /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          key: d.id,
+          onClick: () => {
+            setMathDifficulty(d.id);
+            newMathProblem(mathMode, d.id);
+          },
+          style: {
+            border: mathDifficulty === d.id ? "2px solid #3D6FB4" : "2px solid #eee",
+            background: mathDifficulty === d.id ? "#EAF1FB" : "#fafafa",
+            color: "#333",
+            fontWeight: 800,
+            fontSize: 12.5,
+            padding: "7px 14px",
+            borderRadius: 999,
+            cursor: "pointer"
+          }
+        },
+        d.label
       ))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 5 } }, [
         { id: "numbers", label: "\u{1F522} \u0391\u03C1\u03B9\u03B8\u03BC\u03BF\u03AF" },
         { id: "icons", label: "\u{1F34E} \u0395\u03B9\u03BA\u03CC\u03BD\u03B5\u03C2" }
