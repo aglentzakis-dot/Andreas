@@ -1,19 +1,20 @@
-const CACHE_NAME = "mathaino-lexeis-v12";
+// Μαθαίνω Λέξεις — λειτουργία χωρίς ίντερνετ. Όλα τα αρχεία είναι τοπικά, τίποτα από ξένους διακομιστές.
+const VERSION = "1.1";
+const CACHE_NAME = "mathaino-lexeis-" + VERSION;
 const ASSETS = [
   "./",
   "./index.html",
-  "./app.compiled.js",
+  "./plaisio.js",
+  "./app.compiled.js?v=1.1",
+  "./lib/react.production.min.js",
+  "./lib/react-dom.production.min.js",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
-  "https://unpkg.com/react@18/umd/react.production.min.js",
-  "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js",
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)).catch(() => {})
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
   self.skipWaiting();
 });
 
@@ -27,18 +28,20 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+  const req = event.request;
+  if (req.method !== "GET" || new URL(req.url).origin !== self.location.origin) return;
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const fetchPromise = fetch(event.request)
-        .then((networkResponse) => {
-          if (event.request.method === "GET" && networkResponse && networkResponse.status === 200) {
-            const clone = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+    caches.match(req, { ignoreSearch: req.mode === "navigate" }).then((cached) => {
+      const net = fetch(req)
+        .then((res) => {
+          if (res && res.status === 200 && res.type === "basic") {
+            const copy = res.clone();
+            caches.open(CACHE_NAME).then((c) => c.put(req, copy));
           }
-          return networkResponse;
+          return res;
         })
-        .catch(() => cached);
-      return cached || fetchPromise;
+        .catch(() => cached || caches.match("./index.html"));
+      return cached || net;
     })
   );
 });

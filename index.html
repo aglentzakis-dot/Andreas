@@ -2,6 +2,10 @@
 <html lang="el">
   <head>
     <meta charset="UTF-8" />
+    <script src="plaisio.js"></script>
+    <meta name="app-version" content="1.1" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; media-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'none'" />
+    <meta name="referrer" content="no-referrer" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <title>Μαθαίνω Λέξεις</title>
 
@@ -52,13 +56,14 @@
       setTimeout(function () {
         var root = document.getElementById("root");
         if (root && !root.hasChildNodes()) {
-          showBootError("Η εφαρμογή δεν πρόλαβε να φορτώσει (timeout). Πιθανόν πρόβλημα σύνδεσης με το CDN.");
+          showBootError("Η εφαρμογή δεν πρόλαβε να φορτώσει (timeout). Δοκίμασε να την κλείσεις και να την ξανανοίξεις.");
         }
       }, 8000);
     </script>
 
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script>var APP_VERSION = "1.1";</script>
+    <script src="lib/react.production.min.js"></script>
+    <script src="lib/react-dom.production.min.js"></script>
 
     <script>
       window.storage = {
@@ -83,7 +88,7 @@
       };
     </script>
 
-    <script src="app.compiled.js"></script>
+    <script src="app.compiled.js?v=1.1"></script>
 
     <script>
       if ("serviceWorker" in navigator) {
