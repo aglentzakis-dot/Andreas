@@ -1,11 +1,11 @@
 // Μαθαίνω Λέξεις — λειτουργία χωρίς ίντερνετ. Όλα τα αρχεία είναι τοπικά, τίποτα από ξένους διακομιστές.
-const VERSION = "1.1";
+const VERSION = "1.2";
 const CACHE_NAME = "mathaino-lexeis-" + VERSION;
 const ASSETS = [
   "./",
   "./index.html",
   "./plaisio.js",
-  "./app.compiled.js?v=1.1",
+  "./app.compiled.js?v=1.2",
   "./lib/react.production.min.js",
   "./lib/react-dom.production.min.js",
   "./manifest.json",
